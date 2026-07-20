@@ -1,0 +1,18 @@
+[
+  {
+    "record_id": "PartsLife:00002",
+    "source_text": "寿命设置",
+    "kind": "comment",
+    "hierarchy": ["Programs", "PartsLife"],
+    "context": "Graphite tray lifetime counter section",
+    "location": "PartsLife line 00002"
+  },
+  {
+    "record_id": "tree:communication",
+    "source_text": "通信程序",
+    "kind": "program_name",
+    "hierarchy": ["Programs"],
+    "context": "PLC communications program",
+    "location": "project tree"
+  }
+]

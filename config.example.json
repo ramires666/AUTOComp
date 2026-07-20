@@ -1,0 +1,19 @@
+{
+  "llm": {
+    "endpoint": "http://127.0.0.1:8000/v1",
+    "model": "local-vision-model",
+    "timeout_seconds": 120,
+    "api_key_env": "AUTOCOMP_LLM_API_KEY"
+  },
+  "kv_studio": {
+    "window_title_pattern": "\\bKV STUDIO\\b",
+    "preferred_backend": "uia",
+    "expected_version": "11.62"
+  },
+  "safety": {
+    "apply_enabled": false,
+    "require_checkpoint": true,
+    "forbid_online_operations": true,
+    "batch_size": 25
+  }
+}

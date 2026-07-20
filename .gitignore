@@ -1,0 +1,45 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.test-tmp*/
+.test-*/
+.ruff_cache/
+.venv/
+build/
+dist/
+.build-*/
+*.egg-info/
+.coverage
+coverage.xml
+htmlcov/
+*.whl
+
+# Local editor, agent, and OS state.
+.agents/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Secrets and machine-local configuration.
+.env
+.env.*
+!.env.example
+
+# Runtime data can contain project text, screenshots, and local endpoints.
+.autocomp/
+checkpoints/
+reports/
+screenshots/
+*.local.json
+*.log
+*.sqlite
+*.sqlite3
+
+# Real KV STUDIO projects and controller storage must never enter source control.
+*.kvproj
+*.kvp
+*.kpr
+*.kst
+0_CARD/
+1_CPUMEM/
