@@ -28,13 +28,20 @@ AUTOComp is distributed under the [proprietary license](LICENSE) in this reposit
 
 ## Windows installation
 
-Use Python 3.11 or newer on the free Windows computer:
+Use Python 3.11 or newer on the free Windows computer. Python 3.14 is supported;
+the legacy `py` launcher is not required:
 
 ```powershell
-py -3.11 -m venv .venv
+python --version
+python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install ".[windows]"
 Copy-Item config.example.json config.local.json
 ```
+
+If `python` is not available but `python3.14` is, use `python3.14 -m venv .venv`.
+The installer script searches for `py`, `python`, `python3`, and `python3.14`
+automatically. A full executable path can also be supplied with
+`-PythonLauncher`.
 
 For an editable development installation with test and lint tools:
 
