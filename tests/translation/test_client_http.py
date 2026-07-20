@@ -9,9 +9,11 @@ from autocomp.cli import main
 
 class _ModelHandler(BaseHTTPRequestHandler):
     calls = 0
+    authorization = ""
 
     def do_POST(self) -> None:  # noqa: N802
         type(self).calls += 1
+        type(self).authorization = self.headers.get("Authorization", "")
         assert self.path == "/v1/chat/completions"
         length = int(self.headers["Content-Length"])
         request = json.loads(self.rfile.read(length))
@@ -39,6 +41,7 @@ class _ModelHandler(BaseHTTPRequestHandler):
 
 def test_cli_translation_uses_one_strict_batch_request(tmp_path) -> None:
     _ModelHandler.calls = 0
+    _ModelHandler.authorization = ""
     server = ThreadingHTTPServer(("127.0.0.1", 0), _ModelHandler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
@@ -54,6 +57,10 @@ def test_cli_translation_uses_one_strict_batch_request(tmp_path) -> None:
                     "safety": {"batch_size": 25},
                 }
             ),
+            encoding="utf-8",
+        )
+        (tmp_path / ".env").write_text(
+            "AUTOCOMP_LLM_API_KEY=dotenv-test-key\n",
             encoding="utf-8",
         )
         inventory = tmp_path / "inventory.json"
@@ -93,6 +100,7 @@ def test_cli_translation_uses_one_strict_batch_request(tmp_path) -> None:
         manifest = json.loads(output.read_text(encoding="utf-8"))
         assert exit_code == 0
         assert _ModelHandler.calls == 1
+        assert _ModelHandler.authorization == "Bearer dotenv-test-key"
         assert [item["target_text"] for item in manifest["decisions"]] == [
             "Start X0",
             "Stop DM100",

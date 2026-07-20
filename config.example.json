@@ -1,9 +1,6 @@
 {
   "llm": {
-    "endpoint": "http://127.0.0.1:8000/v1",
-    "model": "local-vision-model",
-    "timeout_seconds": 120,
-    "api_key_env": "AUTOCOMP_LLM_API_KEY"
+    "timeout_seconds": 120
   },
   "kv_studio": {
     "window_title_pattern": "\\bKV STUDIO\\b",

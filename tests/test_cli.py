@@ -14,6 +14,26 @@ def test_doctor_reports_safe_defaults(capsys) -> None:
     assert report["dry_run"] is True
     assert report["online_operations_forbidden"] is True
     assert report["expected_kv_studio_version"] == "11.62"
+    assert "api_key" not in report
+
+
+def test_doctor_reports_dotenv_without_exposing_secret(tmp_path, capsys, monkeypatch) -> None:
+    monkeypatch.delenv("AUTOCOMP_LLM_API_KEY", raising=False)
+    env_path = tmp_path / ".env"
+    env_path.write_text(
+        "AUTOCOMP_LLM_ENDPOINT=http://127.0.0.1:8080/v1\n"
+        "AUTOCOMP_LLM_MODEL=qwen-test\n"
+        "AUTOCOMP_LLM_API_KEY=never-print-this\n",
+        encoding="utf-8",
+    )
+
+    assert main(["doctor", "--env-file", str(env_path)]) == 0
+    rendered = capsys.readouterr().out
+    report = json.loads(rendered)
+    assert report["llm_endpoint"] == "http://127.0.0.1:8080/v1"
+    assert report["llm_model"] == "qwen-test"
+    assert report["llm_api_key_configured"] is True
+    assert "never-print-this" not in rendered
 
 
 def test_program_name_inventory_is_high_risk(tmp_path) -> None:

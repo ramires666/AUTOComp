@@ -42,8 +42,16 @@ class WorkerHttpServer(ThreadingHTTPServer):
             raise ValueError(
                 f"Bearer token must be supplied or set in {TOKEN_ENVIRONMENT_VARIABLE}"
             )
-        if len(resolved_token) < 32:
-            raise ValueError("Bearer token must contain at least 32 characters")
+        if (
+            len(resolved_token) < 32
+            or len(resolved_token) > 512
+            or not resolved_token.isascii()
+            or resolved_token != resolved_token.strip()
+            or any(ord(character) < 33 or ord(character) == 127 for character in resolved_token)
+        ):
+            raise ValueError(
+                "Bearer token must contain 32-512 printable non-whitespace characters"
+            )
         self.worker = worker
         self._token = resolved_token
         self.max_body_bytes = max_body_bytes
@@ -110,7 +118,11 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
         def _authenticated(self) -> bool:
             header = self.headers.get("Authorization", "")
             supplied = header[7:] if header.startswith("Bearer ") else ""
-            if not supplied or not hmac.compare_digest(supplied, self.server._token):
+            if (
+                not supplied
+                or not supplied.isascii()
+                or not hmac.compare_digest(supplied, self.server._token)
+            ):
                 self.send_response(HTTPStatus.UNAUTHORIZED)
                 self.send_header("WWW-Authenticate", "Bearer")
                 self.send_header("Content-Length", "0")

@@ -16,7 +16,8 @@ sanitized reproduction whenever possible.
 - Never test against the only copy of a project.
 - Never connect AUTOComp to a PLC or enable transfer/monitor/online-edit actions.
 - Keep the worker bound to loopback and access it through a trusted tunnel.
-- Keep API keys and worker tokens in environment variables.
+- Keep the LLM endpoint, model, API keys, and worker tokens in the ignored local
+  `.env` file or in process environment variables. Never commit a populated `.env`.
 - Do not commit `config.local.json`, runtime reports, screenshots, or KV project
   files.
 - Treat operator-visible strings separately from protocol commands and external

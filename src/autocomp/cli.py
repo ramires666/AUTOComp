@@ -142,7 +142,7 @@ def _require_export_text(path: str | Path) -> str:
 
 
 def _cmd_doctor(args: argparse.Namespace) -> int:
-    config = load_config(args.config)
+    config = load_config(args.config, args.env_file)
     report: dict[str, object] = {
         "autocomp_version": __version__,
         "python": platform.python_version(),
@@ -153,6 +153,8 @@ def _cmd_doctor(args: argparse.Namespace) -> int:
         "pywinauto_installed": find_spec("pywinauto") is not None,
         "llm_endpoint": config.llm.endpoint,
         "llm_model": config.llm.model,
+        "llm_api_key_configured": config.llm.api_key is not None,
+        "worker_token_configured": config.worker_token is not None,
     }
     if args.probe_ui:
         adapter = PywinautoKVStudioAdapter(config.kv_studio.window_title_pattern)
@@ -164,7 +166,7 @@ def _cmd_doctor(args: argparse.Namespace) -> int:
 
 
 def _cmd_inventory_ui(args: argparse.Namespace) -> int:
-    config = load_config(args.config)
+    config = load_config(args.config, args.env_file)
     adapter = PywinautoKVStudioAdapter(config.kv_studio.window_title_pattern)
     result = KVStudioWorker(adapter).execute(ActionRequest(ActionKind.INVENTORY))
     _emit(result, args.output)
@@ -204,7 +206,7 @@ def _cmd_extract_mnemonic(args: argparse.Namespace) -> int:
 
 
 def _cmd_translate(args: argparse.Namespace) -> int:
-    config = load_config(args.config)
+    config = load_config(args.config, args.env_file)
     glossary = Glossary(_load_string_map(args.glossary, "glossary"))
     memory = TranslationMemory(_load_string_map(args.memory, "translation memory"))
     provider = OpenAICompatibleProvider(
@@ -232,9 +234,14 @@ def _cmd_translate(args: argparse.Namespace) -> int:
 
 
 def _cmd_worker_serve(args: argparse.Namespace) -> int:
-    config = load_config(args.config)
+    config = load_config(args.config, args.env_file)
     adapter = PywinautoKVStudioAdapter(config.kv_studio.window_title_pattern)
-    server = WorkerHttpServer(KVStudioWorker(adapter), host="127.0.0.1", port=args.port)
+    server = WorkerHttpServer(
+        KVStudioWorker(adapter),
+        token=config.worker_token,
+        host="127.0.0.1",
+        port=args.port,
+    )
     address, port = server.server_address
     sys.stdout.write(f"AUTOComp read-only worker listening on http://{address}:{port}\n")
     sys.stdout.flush()
@@ -257,12 +264,14 @@ def _parser() -> argparse.ArgumentParser:
 
     doctor = subparsers.add_parser("doctor", help="validate configuration and dependencies")
     doctor.add_argument("--config")
+    doctor.add_argument("--env-file")
     doctor.add_argument("--probe-ui", action="store_true")
     doctor.add_argument("--output")
     doctor.set_defaults(handler=_cmd_doctor)
 
     inventory = subparsers.add_parser("inventory-ui", help="read the KV STUDIO UIA tree")
     inventory.add_argument("--config")
+    inventory.add_argument("--env-file")
     inventory.add_argument("--output")
     inventory.set_defaults(handler=_cmd_inventory_ui)
 
@@ -303,6 +312,7 @@ def _parser() -> argparse.ArgumentParser:
     )
     translate.add_argument("inventory")
     translate.add_argument("--config")
+    translate.add_argument("--env-file")
     translate.add_argument("--glossary")
     translate.add_argument("--memory")
     translate.add_argument("--memory-output")
@@ -314,6 +324,7 @@ def _parser() -> argparse.ArgumentParser:
         "worker-serve", help="serve authenticated read-only UI inventory on loopback"
     )
     worker_serve.add_argument("--config")
+    worker_serve.add_argument("--env-file")
     worker_serve.add_argument("--port", type=int, default=8765)
     worker_serve.set_defaults(handler=_cmd_worker_serve)
     return parser

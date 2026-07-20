@@ -11,6 +11,8 @@ $venvPath = Join-Path $projectRoot ".venv"
 $venvPython = Join-Path $venvPath "Scripts\python.exe"
 $configExample = Join-Path $projectRoot "config.example.json"
 $configLocal = Join-Path $projectRoot "config.local.json"
+$envExample = Join-Path $projectRoot ".env.example"
+$envLocal = Join-Path $projectRoot ".env"
 
 function Find-PythonCommand {
     $candidates = if ($PythonLauncher) {
@@ -74,6 +76,9 @@ if (-not (Test-Path -LiteralPath $venvPython)) {
 }
 
 & $venvPython -m pip install --upgrade pip
+if ($LASTEXITCODE -ne 0) {
+    throw "Failed to upgrade pip in $venvPath."
+}
 Push-Location -LiteralPath $projectRoot
 try {
     if ($Developer) {
@@ -81,6 +86,9 @@ try {
     }
     else {
         & $venvPython -m pip install ".[windows]"
+    }
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to install AUTOComp dependencies."
     }
 }
 finally {
@@ -90,6 +98,31 @@ finally {
 if (-not (Test-Path -LiteralPath $configLocal)) {
     Copy-Item -LiteralPath $configExample -Destination $configLocal
 }
+if (-not (Test-Path -LiteralPath $envLocal)) {
+    Copy-Item -LiteralPath $envExample -Destination $envLocal
+}
+$envText = [IO.File]::ReadAllText($envLocal)
+$workerTokenMatch = [regex]::Match($envText, "(?m)^AUTOCOMP_WORKER_TOKEN=(.*)$")
+if (-not $workerTokenMatch.Success) {
+    throw "AUTOCOMP_WORKER_TOKEN entry is missing from $envLocal"
+}
+if ([string]::IsNullOrWhiteSpace($workerTokenMatch.Groups[1].Value)) {
+    $tokenBytes = New-Object byte[] 32
+    $random = [Security.Cryptography.RandomNumberGenerator]::Create()
+    try {
+        $random.GetBytes($tokenBytes)
+    }
+    finally {
+        $random.Dispose()
+    }
+    $workerToken = [Convert]::ToBase64String($tokenBytes)
+    $envText = [regex]::Replace(
+        $envText,
+        "(?m)^AUTOCOMP_WORKER_TOKEN=.*$",
+        "AUTOCOMP_WORKER_TOKEN=$workerToken"
+    )
+    [IO.File]::WriteAllText($envLocal, $envText, [Text.UTF8Encoding]::new($false))
+}
 
 Write-Host "AUTOComp worker installed in $venvPath"
-Write-Host "Edit $configLocal, then run scripts\start-worker.ps1"
+Write-Host "Edit $envLocal and $configLocal, then run scripts\start-worker.ps1"

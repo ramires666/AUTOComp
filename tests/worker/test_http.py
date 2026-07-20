@@ -44,6 +44,14 @@ def test_health_requires_bearer_token(server) -> None:
     assert headers["WWW-Authenticate"] == "Bearer"
 
 
+def test_non_ascii_bearer_is_rejected_without_crashing_server(server) -> None:
+    status, _, _ = request(server, "GET", "/health", token="é" * 32)
+    healthy_status, _, _ = request(server, "GET", "/health")
+
+    assert status == 401
+    assert healthy_status == 200
+
+
 def test_health_is_authenticated(server) -> None:
     status, body, _ = request(server, "GET", "/health")
 
@@ -88,5 +96,14 @@ def test_non_loopback_requires_explicit_opt_in() -> None:
 
 
 def test_rejects_short_token() -> None:
-    with pytest.raises(ValueError, match="32 characters"):
+    with pytest.raises(ValueError, match="32-512"):
         WorkerHttpServer(KVStudioWorker(FakeKVStudioAdapter()), token="too-short")
+
+
+@pytest.mark.parametrize(
+    "token",
+    [" " * 32, "a" * 31, "a" * 513, "a" * 31 + "\n", "я" * 32],
+)
+def test_rejects_unsafe_tokens(token) -> None:
+    with pytest.raises(ValueError, match="printable non-whitespace"):
+        WorkerHttpServer(KVStudioWorker(FakeKVStudioAdapter()), token=token)

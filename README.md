@@ -36,6 +36,7 @@ python --version
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install ".[windows]"
 Copy-Item config.example.json config.local.json
+Copy-Item .env.example .env
 ```
 
 If `python` is not available but `python3.14` is, use `python3.14 -m venv .venv`.
@@ -49,14 +50,22 @@ For an editable development installation with test and lint tools:
 .\scripts\install-worker.ps1 -Developer
 ```
 
-Keep secrets in environment variables, not in `config.local.json`:
+Keep the LLM endpoint, model, API key, and worker token in the local `.env` file,
+not in `config.local.json`:
 
-```powershell
-$env:AUTOCOMP_LLM_API_KEY = "local-api-token"
+```dotenv
+AUTOCOMP_LLM_ENDPOINT=http://127.0.0.1:8080/v1
+AUTOCOMP_LLM_MODEL=local-vision-model
+AUTOCOMP_LLM_API_KEY=
+AUTOCOMP_WORKER_TOKEN=
 ```
 
-Set `llm.endpoint` and `llm.model` in `config.local.json` to the
-OpenAI-compatible endpoint serving the local Qwen model.
+Populate `AUTOCOMP_LLM_API_KEY` only if the local server requires it. Set
+`AUTOCOMP_WORKER_TOKEN` to a unique random value of at least 32 characters.
+The populated `.env` is ignored by Git; `.env.example` contains no secrets.
+Real process environment variables override values loaded from the file.
+`scripts\install-worker.ps1` generates a unique worker token when it creates
+`.env` for the first time and never overwrites an existing local file.
 
 ## Implemented commands
 
@@ -76,7 +85,6 @@ Run the authenticated worker on loopback. Use an SSH/VPN tunnel from the GPU
 computer rather than exposing this plain HTTP endpoint directly to the LAN:
 
 ```powershell
-$env:AUTOCOMP_WORKER_TOKEN = "generate-a-long-random-token"
 autocomp worker-serve --config config.local.json --port 8765
 ```
 
