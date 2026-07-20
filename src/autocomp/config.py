@@ -46,7 +46,7 @@ class _SecretValues:
 @dataclass(frozen=True, slots=True)
 class LlmConfig:
     endpoint: str = "http://127.0.0.1:8000/v1"
-    model: str = "local-vision-model"
+    model: str = "auto"
     timeout_seconds: float = 120.0
     _secrets: _SecretValues = field(
         default_factory=lambda: _SecretValues(None, None),

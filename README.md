@@ -55,7 +55,7 @@ not in `config.local.json`:
 
 ```dotenv
 AUTOCOMP_LLM_ENDPOINT=http://127.0.0.1:8080/v1
-AUTOCOMP_LLM_MODEL=local-vision-model
+AUTOCOMP_LLM_MODEL=auto
 AUTOCOMP_LLM_API_KEY=
 AUTOCOMP_WORKER_TOKEN=
 ```
@@ -66,6 +66,37 @@ The populated `.env` is ignored by Git; `.env.example` contains no secrets.
 Real process environment variables override values loaded from the file.
 `scripts\install-worker.ps1` generates a unique worker token when it creates
 `.env` for the first time and never overwrites an existing local file.
+
+With `AUTOCOMP_LLM_MODEL=auto`, AUTOComp reads the models advertised by
+`GET /v1/models`, tries chat-capable candidates, and caches the responding ID
+for the current run. If the server replaces that model, AUTOComp refreshes the
+list and retries automatically. Set an exact model ID only to pin one model.
+
+### Local Qwen llama-server
+
+The current Qwen 3.6 server can be started from PowerShell with:
+
+```powershell
+& "W:\LAMA\llama\llama-server.exe" `
+  -m "W:\LAMA\models\lmstudio-community\Qwen3.6-35B-A3B\Qwen3.6-35B-A3B-UD-Q3_K_XL.gguf" `
+  --mmproj "W:\LAMA\models\unsloth\Qwen3.6-35B-A3B-MTP-GGUF\mmproj-F32.gguf" `
+  --host 0.0.0.0 `
+  --port 8080 `
+  --ctx-size 32000 `
+  -ngl 99 `
+  --parallel 1 `
+  --chat-template-kwargs '{"enable_thinking":false}'
+```
+
+AUTOComp requests schema-constrained JSON through the Chat Completions
+`response_format` field. If another OpenAI-compatible backend rejects that
+field, AUTOComp retries without it and still validates the returned JSON
+strictly. No additional JSON-related `llama-server` launch flag is required.
+
+When AUTOComp runs on another Windows computer, replace `127.0.0.1` in `.env`
+with the GPU computer's LAN/VPN address. Because `--host 0.0.0.0` exposes the
+unauthenticated LLM API to the network, restrict port 8080 in Windows Firewall
+to the AUTOComp machine or use an SSH/VPN tunnel.
 
 ## Implemented commands
 
