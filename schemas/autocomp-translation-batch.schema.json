@@ -1,0 +1,41 @@
+{
+  "type": "object",
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "record_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "translation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "notes": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "record_id",
+          "translation",
+          "notes",
+          "confidence"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "items"
+  ],
+  "additionalProperties": false
+}

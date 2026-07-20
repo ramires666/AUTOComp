@@ -3,9 +3,14 @@ from __future__ import annotations
 import json
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 
 from autocomp.cli import main
-from autocomp.translation.client import OpenAICompatibleConfig, OpenAICompatibleProvider
+from autocomp.translation.client import (
+    _BATCH_RESPONSE_FORMAT,
+    OpenAICompatibleConfig,
+    OpenAICompatibleProvider,
+)
 from autocomp.translation.models import ProviderBatchItem
 
 
@@ -63,6 +68,14 @@ class _ModelHandler(BaseHTTPRequestHandler):
 
     def log_message(self, format: str, *args: object) -> None:
         del format, args
+
+
+def test_server_schema_matches_client_batch_schema() -> None:
+    schema_path = (
+        Path(__file__).parents[2] / "schemas" / "autocomp-translation-batch.schema.json"
+    )
+
+    assert json.loads(schema_path.read_text(encoding="utf-8")) == _BATCH_RESPONSE_FORMAT["schema"]
 
 
 def test_cli_translation_uses_one_strict_batch_request(tmp_path) -> None:
@@ -194,12 +207,9 @@ def test_json_mode_falls_back_for_compatible_server() -> None:
             )
         )
 
-        result = provider.translate_batch(
-            [ProviderBatchItem("one", "启动", "")],
-            glossary={},
-        )
+        result = provider.translate("启动", context="", glossary={})
 
-        assert result["one"].translation == "Start"
+        assert result.translation == "Start"
         assert _ModelHandler.response_formats == [True, False]
     finally:
         server.shutdown()

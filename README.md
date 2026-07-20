@@ -77,6 +77,8 @@ list and retries automatically. Set an exact model ID only to pin one model.
 The current Qwen 3.6 server can be started from PowerShell with:
 
 ```powershell
+$autoCompSchema = "W:\_python\AUTOComp\schemas\autocomp-translation-batch.schema.json"
+
 & "W:\LAMA\llama\llama-server.exe" `
   -m "W:\LAMA\models\lmstudio-community\Qwen3.6-35B-A3B\Qwen3.6-35B-A3B-UD-Q3_K_XL.gguf" `
   --mmproj "W:\LAMA\models\unsloth\Qwen3.6-35B-A3B-MTP-GGUF\mmproj-F32.gguf" `
@@ -85,13 +87,21 @@ The current Qwen 3.6 server can be started from PowerShell with:
   --ctx-size 32000 `
   -ngl 99 `
   --parallel 1 `
-  --chat-template-kwargs '{"enable_thinking":false}'
+  --chat-template-kwargs '{"enable_thinking":false}' `
+  --json-schema-file $autoCompSchema
 ```
 
-AUTOComp requests schema-constrained JSON through the Chat Completions
-`response_format` field. If another OpenAI-compatible backend rejects that
-field, AUTOComp retries without it and still validates the returned JSON
-strictly. No additional JSON-related `llama-server` launch flag is required.
+`--json-schema-file` installs the response grammar when `llama-server` starts.
+Every generation on this dedicated server is therefore constrained to an
+object with an `items` array containing `record_id`, `translation`, `notes`,
+and `confidence`. Use this server instance for AUTOComp batch translation, not
+for unrestricted chat.
+
+AUTOComp additionally sends the same schema through the Chat Completions
+`response_format` field. This keeps schema enforcement when another compatible
+server is used without the startup flag. If a backend rejects request-level
+`response_format`, AUTOComp retries without it and still validates the returned
+JSON strictly.
 
 When AUTOComp runs on another Windows computer, replace `127.0.0.1` in `.env`
 with the GPU computer's LAN/VPN address. Because `--host 0.0.0.0` exposes the

@@ -16,15 +16,6 @@ _TRANSLATION_PROPERTIES: dict[str, Any] = {
     "notes": {"type": "string"},
     "confidence": {"type": ["number", "null"]},
 }
-_SINGLE_RESPONSE_FORMAT = {
-    "type": "json_schema",
-    "schema": {
-        "type": "object",
-        "properties": _TRANSLATION_PROPERTIES,
-        "required": ["translation", "notes", "confidence"],
-        "additionalProperties": False,
-    },
-}
 _BATCH_RESPONSE_FORMAT = {
     "type": "json_schema",
     "schema": {
@@ -84,27 +75,11 @@ class OpenAICompatibleProvider(TranslationProvider):
     def translate(
         self, text: str, *, context: str, glossary: dict[str, str]
     ) -> ProviderTranslation:
-        instruction = (
-            "Translate only user-authored Chinese text into concise technical English. "
-            "When a glossary source term occurs anywhere in the input, use its target term "
-            "verbatim in the translation. Do not leave any CJK characters in the result. "
-            "Keep placeholders such as [[PLC_TOKEN_0]] exactly unchanged. "
-            "Return a JSON object with translation, notes, and numeric or null confidence fields."
-        )
-        payload = {
-            "temperature": self._config.temperature,
-            "messages": [
-                {"role": "system", "content": instruction},
-                {
-                    "role": "user",
-                    "content": json.dumps(
-                        {"text": text, "context": context, "glossary": glossary}, ensure_ascii=False
-                    ),
-                },
-            ],
-            "response_format": _SINGLE_RESPONSE_FORMAT,
-        }
-        return _parse_completion(self._post(payload))
+        record_id = "autocomp-single-item"
+        return self.translate_batch(
+            [ProviderBatchItem(record_id=record_id, text=text, context=context)],
+            glossary=glossary,
+        )[record_id]
 
     def translate_batch(
         self, items: list[ProviderBatchItem], *, glossary: dict[str, str]
