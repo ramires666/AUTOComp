@@ -65,6 +65,19 @@ def _emit(payload: object, output: str | None) -> None:
         raise CliError(f"refusing to overwrite existing output: {path}") from exc
 
 
+def _prepare_new_output(output: str) -> None:
+    """Validate and create the report directory before any reversible UI mutation."""
+    path = Path(output)
+    if path.exists():
+        raise CliError(f"refusing to overwrite existing output: {path}")
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+    except OSError as exc:
+        raise CliError(f"cannot prepare output directory for {path}: {exc}") from exc
+    if not path.parent.is_dir():
+        raise CliError(f"output parent is not a directory: {path.parent}")
+
+
 def _read_json(path: str | Path) -> Any:
     try:
         return json.loads(Path(path).read_text(encoding="utf-8"))
@@ -173,6 +186,49 @@ def _cmd_inventory_ui(args: argparse.Namespace) -> int:
     return 0 if result.windows else 1
 
 
+def _cmd_inventory_project_tree(args: argparse.Namespace) -> int:
+    if args.expand_all:
+        if not args.apply:
+            raise CliError("--expand-all requires explicit --apply")
+        if not args.checkpoint or not args.checkpoint.strip():
+            raise CliError("--expand-all requires a non-empty --checkpoint")
+    elif args.apply or args.checkpoint:
+        raise CliError("--apply and --checkpoint are valid only with --expand-all")
+
+    _prepare_new_output(args.output)
+    config = load_config(args.config, args.env_file)
+    adapter = PywinautoKVStudioAdapter(
+        config.kv_studio.window_title_pattern,
+        max_project_depth=args.max_depth,
+        max_project_items=args.max_items,
+        max_project_expansions=args.max_expansions,
+        max_project_seconds=args.timeout_seconds,
+    )
+    inventory = adapter.inventory_project_tree(
+        expand_all=args.expand_all,
+        restore_state=True,
+    )
+    payload = {
+        "schema_version": 1,
+        "action": "inventory_project_tree",
+        "checkpoint": args.checkpoint or "",
+        "mode": "apply" if args.expand_all else "read_only",
+        "requested": {
+            "expand_all": args.expand_all,
+            "restore_state": True,
+        },
+        "inventory": inventory,
+        "audit": {
+            "operation": "inventory_project_tree",
+            "ui_mutation": "expand_collapse_only" if args.expand_all else "none",
+            "project_content_changed": False,
+            "plc_operations": "forbidden",
+        },
+    }
+    _emit(payload, args.output)
+    return 0 if inventory.complete and inventory.restoration_complete else 1
+
+
 def _cmd_scan_cjk(args: argparse.Namespace) -> int:
     report = scan_remaining_cjk(args.directory)
     _emit(report, args.output)
@@ -274,6 +330,22 @@ def _parser() -> argparse.ArgumentParser:
     inventory.add_argument("--env-file")
     inventory.add_argument("--output")
     inventory.set_defaults(handler=_cmd_inventory_ui)
+
+    project_tree = subparsers.add_parser(
+        "inventory-project-tree",
+        help="inventory the KV STUDIO project tree with reversible UIA expansion",
+    )
+    project_tree.add_argument("--config")
+    project_tree.add_argument("--env-file")
+    project_tree.add_argument("--output", required=True)
+    project_tree.add_argument("--expand-all", action="store_true")
+    project_tree.add_argument("--apply", action="store_true")
+    project_tree.add_argument("--checkpoint")
+    project_tree.add_argument("--max-depth", type=int, default=64)
+    project_tree.add_argument("--max-items", type=int, default=50_000)
+    project_tree.add_argument("--max-expansions", type=int, default=2_000)
+    project_tree.add_argument("--timeout-seconds", type=float, default=120.0)
+    project_tree.set_defaults(handler=_cmd_inventory_project_tree)
 
     scan = subparsers.add_parser("scan-cjk", help="scan safe text exports for CJK text")
     scan.add_argument("directory")

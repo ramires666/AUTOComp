@@ -40,6 +40,40 @@ class WindowSnapshot:
 
 
 @dataclass(frozen=True, slots=True)
+class ProjectTreeNodeSnapshot:
+    """One project-tree node captured with its full logical hierarchy."""
+
+    name: str
+    path: tuple[str, ...]
+    depth: int
+    sibling_index: int
+    locator: tuple[int, ...]
+    initial_expansion_state: str = "unknown"
+    expanded_for_inventory: bool = False
+    visible: bool = False
+    truncated: bool = False
+    children: tuple[ProjectTreeNodeSnapshot, ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
+class ProjectTreeInventory:
+    """Bounded, reversible inventory of KV STUDIO's native project tree."""
+
+    window_title: str
+    process_id: int
+    automation_id: str
+    item_count: int
+    expanded_count: int
+    restored_count: int
+    restore_requested: bool
+    complete: bool = True
+    restoration_complete: bool = True
+    truncated: bool = False
+    warnings: tuple[str, ...] = ()
+    roots: tuple[ProjectTreeNodeSnapshot, ...] = ()
+
+
+@dataclass(frozen=True, slots=True)
 class ActionRequest:
     """A request that cannot encode shell commands, keys, or arbitrary clicks."""
 

@@ -122,6 +122,24 @@ Capture a read-only UI Automation inventory while KV STUDIO is open:
 autocomp inventory-ui --config config.local.json --output reports\uia.json
 ```
 
+Capture the complete logical project tree by temporarily expanding collapsed
+branches and restoring their original state:
+
+```powershell
+autocomp inventory-project-tree `
+  --config config.local.json `
+  --env-file .env `
+  --expand-all --apply `
+  --checkpoint 01-project-tree-expanded `
+  --output reports\01-project-tree-expanded.json
+```
+
+This command uses only the UI Automation expand/collapse pattern. It does not
+click, type, edit project content, or perform PLC operations. Treat exit code
+`1`, `complete: false`, or `restoration_complete: false` as an incomplete run.
+See [the project-tree inventory guide](docs/project-tree-inventory.md) for the
+Windows pilot requirements and report fields.
+
 Run the authenticated worker on loopback. Use an SSH/VPN tunnel from the GPU
 computer rather than exposing this plain HTTP endpoint directly to the LAN:
 

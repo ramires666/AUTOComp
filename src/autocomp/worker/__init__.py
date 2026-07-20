@@ -1,6 +1,13 @@
 """Safe, offline-only Windows UI automation primitives for KV STUDIO."""
 
-from .models import ActionRequest, ActionResult, ControlSnapshot, WindowSnapshot
+from .models import (
+    ActionRequest,
+    ActionResult,
+    ControlSnapshot,
+    ProjectTreeInventory,
+    ProjectTreeNodeSnapshot,
+    WindowSnapshot,
+)
 from .service import KVStudioWorker
 
 __all__ = [
@@ -8,5 +15,7 @@ __all__ = [
     "ActionResult",
     "ControlSnapshot",
     "KVStudioWorker",
+    "ProjectTreeInventory",
+    "ProjectTreeNodeSnapshot",
     "WindowSnapshot",
 ]
