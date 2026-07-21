@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from autocomp.cli import CliError, _emit, _load_inventory, main
+from autocomp.cli import CliError, _emit, _load_inventory, _parser, main
 from autocomp.translation.models import InventoryRecord, RiskLevel, TextKind
 
 
@@ -126,3 +126,24 @@ def test_extract_project_tree_command_writes_inventory(tmp_path, monkeypatch) ->
     inventory = json.loads(output.read_text(encoding="utf-8"))
     assert captured == {"payload": {"source": True}, "source_name": "tree.json"}
     assert inventory[0]["source_text"] == "报警"
+
+
+def test_worker_serve_requires_explicit_audit_destination() -> None:
+    parser = _parser()
+    with pytest.raises(SystemExit):
+        parser.parse_args(["worker-serve"])
+
+    args = parser.parse_args(
+        [
+            "worker-serve",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            "8765",
+            "--audit-log",
+            ".autocomp/worker-audit.jsonl",
+        ]
+    )
+    assert args.host == "127.0.0.1"
+    assert args.audit_log.endswith("worker-audit.jsonl")
+    assert args.allow_remote is False

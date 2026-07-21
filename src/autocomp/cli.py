@@ -168,6 +168,7 @@ def _cmd_doctor(args: argparse.Namespace) -> int:
         "llm_model": config.llm.model,
         "llm_api_key_configured": config.llm.api_key is not None,
         "worker_token_configured": config.worker_token is not None,
+        "worker_endpoint": config.worker.endpoint,
         "translation_target_language": config.translation.target_language,
         "translation_context_configured": bool(config.translation.project_context.strip()),
     }
@@ -317,13 +318,16 @@ def _cmd_worker_serve(args: argparse.Namespace) -> int:
     config = load_config(args.config, args.env_file)
     adapter = PywinautoKVStudioAdapter(config.kv_studio.window_title_pattern)
     server = WorkerHttpServer(
-        KVStudioWorker(adapter),
+        KVStudioWorker(adapter, apply_enabled=config.safety.apply_enabled),
         token=config.worker_token,
-        host="127.0.0.1",
+        host=args.host,
         port=args.port,
+        allow_remote=args.allow_remote,
+        audit_log_path=args.audit_log,
     )
     address, port = server.server_address
-    sys.stdout.write(f"AUTOComp read-only worker listening on http://{address}:{port}\n")
+    mode = "remote-enabled" if args.allow_remote else "loopback"
+    sys.stdout.write(f"AUTOComp KV worker ({mode}) listening on http://{address}:{port}\n")
     sys.stdout.flush()
     try:
         server.serve_forever()
@@ -426,11 +430,23 @@ def _parser() -> argparse.ArgumentParser:
     translate.set_defaults(handler=_cmd_translate)
 
     worker_serve = subparsers.add_parser(
-        "worker-serve", help="serve authenticated read-only UI inventory on loopback"
+        "worker-serve",
+        help="serve authenticated, audited allowlisted KV STUDIO UI actions",
     )
     worker_serve.add_argument("--config")
     worker_serve.add_argument("--env-file")
+    worker_serve.add_argument("--host", default="127.0.0.1")
     worker_serve.add_argument("--port", type=int, default=8765)
+    worker_serve.add_argument(
+        "--audit-log",
+        required=True,
+        help="append-only JSONL audit destination required for worker actions",
+    )
+    worker_serve.add_argument(
+        "--allow-remote",
+        action="store_true",
+        help="explicitly allow binding to a non-loopback IP (token and firewall required)",
+    )
     worker_serve.set_defaults(handler=_cmd_worker_serve)
     return parser
 

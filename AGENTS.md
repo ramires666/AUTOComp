@@ -17,6 +17,9 @@ Build a local-first automation tool that inventories and translates user-owned t
 - Default to dry-run. Mutating commands require an explicit apply mode and a named checkpoint.
 - Never connect to, monitor, write to, or transfer data to a PLC. The automation must operate in editor/offline mode.
 - The UI worker must allowlist KV STUDIO windows and operations. The model must never receive arbitrary shell execution capability.
+- The remote worker binds to loopback by default. On a trusted isolated LAN or VMware host-only network, direct HTTP is allowed with explicit non-loopback opt-in and a bearer token; SSH and extra firewall setup are optional. Do not expose it through router port forwarding or a public interface.
+- Every remote mutation requires global apply enablement, an explicit per-request apply flag, a named checkpoint, an exact structured tree locator/path/source precondition, and a durable intent audit record before UI input.
+- Rename operations must verify the resulting text and automatically attempt rollback to the exact source text after partial, truncated, normalized, or otherwise failed edits.
 - Preserve an audit log and a reversible source-to-target translation manifest.
 - Treat program names, identifiers, protocol strings, paths, filenames, and external integration keys as higher-risk than comments.
 - Verify after every batch. Ladder instructions, operands, and addresses must remain unchanged unless a future user request explicitly authorizes logic changes.

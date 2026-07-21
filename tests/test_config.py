@@ -12,6 +12,7 @@ _ENV_NAMES = (
     "AUTOCOMP_LLM_MODEL",
     "AUTOCOMP_LLM_API_KEY",
     "AUTOCOMP_WORKER_TOKEN",
+    "AUTOCOMP_WORKER_ENDPOINT",
 )
 
 
@@ -26,6 +27,7 @@ def test_safe_defaults_are_dry_run() -> None:
     assert config.safety.forbid_online_operations is True
     assert config.kv_studio.expected_version == "11.62"
     assert config.translation.target_language == "English"
+    assert config.worker.endpoint == "http://127.0.0.1:8765"
 
 
 def test_translation_project_context_is_loaded_and_validated(tmp_path) -> None:
@@ -103,6 +105,39 @@ def test_process_environment_overrides_dotenv(tmp_path, monkeypatch) -> None:
     config = load_config(env_path=tmp_path / ".env")
 
     assert config.llm.endpoint == "http://127.0.0.1:9090/v1"
+
+
+def test_worker_endpoint_is_loaded_from_dotenv(tmp_path, monkeypatch) -> None:
+    _clear_autocomp_environment(monkeypatch)
+    env_path = tmp_path / ".env"
+    env_path.write_text(
+        "AUTOCOMP_WORKER_ENDPOINT=http://192.0.2.10:8765\n"
+        "AUTOCOMP_WORKER_TOKEN=0123456789abcdef0123456789abcdef\n",
+        encoding="utf-8",
+    )
+
+    config = load_config(env_path=env_path)
+
+    assert config.worker.endpoint == "http://192.0.2.10:8765"
+    assert config.worker_token == "0123456789abcdef0123456789abcdef"
+
+
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "file:///worker",
+        "http://user:secret@127.0.0.1:8765",
+        "http://127.0.0.1:8765/v1",
+        "http://127.0.0.1:8765?token=secret",
+    ],
+)
+def test_worker_endpoint_rejects_unsafe_values(endpoint, tmp_path, monkeypatch) -> None:
+    _clear_autocomp_environment(monkeypatch)
+    env_path = tmp_path / ".env"
+    env_path.write_text(f"AUTOCOMP_WORKER_ENDPOINT={endpoint}\n", encoding="utf-8")
+
+    with pytest.raises(ConfigError, match="worker.endpoint"):
+        load_config(env_path=env_path)
 
 
 def test_explicit_missing_env_file_is_rejected(tmp_path) -> None:

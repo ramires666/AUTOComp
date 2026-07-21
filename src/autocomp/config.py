@@ -14,6 +14,7 @@ DEFAULT_LLM_API_KEY_ENV = "AUTOCOMP_LLM_API_KEY"
 LLM_ENDPOINT_ENV = "AUTOCOMP_LLM_ENDPOINT"
 LLM_MODEL_ENV = "AUTOCOMP_LLM_MODEL"
 WORKER_TOKEN_ENV = "AUTOCOMP_WORKER_TOKEN"
+WORKER_ENDPOINT_ENV = "AUTOCOMP_WORKER_ENDPOINT"
 _ENV_NAME_RE = re.compile(r"^[A-Z_][A-Z0-9_]*$")
 _MAX_ENV_FILE_BYTES = 64 * 1024
 
@@ -115,11 +116,29 @@ class TranslationConfig:
 
 
 @dataclass(frozen=True, slots=True)
+class WorkerConfig:
+    endpoint: str = "http://127.0.0.1:8765"
+    timeout_seconds: float = 30.0
+
+    def validate(self) -> None:
+        parsed = urlparse(self.endpoint)
+        if parsed.scheme not in {"http", "https"} or not parsed.hostname:
+            raise ConfigError("worker.endpoint must be an absolute HTTP(S) URL")
+        if parsed.username or parsed.password or parsed.query or parsed.fragment:
+            raise ConfigError("worker.endpoint must not contain credentials, query, or fragment")
+        if parsed.path not in {"", "/"}:
+            raise ConfigError("worker.endpoint must not contain a path")
+        if not 1 <= self.timeout_seconds <= 300:
+            raise ConfigError("worker.timeout_seconds must be between 1 and 300")
+
+
+@dataclass(frozen=True, slots=True)
 class RuntimeConfig:
     llm: LlmConfig = field(default_factory=LlmConfig)
     kv_studio: KvStudioConfig = field(default_factory=KvStudioConfig)
     safety: SafetyConfig = field(default_factory=SafetyConfig)
     translation: TranslationConfig = field(default_factory=TranslationConfig)
+    worker: WorkerConfig = field(default_factory=WorkerConfig)
     _secrets: _SecretValues = field(
         default_factory=lambda: _SecretValues(None, None),
         repr=False,
@@ -131,6 +150,7 @@ class RuntimeConfig:
         self.kv_studio.validate()
         self.safety.validate()
         self.translation.validate()
+        self.worker.validate()
 
     @property
     def worker_token(self) -> str | None:
@@ -231,6 +251,9 @@ def load_config(
         raise ConfigError("llm API keys must be stored in .env, not JSON")
     if "api_key_env" in llm_data and llm_data.pop("api_key_env") != DEFAULT_LLM_API_KEY_ENV:
         raise ConfigError(f"llm.api_key_env may only be {DEFAULT_LLM_API_KEY_ENV}")
+    worker_data = dict(_section(raw, "worker"))
+    if "token" in worker_data or "worker_token" in worker_data:
+        raise ConfigError("worker tokens must be stored in .env, not JSON")
 
     resolved_env_path = None
     if env_path is not None:
@@ -241,6 +264,7 @@ def load_config(
         LLM_ENDPOINT_ENV,
         LLM_MODEL_ENV,
         WORKER_TOKEN_ENV,
+        WORKER_ENDPOINT_ENV,
         DEFAULT_LLM_API_KEY_ENV,
     }
     file_environment = (
@@ -259,6 +283,8 @@ def load_config(
         llm_data["endpoint"] = environment[LLM_ENDPOINT_ENV]
     if LLM_MODEL_ENV in environment:
         llm_data["model"] = environment[LLM_MODEL_ENV]
+    if WORKER_ENDPOINT_ENV in environment:
+        worker_data["endpoint"] = environment[WORKER_ENDPOINT_ENV]
 
     secrets = _SecretValues(
         _validate_secret(environment.get(DEFAULT_LLM_API_KEY_ENV), DEFAULT_LLM_API_KEY_ENV),
@@ -271,6 +297,7 @@ def load_config(
             kv_studio=KvStudioConfig(**_section(raw, "kv_studio")),
             safety=SafetyConfig(**_section(raw, "safety")),
             translation=TranslationConfig(**_section(raw, "translation")),
+            worker=WorkerConfig(**worker_data),
             _secrets=secrets,
         )
     except TypeError as exc:

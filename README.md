@@ -173,15 +173,24 @@ example, `Port0`, `MQTT:4G`, dates, arrows, station numbers, and device addresse
 must survive exactly. This output is a proposal for review, not authorization
 for the UI worker to rename project nodes.
 
-Run the authenticated worker on loopback. Use an SSH/VPN tunnel from the GPU
-computer rather than exposing this plain HTTP endpoint directly to the LAN:
+Run the authenticated worker on loopback by default:
 
 ```powershell
-autocomp worker-serve --config config.local.json --port 8765
+autocomp worker-serve `
+  --config config.local.json `
+  --port 8765 `
+  --audit-log .autocomp\worker-audit.jsonl
 ```
 
 Equivalent deployment helpers are provided in `scripts\install-worker.ps1` and
-`scripts\start-worker.ps1`.
+`scripts\start-worker.ps1`. On a trusted LAN or VMware host-only network, start
+the remote worker with `start-worker.ps1 -ListenAddress 0.0.0.0 -AllowRemote`
+and use `-AllowLanHttp` for controller calls. SSH is an optional alternative;
+both modes are described in [the remote worker guide](docs/remote-worker.md).
+The controller script exposes
+health, capabilities, status, inventory, full-tree inventory, and guarded
+name-limit probes and single-item rename operations; it has no raw action or
+shell mode.
 
 Hash an untouched project copy:
 

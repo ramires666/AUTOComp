@@ -10,7 +10,9 @@ from .models import (
     ControlSnapshot,
     ProjectTreeInventory,
     ProjectTreeNodeSnapshot,
+    TreeItemRenameResult,
     WindowSnapshot,
+    WindowState,
 )
 
 _EXPANSION_STATES = {
@@ -27,6 +29,9 @@ class KVStudioAdapter(Protocol):
     def discover(self) -> tuple[WindowSnapshot, ...]:
         """Return only KV STUDIO 11.62 windows."""
 
+    def status(self) -> WindowState:
+        """Return state for the single allowlisted local editor without changing it."""
+
     def expand_tree_item(self, target_path: tuple[str, ...]) -> bool:
         """Expand a tree item in the already allowlisted local editor window."""
 
@@ -34,6 +39,16 @@ class KVStudioAdapter(Protocol):
         self, *, expand_all: bool, restore_state: bool
     ) -> ProjectTreeInventory:
         """Inventory the native project tree with optional reversible expansion."""
+
+    def rename_tree_item(
+        self,
+        *,
+        locator: tuple[int, ...],
+        expected_path: tuple[str, ...],
+        expected_source: str,
+        target: str,
+    ) -> TreeItemRenameResult:
+        """Rename exactly one pinned tree item and roll back on failed verification."""
 
 
 class FakeKVStudioAdapter:
@@ -45,9 +60,16 @@ class FakeKVStudioAdapter:
         self.project_tree_inventory = ProjectTreeInventory(
             "KV STUDIO", 0, "ProjectTreeView", 0, 0, 0, True
         )
+        self.window_state = WindowState("KV STUDIO", 0, False, True, True, True)
+        self.tree_items: dict[tuple[int, ...], tuple[str, ...]] = {}
+        self.rename_calls: list[dict[str, object]] = []
+        self.rename_failure_after_write = False
 
     def discover(self) -> tuple[WindowSnapshot, ...]:
         return self.windows
+
+    def status(self) -> WindowState:
+        return self.window_state
 
     def expand_tree_item(self, target_path: tuple[str, ...]) -> bool:
         self.expanded_paths.append(target_path)
@@ -59,12 +81,48 @@ class FakeKVStudioAdapter:
         del expand_all, restore_state
         return self.project_tree_inventory
 
+    def rename_tree_item(
+        self,
+        *,
+        locator: tuple[int, ...],
+        expected_path: tuple[str, ...],
+        expected_source: str,
+        target: str,
+    ) -> TreeItemRenameResult:
+        self.rename_calls.append(
+            {
+                "locator": locator,
+                "expected_path": expected_path,
+                "expected_source": expected_source,
+                "target": target,
+            }
+        )
+        actual_path = self.tree_items.get(locator)
+        if actual_path != expected_path or not actual_path or actual_path[-1] != expected_source:
+            actual = actual_path[-1] if actual_path else ""
+            return TreeItemRenameResult(False, actual, actual, error="source precondition failed")
+        new_path = (*actual_path[:-1], target)
+        self.tree_items[locator] = new_path
+        if self.rename_failure_after_write:
+            self.tree_items[locator] = actual_path
+            return TreeItemRenameResult(
+                False,
+                expected_source,
+                expected_source,
+                rollback_attempted=True,
+                rollback_succeeded=True,
+                error="post-rename verification failed",
+            )
+        return TreeItemRenameResult(True, expected_source, target)
+
 
 class PywinautoKVStudioAdapter:
-    """Read-only discovery scaffold for a locally running KV STUDIO 11.62.
+    """Allowlisted offline UI adapter for a locally running KV STUDIO 11.62.
 
     ``pywinauto`` is imported only inside methods so non-Windows inventory and
-    translation workflows can import this package safely.
+    translation workflows can import this package safely. The only text mutation
+    primitive is an exact, verified ProjectTreeView rename with automatic rollback;
+    this adapter exposes no PLC, shell, arbitrary-window, or arbitrary-key APIs.
     """
 
     def __init__(
@@ -114,6 +172,24 @@ class PywinautoKVStudioAdapter:
                 )
             )
         return tuple(snapshots)
+
+    def status(self) -> WindowState:
+        """Inspect, but never restore or focus, the single allowlisted editor."""
+        windows = self._allowed_windows()
+        if not windows:
+            raise RuntimeError("KV STUDIO editor window was not found")
+        if len(windows) > 1:
+            raise RuntimeError("multiple KV STUDIO windows were found; keep one editor open")
+        window = windows[0]
+        project_tree_available = self._project_trees(window) != ()
+        return WindowState(
+            title=window.window_text(),
+            process_id=int(window.process_id()),
+            minimized=self._is_minimized(window),
+            enabled=bool(window.is_enabled()),
+            visible=bool(window.is_visible()),
+            project_tree_available=project_tree_available,
+        )
 
     def expand_tree_item(self, target_path: tuple[str, ...]) -> bool:
         """Scaffold only: tree expansion is intentionally not implemented yet."""
@@ -167,10 +243,7 @@ class PywinautoKVStudioAdapter:
                 )
         except Exception as exc:
             truncated[0] = True
-            warnings.append(
-                "project-tree traversal failed: "
-                f"{type(exc).__name__}: {exc}"
-            )
+            warnings.append(f"project-tree traversal failed: {type(exc).__name__}: {exc}")
         finally:
             if restore_state:
                 restoration_tree = tree
@@ -208,24 +281,109 @@ class PywinautoKVStudioAdapter:
             roots=roots,
         )
 
+    def rename_tree_item(
+        self,
+        *,
+        locator: tuple[int, ...],
+        expected_path: tuple[str, ...],
+        expected_source: str,
+        target: str,
+    ) -> TreeItemRenameResult:
+        """Perform one exact, verified edit inside ``ProjectTreeView`` only."""
+        before = ""
+        after = ""
+        rollback_attempted = False
+        rollback_succeeded = False
+        expanded: list[object] = []
+        result: TreeItemRenameResult
+        try:
+            window, tree = self._find_project_tree()
+            window_identity = (window.window_text(), int(window.process_id()))
+            self._restore_and_focus_editor(window)
+            item = self._resolve_tree_item_for_edit(
+                tree,
+                locator,
+                expected_path,
+                expanded=expanded,
+            )
+            before = item.window_text().strip()
+            if before != expected_source or expected_path[-1] != expected_source:
+                result = TreeItemRenameResult(
+                    False,
+                    before,
+                    before,
+                    error="source precondition failed",
+                )
+            else:
+                self._commit_tree_item_text(window, tree, item, target)
+                current = self._wait_for_tree_text(
+                    tree,
+                    locator,
+                    target,
+                    expanded=expanded,
+                    timeout_seconds=2.0,
+                )
+                after = current.window_text().strip()
+                result = TreeItemRenameResult(True, before, after)
+        except Exception as exc:
+            error = f"{type(exc).__name__}: {exc}"
+            try:
+                if "tree" in locals():
+                    try:
+                        current = self._resolve_tree_item_by_index(tree, locator, expanded=expanded)
+                    except Exception:
+                        window, tree = self._find_project_tree()
+                        if (window.window_text(), int(window.process_id())) != window_identity:
+                            raise RuntimeError(
+                                "KV STUDIO window identity changed before rollback"
+                            ) from None
+                        current = self._resolve_tree_item_by_index(tree, locator, expanded=expanded)
+                    after = current.window_text().strip()
+                    if before == expected_source and after != expected_source:
+                        rollback_attempted = True
+                        self._commit_tree_item_text(window, tree, current, expected_source)
+                        restored = self._wait_for_tree_text(
+                            tree,
+                            locator,
+                            expected_source,
+                            expanded=expanded,
+                            timeout_seconds=2.0,
+                        )
+                        after = restored.window_text().strip()
+                        rollback_succeeded = after == expected_source
+            except Exception as rollback_exc:
+                error = f"{error}; rollback failed: {type(rollback_exc).__name__}: {rollback_exc}"
+            result = TreeItemRenameResult(
+                False,
+                before,
+                after,
+                rollback_attempted=rollback_attempted,
+                rollback_succeeded=rollback_succeeded,
+                error=error,
+            )
+        restoration_errors: list[str] = []
+        for control in reversed(tuple(dict.fromkeys(expanded))):
+            try:
+                self._collapse_and_verify(control)
+            except Exception as exc:
+                restoration_errors.append(f"{type(exc).__name__}: {exc}")
+        if restoration_errors:
+            suffix = "expansion-state restoration failed: " + "; ".join(restoration_errors)
+            error = f"{result.error}; {suffix}" if result.error else suffix
+            result = TreeItemRenameResult(
+                result.performed,
+                result.before,
+                result.after,
+                result.rollback_attempted,
+                result.rollback_succeeded,
+                error,
+            )
+        return result
+
     def _find_project_tree(self):  # type: ignore[no-untyped-def]
         matches: list[tuple[object, object]] = []
-        for window in self._desktop().windows():
-            title = window.window_text()
-            if not self._is_allowed_title(title):
-                continue
-            try:
-                descendants = window.descendants(control_type="Tree")
-            except Exception:
-                continue
-            for candidate in descendants:
-                if str(candidate.element_info.automation_id or "") == "ProjectTreeView":
-                    class_name = str(getattr(candidate.element_info, "class_name", "") or "")
-                    window_pid = int(window.process_id())
-                    tree_pid = int(getattr(candidate.element_info, "process_id", 0) or 0)
-                    same_process = tree_pid in {0, window_pid}
-                    if "SysTreeView32" in class_name and same_process:
-                        matches.append((window, candidate))
+        for window in self._allowed_windows():
+            matches.extend((window, tree) for tree in self._project_trees(window))
         if not matches:
             raise RuntimeError(
                 "KV STUDIO ProjectTreeView was not found; restore the editor window "
@@ -234,6 +392,157 @@ class PywinautoKVStudioAdapter:
         if len(matches) > 1:
             raise RuntimeError("multiple KV STUDIO project trees were found; keep one editor open")
         return matches[0]
+
+    def _allowed_windows(self) -> tuple[object, ...]:
+        return tuple(
+            window
+            for window in self._desktop().windows()
+            if self._is_allowed_title(window.window_text())
+        )
+
+    @staticmethod
+    def _project_trees(window) -> tuple[object, ...]:  # type: ignore[no-untyped-def]
+        try:
+            descendants = window.descendants(control_type="Tree")
+        except Exception:
+            return ()
+        matches: list[object] = []
+        for candidate in descendants:
+            if str(candidate.element_info.automation_id or "") != "ProjectTreeView":
+                continue
+            class_name = str(getattr(candidate.element_info, "class_name", "") or "")
+            window_pid = int(window.process_id())
+            tree_pid = int(getattr(candidate.element_info, "process_id", 0) or 0)
+            if "SysTreeView32" in class_name and tree_pid in {0, window_pid}:
+                matches.append(candidate)
+        return tuple(matches)
+
+    @staticmethod
+    def _is_minimized(window) -> bool:  # type: ignore[no-untyped-def]
+        try:
+            return bool(window.is_minimized())
+        except Exception:
+            try:
+                return int(window.get_show_state()) == 2
+            except Exception:
+                return False
+
+    def _restore_and_focus_editor(self, window) -> None:  # type: ignore[no-untyped-def]
+        title = window.window_text()
+        process_id = int(window.process_id())
+        if not self._is_allowed_title(title):
+            raise RuntimeError("refusing to activate a non-KV STUDIO window")
+        if self._is_minimized(window):
+            window.restore()
+        window.set_focus()
+        if int(window.process_id()) != process_id or window.window_text() != title:
+            raise RuntimeError("KV STUDIO window identity changed during activation")
+
+    def _resolve_tree_item_for_edit(
+        self,
+        tree,
+        locator: tuple[int, ...],
+        expected_path: tuple[str, ...],
+        *,
+        expanded: list[object],
+    ):  # type: ignore[no-untyped-def]
+        if not locator or len(locator) != len(expected_path):
+            raise RuntimeError("tree locator and expected path must have equal non-zero depth")
+        current = tree
+        for sibling_index, expected_name in zip(locator, expected_path, strict=True):
+            if current is not tree and self._expand_state(current) == "collapsed":
+                current.expand()
+                if not self._wait_for_state(current, {"expanded"}, timeout_seconds=0.5):
+                    raise RuntimeError("tree ancestor could not be expanded")
+                expanded.append(current)
+            children = self._tree_item_children(current)
+            if sibling_index >= len(children):
+                raise RuntimeError("project-tree locator no longer exists")
+            current = children[sibling_index]
+            if current.window_text().strip() != expected_name:
+                raise RuntimeError("project-tree locator identity changed")
+        return current
+
+    def _resolve_tree_item_by_index(
+        self,
+        tree,
+        locator: tuple[int, ...],
+        *,
+        expanded: list[object],
+    ):  # type: ignore[no-untyped-def]
+        if not locator:
+            raise RuntimeError("tree locator cannot be empty")
+        current = tree
+        for sibling_index in locator:
+            if current is not tree and self._expand_state(current) == "collapsed":
+                current.expand()
+                if not self._wait_for_state(current, {"expanded"}, timeout_seconds=0.5):
+                    raise RuntimeError("tree ancestor could not be expanded")
+                expanded.append(current)
+            children = self._tree_item_children(current)
+            if sibling_index >= len(children):
+                raise RuntimeError("project-tree locator no longer exists")
+            current = children[sibling_index]
+        return current
+
+    def _wait_for_tree_text(
+        self,
+        tree,
+        locator: tuple[int, ...],
+        expected_text: str,
+        *,
+        expanded: list[object],
+        timeout_seconds: float,
+    ):  # type: ignore[no-untyped-def]
+        deadline = time.monotonic() + timeout_seconds
+        last_text = ""
+        while True:
+            current = self._resolve_tree_item_by_index(tree, locator, expanded=expanded)
+            last_text = current.window_text().strip()
+            if last_text == expected_text:
+                return current
+            if time.monotonic() >= deadline:
+                raise RuntimeError(
+                    "tree item text did not settle to the exact expected value; "
+                    f"actual={last_text!r}"
+                )
+            time.sleep(0.05)
+
+    def _commit_tree_item_text(self, window, tree, item, target: str) -> None:  # type: ignore[no-untyped-def]
+        """Use only KV's in-place TreeView editor and the fixed F2/Enter sequence."""
+        item.select()
+        item.type_keys("{F2}", set_foreground=False)
+        deadline = time.monotonic() + 2.0
+        while True:
+            edits: list[object] = []
+            for scope in (tree, window):
+                try:
+                    candidates = scope.descendants(control_type="Edit")
+                except Exception:
+                    continue
+                for candidate in candidates:
+                    info = candidate.element_info
+                    same_process = int(getattr(info, "process_id", 0) or 0) in {
+                        0,
+                        int(window.process_id()),
+                    }
+                    if same_process and candidate.is_visible() and candidate.is_enabled():
+                        edits.append(candidate)
+                if edits:
+                    break
+            unique = {
+                int(getattr(edit.element_info, "handle", 0) or id(edit)): edit for edit in edits
+            }
+            if len(unique) == 1:
+                edit = next(iter(unique.values()))
+                edit.set_edit_text(target)
+                edit.type_keys("{ENTER}", set_foreground=False)
+                return
+            if len(unique) > 1:
+                raise RuntimeError("multiple KV STUDIO in-place editors were found")
+            if time.monotonic() >= deadline:
+                raise RuntimeError("KV STUDIO in-place tree editor was not found")
+            time.sleep(0.05)
 
     def _crawl_project_node(
         self,
@@ -345,9 +654,7 @@ class PywinautoKVStudioAdapter:
         )
         if missing_expanded_children:
             truncated[0] = True
-            warnings.append(
-                "expanded tree item exposed no children: " f"{' > '.join(path)}"
-            )
+            warnings.append(f"expanded tree item exposed no children: {' > '.join(path)}")
         if node_truncated:
             truncated[0] = True
             children: tuple[ProjectTreeNodeSnapshot, ...] = ()
@@ -357,8 +664,7 @@ class PywinautoKVStudioAdapter:
                 if budget[0] <= 0 or time.monotonic() >= deadline:
                     truncated[0] = True
                     warnings.append(
-                        "project-tree inventory limit reached below: "
-                        f"{' > '.join(path)}"
+                        f"project-tree inventory limit reached below: {' > '.join(path)}"
                     )
                     break
                 child_nodes.append(
@@ -396,14 +702,10 @@ class PywinautoKVStudioAdapter:
     def _tree_item_children(control) -> tuple[object, ...]:  # type: ignore[no-untyped-def]
         children = control.children()
         return tuple(
-            child
-            for child in children
-            if str(child.element_info.control_type) == "TreeItem"
+            child for child in children if str(child.element_info.control_type) == "TreeItem"
         )
 
-    def _settled_tree_item_children(
-        self, control, *, deadline: float
-    ) -> tuple[object, ...]:  # type: ignore[no-untyped-def]
+    def _settled_tree_item_children(self, control, *, deadline: float) -> tuple[object, ...]:  # type: ignore[no-untyped-def]
         previous_identity: tuple[tuple[object, ...], ...] | None = None
         current: tuple[object, ...] = ()
         settle_deadline = min(
@@ -534,4 +836,11 @@ class PywinautoKVStudioAdapter:
         # The main editor title does not reliably contain the product version;
         # version 11.62 is validated separately by the doctor/probe workflow.
         browser_suffix = re.compile(r"(?:Microsoft\s*Edge|Google Chrome|Mozilla Firefox)$", re.I)
-        return bool(self._title_pattern.search(title)) and not browser_suffix.search(title)
+        product_marker = re.compile(r"\bKV STUDIO\b", re.I)
+        # Configuration may narrow the title match, but can never broaden it to
+        # non-KV windows.
+        return (
+            bool(product_marker.search(title))
+            and bool(self._title_pattern.search(title))
+            and not browser_suffix.search(title)
+        )

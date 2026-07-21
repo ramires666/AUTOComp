@@ -11,6 +11,9 @@
     "target_language": "English",
     "project_context": "This PLC project controls an automated precious-metal acceptance kiosk. A robotic arm moves trays and samples between coarse and precision weighing stations, an induction furnace melts gold and other precious metals, and an X-ray fluorescence (XRF) analyzer measures material composition for valuation. Use concise industrial-automation terminology."
   },
+  "worker": {
+    "timeout_seconds": 30
+  },
   "safety": {
     "apply_enabled": false,
     "require_checkpoint": true,
