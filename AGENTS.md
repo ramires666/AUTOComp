@@ -11,6 +11,8 @@
 
 Build a local-first automation tool that inventories and translates user-owned text in Chinese KV STUDIO 11.62 projects, applies changes through supported exports or the interactive Windows UI, and verifies that PLC program logic remains unchanged.
 
+- For the one-off live translation, intelligence and task state stay in the controller. The local VLM interprets screenshots and chooses the next step; the remote worker is only a constrained KV STUDIO screenshot/input executor (eyes and hands), not an autonomous planner.
+
 ## Safety requirements
 
 - Work on project copies only. Never overwrite the sole source project.

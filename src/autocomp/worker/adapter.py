@@ -14,6 +14,8 @@ from .models import (
     ProjectTreeNodeSnapshot,
     TreeItemMenuInspection,
     TreeItemRenameResult,
+    VisualInputOperation,
+    VisualSnapshot,
     WindowSnapshot,
     WindowState,
 )
@@ -65,6 +67,20 @@ class KVStudioAdapter(Protocol):
     ) -> TreeItemMenuInspection:
         """Open, snapshot, and close the context menu for one pinned tree item."""
 
+    def visual_snapshot(self) -> VisualSnapshot:
+        """Capture the unique KV editor client area."""
+
+    def visual_input(
+        self,
+        operation: VisualInputOperation,
+        *,
+        x: int | None,
+        y: int | None,
+        delta: int | None,
+        text: str,
+    ) -> bool:
+        """Send one constrained visual input to the unique KV editor."""
+
 
 class FakeKVStudioAdapter:
     """Deterministic adapter for tests; it has no OS or network side effects."""
@@ -79,6 +95,7 @@ class FakeKVStudioAdapter:
         self.tree_items: dict[tuple[int, ...], tuple[str, ...]] = {}
         self.rename_calls: list[dict[str, object]] = []
         self.menu_inspection_calls: list[dict[str, object]] = []
+        self.visual_input_calls: list[dict[str, object]] = []
         self.rename_failure_after_write = False
 
     def discover(self) -> tuple[WindowSnapshot, ...]:
@@ -159,6 +176,25 @@ class FakeKVStudioAdapter:
             complete=complete,
             warnings=() if complete else ("source precondition failed",),
         )
+
+    def visual_snapshot(self) -> VisualSnapshot:
+        return VisualSnapshot(
+            "iVBORw0KGgo=", (0, 0, 100, 80), (1, 2, 99, 78), 98, 76, 0, "KV STUDIO"
+        )
+
+    def visual_input(
+        self,
+        operation: VisualInputOperation,
+        *,
+        x: int | None,
+        y: int | None,
+        delta: int | None,
+        text: str,
+    ) -> bool:
+        self.visual_input_calls.append(
+            {"operation": operation, "x": x, "y": y, "delta": delta, "text": text}
+        )
+        return True
 
 
 class PywinautoKVStudioAdapter:
@@ -246,6 +282,162 @@ class PywinautoKVStudioAdapter:
             visible=self._safe_control_flag(window, "is_visible"),
             project_tree_available=bool(trees),
         )
+
+    def visual_snapshot(self) -> VisualSnapshot:
+        """Capture only the unique, visible KV editor's native client area."""
+        import base64
+        from io import BytesIO
+
+        window, _ = self._find_project_tree()
+        if self._is_minimized(window) or not window.is_visible():
+            raise RuntimeError("KV STUDIO must be visible and not minimized for a snapshot")
+        window_bounds, client_bounds = self._native_window_bounds(window)
+        image = window.capture_as_image()
+        left = client_bounds[0] - window_bounds[0]
+        top = client_bounds[1] - window_bounds[1]
+        right = left + client_bounds[2] - client_bounds[0]
+        bottom = top + client_bounds[3] - client_bounds[1]
+        client_image = image.crop((left, top, right, bottom))
+        stream = BytesIO()
+        client_image.save(stream, format="PNG")
+        return VisualSnapshot(
+            png_base64=base64.b64encode(stream.getvalue()).decode("ascii"),
+            window_bounds=window_bounds,
+            client_bounds=client_bounds,
+            width=int(client_image.width),
+            height=int(client_image.height),
+            process_id=int(window.process_id()),
+            window_title=window.window_text(),
+        )
+
+    def visual_input(
+        self,
+        operation: VisualInputOperation,
+        *,
+        x: int | None,
+        y: int | None,
+        delta: int | None,
+        text: str,
+    ) -> bool:
+        """Send one bounded input to the unique allowlisted KV editor window."""
+        window, _ = self._find_project_tree()
+        self._restore_and_focus_editor(window)
+        window_bounds, client_bounds = self._native_window_bounds(window)
+        coordinate_operations = {
+            VisualInputOperation.CLICK,
+            VisualInputOperation.RIGHT_CLICK,
+            VisualInputOperation.DOUBLE_CLICK,
+            VisualInputOperation.WHEEL,
+        }
+        relative: tuple[int, int] | None = None
+        if operation in coordinate_operations:
+            if x is None or y is None:
+                raise ValueError("visual coordinate operation requires x and y")
+            width = client_bounds[2] - client_bounds[0]
+            height = client_bounds[3] - client_bounds[1]
+            if not 0 <= x < width or not 0 <= y < height:
+                raise ValueError("visual coordinates are outside the KV STUDIO client area")
+            relative = (
+                client_bounds[0] + x - window_bounds[0],
+                client_bounds[1] + y - window_bounds[1],
+            )
+
+        if operation is VisualInputOperation.CLICK:
+            window.click_input(button="left", coords=relative)
+        elif operation is VisualInputOperation.RIGHT_CLICK:
+            window.click_input(button="right", coords=relative)
+        elif operation is VisualInputOperation.DOUBLE_CLICK:
+            window.double_click_input(button="left", coords=relative)
+        elif operation is VisualInputOperation.WHEEL:
+            if delta is None or delta == 0:
+                raise ValueError("wheel requires a non-zero delta")
+            window.wheel_mouse_input(wheel_dist=delta, coords=relative)
+        elif operation is VisualInputOperation.TYPE_TEXT:
+            self._paste_unicode_text(window, text)
+        else:
+            keys = {
+                VisualInputOperation.KEY_ENTER: "{ENTER}",
+                VisualInputOperation.KEY_ESCAPE: "{ESC}",
+                VisualInputOperation.KEY_F2: "{F2}",
+                VisualInputOperation.KEY_CTRL_A: "^a",
+            }
+            try:
+                key = keys[operation]
+            except KeyError as exc:
+                raise ValueError("unsupported visual input operation") from exc
+            window.type_keys(key, set_foreground=False)
+        return True
+
+    @staticmethod
+    def _paste_unicode_text(window, text: str) -> None:  # type: ignore[no-untyped-def]
+        if not text or any(ord(character) < 32 or ord(character) == 127 for character in text):
+            raise ValueError("visual text must be non-empty printable text")
+        import win32clipboard
+
+        previous: str | None = None
+        had_unicode = False
+        win32clipboard.OpenClipboard()
+        try:
+            had_unicode = bool(
+                win32clipboard.IsClipboardFormatAvailable(win32clipboard.CF_UNICODETEXT)
+            )
+            if had_unicode:
+                previous = win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
+            win32clipboard.EmptyClipboard()
+            win32clipboard.SetClipboardText(text, win32clipboard.CF_UNICODETEXT)
+        finally:
+            win32clipboard.CloseClipboard()
+        try:
+            window.type_keys("^v", set_foreground=False)
+        finally:
+            win32clipboard.OpenClipboard()
+            try:
+                win32clipboard.EmptyClipboard()
+                if had_unicode and previous is not None:
+                    win32clipboard.SetClipboardText(previous, win32clipboard.CF_UNICODETEXT)
+            finally:
+                win32clipboard.CloseClipboard()
+
+    @staticmethod
+    def _native_window_bounds(
+        window,
+    ) -> tuple[tuple[int, int, int, int], tuple[int, int, int, int]]:  # type: ignore[no-untyped-def]
+        import ctypes
+        from ctypes import wintypes
+
+        handle = int(getattr(window.element_info, "handle", 0) or 0)
+        if not handle:
+            raise RuntimeError("KV STUDIO window has no native handle")
+        window_rect = wintypes.RECT()
+        client_rect = wintypes.RECT()
+        top_left = wintypes.POINT(0, 0)
+        bottom_right = wintypes.POINT()
+        user32 = ctypes.windll.user32
+        if not user32.GetWindowRect(handle, ctypes.byref(window_rect)):
+            raise RuntimeError("could not read KV STUDIO window bounds")
+        if not user32.GetClientRect(handle, ctypes.byref(client_rect)):
+            raise RuntimeError("could not read KV STUDIO client bounds")
+        bottom_right.x = client_rect.right
+        bottom_right.y = client_rect.bottom
+        if not user32.ClientToScreen(handle, ctypes.byref(top_left)) or not user32.ClientToScreen(
+            handle, ctypes.byref(bottom_right)
+        ):
+            raise RuntimeError("could not map KV STUDIO client bounds to screen")
+        window_bounds = (
+            int(window_rect.left),
+            int(window_rect.top),
+            int(window_rect.right),
+            int(window_rect.bottom),
+        )
+        client_bounds = (
+            int(top_left.x),
+            int(top_left.y),
+            int(bottom_right.x),
+            int(bottom_right.y),
+        )
+        if client_bounds[2] <= client_bounds[0] or client_bounds[3] <= client_bounds[1]:
+            raise RuntimeError("KV STUDIO client area is empty")
+        return window_bounds, client_bounds
 
     def expand_tree_item(self, target_path: tuple[str, ...]) -> bool:
         """Scaffold only: tree expansion is intentionally not implemented yet."""

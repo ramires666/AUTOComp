@@ -167,10 +167,14 @@ def _audit_request(request: ActionRequest, *, request_id: str, phase: str) -> di
         "action": _bounded_text(kind),
         "apply": bool(getattr(request, "apply", False)),
     }
-    for field_name in ("checkpoint", "expected_source", "target"):
+    for field_name in ("checkpoint", "expected_source", "target", "operation", "text"):
         value = getattr(request, field_name, "")
         if value:
             record[field_name] = _bounded_text(value)
+    for field_name in ("x", "y", "delta"):
+        value = getattr(request, field_name, None)
+        if value is not None:
+            record[field_name] = value
     for field_name in ("target_path", "expected_path", "locator"):
         value = getattr(request, field_name, ())
         if value:
@@ -255,6 +259,8 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                 "PROBE_TREE_ITEM_RENAME",
                 "RENAME_TREE_ITEM",
                 "INSPECT_TREE_ITEM_MENU",
+                "VISUAL_SNAPSHOT",
+                "VISUAL_INPUT",
             )
             actions = [
                 member.value
@@ -269,6 +275,7 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                     "PROBE_TREE_ITEM_RENAME",
                     "RENAME_TREE_ITEM",
                     "INSPECT_TREE_ITEM_MENU",
+                    "VISUAL_INPUT",
                 )
                 if (member := getattr(ActionKind, name, None)) is not None
             ]

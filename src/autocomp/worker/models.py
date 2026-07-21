@@ -16,6 +16,20 @@ class ActionKind(StrEnum):
     RENAME_TREE_ITEM = "rename_tree_item"
     PROBE_TREE_ITEM_RENAME = "probe_tree_item_rename"
     INSPECT_TREE_ITEM_MENU = "inspect_tree_item_menu"
+    VISUAL_SNAPSHOT = "visual_snapshot"
+    VISUAL_INPUT = "visual_input"
+
+
+class VisualInputOperation(StrEnum):
+    CLICK = "click"
+    RIGHT_CLICK = "right_click"
+    DOUBLE_CLICK = "double_click"
+    WHEEL = "wheel"
+    TYPE_TEXT = "type_text"
+    KEY_ENTER = "key_enter"
+    KEY_ESCAPE = "key_escape"
+    KEY_F2 = "key_f2"
+    KEY_CTRL_A = "key_ctrl_a"
 
 
 @dataclass(frozen=True, slots=True)
@@ -99,6 +113,19 @@ class TreeItemMenuInspection:
 
 
 @dataclass(frozen=True, slots=True)
+class VisualSnapshot:
+    """PNG of the unique KV editor client area and its screen bounds."""
+
+    png_base64: str
+    window_bounds: tuple[int, int, int, int]
+    client_bounds: tuple[int, int, int, int]
+    width: int
+    height: int
+    process_id: int
+    window_title: str
+
+
+@dataclass(frozen=True, slots=True)
 class ProjectTreeNodeSnapshot:
     """One project-tree node captured with its full logical hierarchy."""
 
@@ -146,6 +173,11 @@ class ActionRequest:
     apply: bool = False
     expand_all: bool = False
     restore_state: bool = True
+    operation: VisualInputOperation | None = None
+    x: int | None = None
+    y: int | None = None
+    delta: int | None = None
+    text: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -164,6 +196,7 @@ class ActionResult:
     rollback_succeeded: bool = False
     window_state: WindowState | None = None
     tree_item_menu_inspection: TreeItemMenuInspection | None = None
+    visual_snapshot: VisualSnapshot | None = None
 
 
 def action_request_from_payload(payload: object) -> ActionRequest:
@@ -248,6 +281,11 @@ def action_request_from_payload(payload: object) -> ActionRequest:
                 "apply",
             },
         ),
+        ActionKind.VISUAL_SNAPSHOT: ({"action"}, {"action"}),
+        ActionKind.VISUAL_INPUT: (
+            {"action", "checkpoint", "operation", "x", "y", "delta", "text", "apply"},
+            {"action", "checkpoint", "operation", "apply"},
+        ),
     }
     allowed, required = schemas[kind]
     keys = set(payload)
@@ -274,6 +312,39 @@ def action_request_from_payload(payload: object) -> ActionRequest:
     apply = _payload_bool(payload.get("apply", False), "apply")
     expand_all = _payload_bool(payload.get("expand_all", False), "expand_all")
     restore_state = _payload_bool(payload.get("restore_state", True), "restore_state")
+    operation: VisualInputOperation | None = None
+    x: int | None = None
+    y: int | None = None
+    delta: int | None = None
+    text = ""
+    if kind is ActionKind.VISUAL_INPUT:
+        try:
+            operation = VisualInputOperation(payload.get("operation"))
+        except (TypeError, ValueError) as exc:
+            raise ValueError("unsupported visual input operation") from exc
+        coordinate_operations = {
+            VisualInputOperation.CLICK,
+            VisualInputOperation.RIGHT_CLICK,
+            VisualInputOperation.DOUBLE_CLICK,
+            VisualInputOperation.WHEEL,
+        }
+        required_fields = {"action", "checkpoint", "operation", "apply"}
+        if operation in coordinate_operations:
+            required_fields |= {"x", "y"}
+            x = _payload_integer(payload.get("x"), "x", minimum=0, maximum=100_000)
+            y = _payload_integer(payload.get("y"), "y", minimum=0, maximum=100_000)
+        if operation is VisualInputOperation.WHEEL:
+            required_fields.add("delta")
+            delta = _payload_integer(payload.get("delta"), "delta", minimum=-12_000, maximum=12_000)
+            if delta == 0:
+                raise ValueError("wheel delta must not be zero")
+        if operation is VisualInputOperation.TYPE_TEXT:
+            required_fields.add("text")
+            text = _payload_text(payload.get("text"), "text", maximum=4096)
+            if not text:
+                raise ValueError("text must not be empty")
+        if set(payload) != required_fields:
+            raise ValueError("visual input payload has missing or unexpected fields")
     return ActionRequest(
         kind=kind,
         checkpoint=checkpoint,
@@ -285,12 +356,29 @@ def action_request_from_payload(payload: object) -> ActionRequest:
         apply=apply,
         expand_all=expand_all,
         restore_state=restore_state,
+        operation=operation,
+        x=x,
+        y=y,
+        delta=delta,
+        text=text,
     )
 
 
 def _payload_bool(value: object, field_name: str) -> bool:
     if not isinstance(value, bool):
         raise ValueError(f"{field_name} must be a boolean")
+    return value
+
+
+def _payload_integer(
+    value: object,
+    field_name: str,
+    *,
+    minimum: int,
+    maximum: int,
+) -> int:
+    if not isinstance(value, int) or isinstance(value, bool) or value < minimum or value > maximum:
+        raise ValueError(f"{field_name} must be an integer from {minimum} to {maximum}")
     return value
 
 

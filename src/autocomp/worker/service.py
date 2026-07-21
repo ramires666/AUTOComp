@@ -42,6 +42,16 @@ class KVStudioWorker:
             return self._rename_tree_item(request, probe=True)
         if request.kind is ActionKind.INSPECT_TREE_ITEM_MENU:
             return self._inspect_tree_item_menu(request)
+        if request.kind is ActionKind.VISUAL_SNAPSHOT:
+            return ActionResult(
+                kind=request.kind,
+                performed=False,
+                message="KV STUDIO visual snapshot captured (read-only).",
+                audit={"mode": "dry-run", "operation": "visual_snapshot"},
+                visual_snapshot=self._adapter.visual_snapshot(),
+            )
+        if request.kind is ActionKind.VISUAL_INPUT:
+            return self._visual_input(request)
         raise ValueError(f"Unsupported UI action: {request.kind!r}")
 
     def _expand_tree_item(self, request: ActionRequest) -> ActionResult:
@@ -207,6 +217,35 @@ class KVStudioWorker:
                 "item_count": str(len(inspection.items)),
             },
             tree_item_menu_inspection=inspection,
+        )
+
+    def _visual_input(self, request: ActionRequest) -> ActionResult:
+        if request.operation is None:
+            raise ValueError("visual input operation is required")
+        if not request.apply:
+            return ActionResult(
+                kind=request.kind,
+                performed=False,
+                message="Dry-run: visual input was validated but not performed.",
+                audit={"mode": "dry-run", "operation": request.operation.value},
+            )
+        self._require_apply(request)
+        performed = self._adapter.visual_input(
+            request.operation,
+            x=request.x,
+            y=request.y,
+            delta=request.delta,
+            text=request.text,
+        )
+        return ActionResult(
+            kind=request.kind,
+            performed=performed,
+            message="Constrained KV STUDIO visual input performed.",
+            audit={
+                "mode": "apply",
+                "checkpoint": request.checkpoint,
+                "operation": request.operation.value,
+            },
         )
 
     def _require_apply(self, request: ActionRequest) -> None:
