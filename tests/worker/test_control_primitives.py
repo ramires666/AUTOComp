@@ -83,11 +83,49 @@ class _Window:
 
 
 class _Desktop:
-    def __init__(self, window: _Window) -> None:
-        self.window = window
+    def __init__(self, *windows: object) -> None:
+        self.windows_list = windows
 
-    def windows(self) -> list[_Window]:
-        return [self.window]
+    def windows(self) -> list[object]:
+        return list(self.windows_list)
+
+
+class _AuxiliaryWindow:
+    def window_text(self) -> str:
+        return "KV STUDIO - License"
+
+    def process_id(self) -> int:
+        return 77
+
+    def descendants(self, *, control_type: str) -> list[object]:
+        assert control_type == "Tree"
+        return []
+
+    def is_minimized(self) -> bool:
+        return False
+
+    def is_enabled(self) -> bool:
+        return True
+
+    def is_visible(self) -> bool:
+        return True
+
+
+class _FragileStateWindow(_Window):
+    def is_enabled(self) -> bool:
+        raise RuntimeError("stale UIA property")
+
+    def is_visible(self) -> bool:
+        raise RuntimeError("stale UIA property")
+
+
+class _StatusAdapter(PywinautoKVStudioAdapter):
+    def __init__(self, *windows: object) -> None:
+        super().__init__(expansion_settle_seconds=0)
+        self.windows = windows
+
+    def _desktop(self) -> _Desktop:
+        return _Desktop(*self.windows)
 
 
 class _DirectEditAdapter(PywinautoKVStudioAdapter):
@@ -142,11 +180,39 @@ def test_adapter_status_does_not_restore_or_focus_minimized_kv_window() -> None:
     assert status.project_tree_available is True
 
 
+def test_status_selects_unique_project_editor_and_ignores_auxiliary_kv_dialog() -> None:
+    editor = _Window(_Tree((_Node("Programs"),)))
+    adapter = _StatusAdapter(_AuxiliaryWindow(), editor)
+
+    status = adapter.status()
+
+    assert status.title == "Pilot Copy - KV STUDIO"
+    assert status.project_tree_available is True
+
+
+def test_status_survives_unavailable_secondary_uia_state_properties() -> None:
+    editor = _FragileStateWindow(_Tree((_Node("Programs"),)))
+    adapter = _StatusAdapter(editor)
+
+    status = adapter.status()
+
+    assert status.project_tree_available is True
+    assert status.enabled is False
+    assert status.visible is False
+
+
 def test_configured_title_pattern_cannot_broaden_allowlist_to_other_apps() -> None:
     adapter = PywinautoKVStudioAdapter(title_pattern=r".*")
 
     assert adapter._is_allowed_title("Pilot Copy - KV STUDIO") is True
     assert adapter._is_allowed_title("Windows PowerShell") is False
+
+
+def test_edge_title_with_zero_width_format_character_is_not_allowlisted() -> None:
+    adapter = PywinautoKVStudioAdapter()
+    edge_title = "KV STUDIO 用户支持 | Keyence — Профиль 1: Microsoft\u200b Edge"
+
+    assert adapter._is_allowed_title(edge_title) is False
 
 
 def test_adapter_renames_only_when_full_indexed_path_matches() -> None:

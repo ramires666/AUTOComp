@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 import time
+import unicodedata
 from typing import Protocol
 
 from .models import (
@@ -174,21 +175,34 @@ class PywinautoKVStudioAdapter:
         return tuple(snapshots)
 
     def status(self) -> WindowState:
-        """Inspect, but never restore or focus, the single allowlisted editor."""
+        """Inspect, but never restore or focus, the primary allowlisted editor."""
         windows = self._allowed_windows()
         if not windows:
             raise RuntimeError("KV STUDIO editor window was not found")
-        if len(windows) > 1:
-            raise RuntimeError("multiple KV STUDIO windows were found; keep one editor open")
-        window = windows[0]
-        project_tree_available = self._project_trees(window) != ()
+        with_project_tree = tuple(
+            (window, trees)
+            for window in windows
+            if (trees := self._project_trees(window))
+        )
+        if len(with_project_tree) > 1:
+            raise RuntimeError(
+                "multiple KV STUDIO project editors were found; keep one project open"
+            )
+        if with_project_tree:
+            window, trees = with_project_tree[0]
+        elif len(windows) == 1:
+            window, trees = windows[0], ()
+        else:
+            raise RuntimeError(
+                "multiple KV STUDIO windows were found but no unique project editor exists"
+            )
         return WindowState(
             title=window.window_text(),
             process_id=int(window.process_id()),
             minimized=self._is_minimized(window),
-            enabled=bool(window.is_enabled()),
-            visible=bool(window.is_visible()),
-            project_tree_available=project_tree_available,
+            enabled=self._safe_control_flag(window, "is_enabled"),
+            visible=self._safe_control_flag(window, "is_visible"),
+            project_tree_available=bool(trees),
         )
 
     def expand_tree_item(self, target_path: tuple[str, ...]) -> bool:
@@ -394,11 +408,24 @@ class PywinautoKVStudioAdapter:
         return matches[0]
 
     def _allowed_windows(self) -> tuple[object, ...]:
-        return tuple(
-            window
-            for window in self._desktop().windows()
-            if self._is_allowed_title(window.window_text())
-        )
+        matches: list[object] = []
+        for window in self._desktop().windows():
+            try:
+                if self._is_allowed_title(window.window_text()):
+                    matches.append(window)
+            except Exception:
+                # A transient/stale UIA top-level wrapper must not hide the live
+                # allowlisted KV editor from a read-only status request.
+                continue
+        return tuple(matches)
+
+    @staticmethod
+    def _safe_control_flag(control, method_name: str) -> bool:  # type: ignore[no-untyped-def]
+        try:
+            method = getattr(control, method_name)
+            return bool(method())
+        except Exception:
+            return False
 
     @staticmethod
     def _project_trees(window) -> tuple[object, ...]:  # type: ignore[no-untyped-def]
@@ -837,10 +864,15 @@ class PywinautoKVStudioAdapter:
         # version 11.62 is validated separately by the doctor/probe workflow.
         browser_suffix = re.compile(r"(?:Microsoft\s*Edge|Google Chrome|Mozilla Firefox)$", re.I)
         product_marker = re.compile(r"\bKV STUDIO\b", re.I)
+        # Browser titles can contain zero-width format characters (for example
+        # ``Microsoft\u200b Edge``), which must not bypass the suffix denylist.
+        normalized_title = "".join(
+            character for character in title if unicodedata.category(character) != "Cf"
+        )
         # Configuration may narrow the title match, but can never broaden it to
         # non-KV windows.
         return (
-            bool(product_marker.search(title))
-            and bool(self._title_pattern.search(title))
-            and not browser_suffix.search(title)
+            bool(product_marker.search(normalized_title))
+            and bool(self._title_pattern.search(normalized_title))
+            and not browser_suffix.search(normalized_title)
         )
