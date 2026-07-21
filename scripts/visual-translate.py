@@ -191,6 +191,7 @@ def _model_action(
     source: str,
     target: str,
     path: list[str],
+    locator: list[int],
     history: list[dict[str, Any]],
 ) -> dict[str, Any]:
     prompt = f"""You control the visible Chinese KV STUDIO 11.62 editor.
@@ -198,6 +199,7 @@ This is a disposable offline copy of a PLC project. Work visually like a human.
 
 Current single goal:
 - exact tree hierarchy: {json.dumps(path, ensure_ascii=False)}
+- approved tree locator: {json.dumps(locator)}
 - replace exact Chinese/user text: {source!r}
 - with technical English: {target!r}
 
@@ -259,6 +261,8 @@ Recent actions: {json.dumps(history[-8:], ensure_ascii=False)}
         "action"
     ]["enum"]:
         raise RuntimeError(f"invalid visual action: {action}")
+    if action.get("action") == "type_text" and action.get("text") != target:
+        raise RuntimeError("vision model type_text must exactly equal the approved target")
     return action
 
 
@@ -293,34 +297,107 @@ def _perform(
 
 
 def _targets(project: Path) -> list[dict[str, Any]]:
-    records = json.loads(
-        (project / "reports/02-tree-translation-inventory.json").read_text(encoding="utf-8")
-    )
     manifest = json.loads(
-        (project / "reports/02-tree-translation-manifest.json").read_text(encoding="utf-8")
+        (project / "reports/03-approved-ui-rename-manifest.json").read_text(encoding="utf-8")
     )
-    by_id = {item["record_id"]: item for item in records}
+    if not isinstance(manifest, dict) or manifest.get("artifact_type") != (
+        "approved_ui_rename_manifest"
+    ):
+        raise ValueError("approved UI rename manifest has an invalid artifact_type")
+    apply_gate = manifest.get("apply_gate")
+    required_gate = {
+        "apply_enabled": True,
+        "requires_explicit_apply_flag": True,
+        "requires_named_checkpoint": True,
+        "program_names_excluded": True,
+    }
+    if not isinstance(apply_gate, dict) or any(
+        apply_gate.get(name) is not expected for name, expected in required_gate.items()
+    ):
+        raise ValueError("approved UI rename manifest has an invalid apply_gate")
+    items = manifest.get("items")
+    if not isinstance(items, list) or not items:
+        raise ValueError("approved UI rename manifest must contain a non-empty items list")
+
     targets: list[dict[str, Any]] = []
-    for decision in manifest["decisions"]:
-        record = by_id[decision["record_id"]]
+    seen_ids: set[str] = set()
+    for index, item in enumerate(items):
+        if not isinstance(item, dict):
+            raise ValueError(f"approved UI rename item {index} must be an object")
+        record_id = item.get("record_id")
+        locator = item.get("locator")
+        path = item.get("expected_path")
+        source = item.get("expected_source")
+        target = item.get("target")
+        if (
+            not isinstance(record_id, str)
+            or not record_id
+            or len(record_id) > 128
+            or record_id in seen_ids
+        ):
+            raise ValueError(f"approved UI rename item {index} has an invalid record_id")
+        if (
+            not isinstance(locator, list)
+            or not locator
+            or len(locator) > 64
+            or any(
+                not isinstance(part, int) or isinstance(part, bool) or part < 0
+                for part in locator
+            )
+        ):
+            raise ValueError(f"approved UI rename item {record_id} has an invalid locator")
+        if (
+            not isinstance(path, list)
+            or not path
+            or len(path) > 64
+            or any(not isinstance(part, str) or not part.strip() for part in path)
+        ):
+            raise ValueError(f"approved UI rename item {record_id} has an invalid expected_path")
+        for field_name, value in (("expected_source", source), ("target", target)):
+            if (
+                not isinstance(value, str)
+                or not value
+                or len(value) > 512
+                or any(ord(character) < 32 or ord(character) == 127 for character in value)
+            ):
+                raise ValueError(
+                    f"approved UI rename item {record_id} has invalid {field_name}"
+                )
+        if item.get("requires_review") is not False:
+            raise ValueError(f"approved UI rename item {record_id} still requires review")
+        if (
+            item.get("kind") == "program_name"
+            or path[-1] != "书签"
+            or len(locator) != len(path) + 1
+        ):
+            raise ValueError(f"approved UI rename item {record_id} is not a bookmark label")
+        if source == target:
+            raise ValueError(f"approved UI rename item {record_id} target is unchanged")
+        seen_ids.add(record_id)
         targets.append(
             {
-                "record_id": decision["record_id"],
-                "source": decision["source_text"],
-                "target": decision["target_text"],
-                "path": [part for part in record["hierarchy"] if not part.startswith("locator:")],
-                "kind": record["kind"],
+                "record_id": record_id,
+                "locator": list(locator),
+                "source": source,
+                "target": target,
+                "path": list(path),
             }
         )
-    # Bookmark labels first; program names last so parent paths remain stable.
-    return sorted(targets, key=lambda item: item["kind"] == "program_name")
+    return targets
+
+
+def _positive_limit(value: str) -> int:
+    limit = int(value)
+    if limit <= 0:
+        raise argparse.ArgumentTypeError("limit must be a positive integer")
+    return limit
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="One-off visual KV STUDIO translator")
     parser.add_argument("--worker-env", default=".env.remote")
     parser.add_argument("--llm-env", default=".env")
-    parser.add_argument("--limit", type=int, default=1)
+    parser.add_argument("--limit", type=_positive_limit, default=1)
     parser.add_argument("--max-steps", type=int, default=30)
     parser.add_argument("--start-record", default="")
     parser.add_argument("--window-title-contains", default="KV STUDIO - [")
@@ -340,7 +417,7 @@ def main() -> int:
         if start is None:
             raise SystemExit("start record not found")
         targets = targets[start:]
-    targets = targets[: max(1, args.limit)]
+    targets = targets[: args.limit]
     log_path = project / ".autocomp" / f"visual-run-{int(time.time())}.jsonl"
     log_path.parent.mkdir(parents=True, exist_ok=True)
     with log_path.open("x", encoding="utf-8") as log:
@@ -349,9 +426,15 @@ def main() -> int:
             completed = False
             for step in range(1, args.max_steps + 1):
                 snapshot = _snapshot(settings, window)
-                action = _model_action(settings, snapshot, history=history, **{
-                    key: target[key] for key in ("source", "target", "path")
-                })
+                action = _model_action(
+                    settings,
+                    snapshot,
+                    history=history,
+                    **{
+                        key: target[key]
+                        for key in ("source", "target", "path", "locator")
+                    },
+                )
                 if len(history) >= 2 and all(
                     previous.get("action") == action.get("action")
                     and previous.get("x") == action.get("x")

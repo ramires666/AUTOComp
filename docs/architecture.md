@@ -33,17 +33,19 @@ used.
 
 ## Trust boundaries
 
-- The model proposes text and an allowlisted element identifier; it cannot issue
-  arbitrary clicks, key sequences, file writes, network calls, or shell commands.
-- The worker validates window ownership, action kind, checkpoint, and target
-  identity before any future mutation.
+- A controller may choose a bounded click, wheel, fixed-key, or Unicode-text
+  operation. The worker accepts it only for an exactly pinned top-level window
+  and validates handle, process ID, title, bounds, action kind, apply gate, and
+  checkpoint before input.
+- The worker exposes no arbitrary shell, file, network, or PLC operation.
 - Proprietary KV project files are treated as opaque. Hashing them is allowed;
   editing them is not.
 - Behavior-affecting literals remain blocked until classified and approved.
 
-## Why vision is a fallback
+## UI Automation first, bounded vision when needed
 
 UI Automation and exported text provide stable identities and exact strings.
 Vision is reserved for custom-drawn controls that expose no usable accessibility
-tree. When needed, the worker will send a cropped screenshot with numbered UIA
-bounding boxes; the model returns an element number, not raw executable input.
+tree. When needed, the controller receives only the pinned window frame and can
+request only the bounded input primitives above; the worker revalidates window
+identity before every frame and action.

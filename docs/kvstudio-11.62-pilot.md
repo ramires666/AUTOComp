@@ -1,7 +1,7 @@
 # KV STUDIO 11.62 pilot
 
-The pilot determines the real accessibility selectors and the exact content of a
-mnemonic export before mutation support is enabled.
+The pilot validates the real accessibility selectors and the exact content of a
+mnemonic export before the apply gate is enabled for a mutation run.
 
 ## Machine preparation
 
@@ -28,8 +28,9 @@ mnemonic export before mutation support is enabled.
 
 ## Apply-gate criteria
 
-Mutation code remains disabled until all of the following are demonstrated on a
-throwaway project copy:
+Mutation code remains safety-gated. Do not enable the global apply gate or run a
+visual controller until all of the following are demonstrated on a throwaway
+project copy:
 
 - KV STUDIO's process and primary window are identified reliably.
 - The project tree and ladder editor controls have stable selectors, or a bounded

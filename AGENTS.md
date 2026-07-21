@@ -7,6 +7,16 @@
 - Sub-agent output is advisory or component-level work until the primary agent reviews, integrates, and verifies it.
 - Do not trade correctness, safety, or maintainability for delegation speed.
 
+## MVP execution priority
+
+- This is an MVP for a mostly one-off translation job. Optimize for finishing the real project quickly and reliably, not for production-grade architecture or hypothetical reuse.
+- Prefer the shortest working implementation. Do not add frameworks, layers, generic pipelines, or defensive machinery unless they directly unblock the current translation.
+- Use the maximum practical number of fast, low-cost agents for independent bounded work. The primary agent reviews their output, integrates it, and controls the live UI.
+- Do not run large or repetitive test suites after every small change. Use syntax/lint checks and a small targeted smoke test proportional to the changed code; run broader validation only at a meaningful batch or final checkpoint.
+- Verify translations once per batch/page instead of taking and reviewing a screenshot after every successful click. Stop immediately only on a visible mismatch, modal dialog, repeated action, or failed worker response.
+- Keep one primary fast path and one visual fallback. Delete superseded experiments, duplicate scripts, generated caches, and temporary code when they are no longer needed.
+- Prefer concrete progress updates and working batches over lengthy planning, status narration, or speculative hardening.
+
 ## Product objective
 
 Build a local-first visual Windows automation tool for one-off translation of user-owned PLC editor projects, initially Chinese KV STUDIO 11.62 and later Schneider Electric engineering software. Application-specific reasoning belongs in the controller/VLM, not the remote worker.

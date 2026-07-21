@@ -8,9 +8,9 @@ verifies translation in that version, then opens a copy in US/Global 11.62 for a
 second compatibility check and final cleanup.
 
 The repository is currently an integration-ready MVP. Inventory, translation,
-and offline verification are implemented. UI mutation remains intentionally
-disabled until the control identifiers of the real KV STUDIO installation have
-been captured during the pilot.
+offline verification, guarded tree renames, and bounded pinned-window visual
+input are implemented. Mutations remain behind the global apply gate, an
+explicit per-run apply flag, and named checkpoints.
 
 ## Safety model
 
@@ -21,7 +21,7 @@ been captured during the pilot.
 - Every proposed replacement is stored in a reversible manifest.
 - Program names, identifiers, and string literals require review.
 - Mnemonic logic is compared before and after every edit batch.
-- The local model receives translation text and selected UI crops, never shell access.
+- The local model receives translation text and pinned-window frames, never shell access.
 
 See [AGENTS.md](AGENTS.md) for permanent development and orchestration rules.
 AUTOComp is distributed under the [proprietary license](LICENSE) in this repository.
@@ -145,7 +145,7 @@ and `书签` are recognized structurally and excluded:
 
 ```powershell
 autocomp extract-project-tree `
-  W:\_python\01-full-tree-inventory.json `
+  reports\01-full-tree-inventory.json `
   --output reports\02-tree-translation-inventory.json
 ```
 
@@ -187,10 +187,11 @@ Equivalent deployment helpers are provided in `scripts\install-worker.ps1` and
 the remote worker with `start-worker.ps1 -ListenAddress 0.0.0.0 -AllowRemote`
 and use `-AllowLanHttp` for controller calls. SSH is an optional alternative;
 both modes are described in [the remote worker guide](docs/remote-worker.md).
-The controller script exposes
-health, capabilities, status, inventory, full-tree inventory, and guarded
-name-limit probes and single-item rename operations; it has no raw action or
-shell mode.
+The worker exposes health, capabilities, status, inventory, full-tree inventory,
+guarded tree operations, and bounded input to one exactly pinned top-level
+window. It has no shell, arbitrary file-access, or PLC mode. The visual and
+calibrated bookmark controllers are documented in the
+[remote worker guide](docs/remote-worker.md#bounded-visual-controllers).
 
 Hash an untouched project copy:
 

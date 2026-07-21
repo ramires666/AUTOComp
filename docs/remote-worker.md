@@ -1,9 +1,10 @@
 # Remote KV STUDIO worker
 
-This setup controls only the allowlisted AUTOComp/KV STUDIO operations on the
-dedicated Windows computer. It deliberately does not provide a remote shell,
-arbitrary mouse/keyboard input, arbitrary file access, PLC access, or generic
-desktop control.
+This setup provides structured AUTOComp/KV STUDIO operations plus bounded
+eyes-and-hands primitives for one exactly pinned top-level window on the
+dedicated Windows computer. Inputs are limited to allowlisted clicks, wheel,
+fixed keys, and bounded Unicode text inside that window. It provides no remote
+shell, arbitrary file access, PLC access, or unrestricted desktop input.
 
 The worker can listen directly on a trusted LAN/VMware interface or remain on
 loopback behind an SSH tunnel. The bearer token remains in an ignored `.env`
@@ -201,10 +202,10 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\invoke-worker.ps
 
 ## Name-limit probe and rename-one safety gate
 
-The client has no raw JSON/action option. A tree rename requires the exact
-integer locator, full expected path, exact current source text, target text, and
-named checkpoint. First submit a probe without `-Apply`; this only validates the
-request structure and stale-node guards:
+The `invoke-worker.ps1` client has no arbitrary payload option. A tree rename
+requires the exact integer locator, full expected path, exact current source
+text, target text, and named checkpoint. First submit a probe without `-Apply`;
+this only validates the request structure and stale-node guards:
 
 ```powershell
 $path = @("项目", "程序", "每次扫描执行型模块", "旧名称")
@@ -230,6 +231,45 @@ guard fields. Run it once without `-Apply`, then repeat it with `-Apply` to keep
 the new name. The worker refuses stale paths/sources and records the checkpoint,
 before/after values, and rollback result. Translation batches must still be
 followed by project save, compile/check diagnostics, and mnemonic comparison.
+
+## Bounded visual controllers
+
+Run these only against the reviewed offline project copy with the desktop
+visible and unlocked. `visual-translate.py` reads the reviewed
+`reports\03-approved-ui-rename-manifest.json` and defaults to one item:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\visual-translate.py `
+  --worker-env .env.remote --llm-env .env --limit 1 --apply
+```
+
+For a calibrated deterministic bookmark batch, prepare an items file such as
+`reports\03-bookmark-batch.json`:
+
+```json
+[
+  {"record_id": "alarm", "tree_y": 320, "source": "/*报警*/", "target": "/*Alarm*/"}
+]
+```
+
+All item and command coordinates are relative to the captured full KV STUDIO
+window. Calibrate them again after any window-size, resolution, scaling, tree
+layout, or editor-layout change:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\fast-bookmark-batch.py `
+  --items-json reports\03-bookmark-batch.json `
+  --tree-x $treeX --editor-x $editorX `
+  --commit-x $commitX --commit-y $commitY `
+  --scan-left $scanLeft --scan-right $scanRight `
+  --scan-top $scanTop --scan-bottom $scanBottom `
+  --worker-env .env.remote --apply
+```
+
+Both controllers pin the window handle, process ID, and exact title and create a
+durable JSONL action log. The fast controller stops on a failed worker action or
+ambiguous selected-row detection; its result is `applied`, not independently
+verified. Check one screenshot per batch/page before continuing.
 
 ## Troubleshooting
 
