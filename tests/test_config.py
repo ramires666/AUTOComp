@@ -57,7 +57,8 @@ def test_rejects_enabling_online_operations(tmp_path) -> None:
         load_config(path)
 
 
-def test_rejects_non_http_endpoint(tmp_path) -> None:
+def test_rejects_non_http_endpoint(tmp_path, monkeypatch) -> None:
+    _clear_autocomp_environment(monkeypatch)
     path = tmp_path / "bad.json"
     path.write_text(json.dumps({"llm": {"endpoint": "file:///secret"}}), encoding="utf-8")
 

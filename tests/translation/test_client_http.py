@@ -79,7 +79,15 @@ def test_server_schema_matches_client_batch_schema() -> None:
     )
 
 
-def test_cli_translation_uses_one_strict_batch_request(tmp_path) -> None:
+def test_cli_translation_uses_one_strict_batch_request(tmp_path, monkeypatch) -> None:
+    for name in (
+        "AUTOCOMP_LLM_ENDPOINT",
+        "AUTOCOMP_LLM_MODEL",
+        "AUTOCOMP_LLM_API_KEY",
+        "AUTOCOMP_WORKER_TOKEN",
+        "AUTOCOMP_WORKER_ENDPOINT",
+    ):
+        monkeypatch.delenv(name, raising=False)
     _ModelHandler.calls = 0
     _ModelHandler.models_calls = 0
     _ModelHandler.authorization = ""

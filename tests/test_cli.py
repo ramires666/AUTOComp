@@ -18,7 +18,14 @@ def test_doctor_reports_safe_defaults(capsys) -> None:
 
 
 def test_doctor_reports_dotenv_without_exposing_secret(tmp_path, capsys, monkeypatch) -> None:
-    monkeypatch.delenv("AUTOCOMP_LLM_API_KEY", raising=False)
+    for name in (
+        "AUTOCOMP_LLM_ENDPOINT",
+        "AUTOCOMP_LLM_MODEL",
+        "AUTOCOMP_LLM_API_KEY",
+        "AUTOCOMP_WORKER_TOKEN",
+        "AUTOCOMP_WORKER_ENDPOINT",
+    ):
+        monkeypatch.delenv(name, raising=False)
     env_path = tmp_path / ".env"
     env_path.write_text(
         "AUTOCOMP_LLM_ENDPOINT=http://127.0.0.1:8080/v1\n"
