@@ -35,7 +35,7 @@
               "additionalProperties": false,
               "required": ["original", "english", "russian"],
               "properties": {
-                "original": {"type": "string", "minLength": 1, "maxLength": 512},
+                "original": {"type": "string", "maxLength": 512},
                 "english": {
                   "oneOf": [
                     {"type": "string", "minLength": 1, "maxLength": 512},

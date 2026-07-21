@@ -53,9 +53,9 @@ def test_decision_schema_rejects_coordinates_outside_current_frame(
     agent: dict[str, Any],
 ) -> None:
     value = _decision()
-    value["operations"][0]["x"] = 800  # type: ignore[index]
+    value["operations"][0]["x"] = 1001  # type: ignore[index]
 
-    with pytest.raises(ValueError, match="outside the frame"):
+    with pytest.raises(ValueError, match="outside 0..1000"):
         agent["_validate_decision"](
             value,
             windows=[_window()],
@@ -81,7 +81,10 @@ def test_atomic_input_payload_contains_only_worker_protocol_fields(
     operations = _decision()["operations"]
 
     payload = agent["_input_payload"](
-        window=_window(), operations=operations, checkpoint="vision-abc-00001"
+        window=_window(),
+        frame={"width": 800, "height": 600},
+        operations=operations,
+        checkpoint="vision-abc-00001",
     )
 
     assert payload == {
@@ -91,7 +94,7 @@ def test_atomic_input_payload_contains_only_worker_protocol_fields(
         "expected_title": "Any application",
         "checkpoint": "vision-abc-00001",
         "operations": [
-            {"operation": "click", "pause_ms": 100, "x": 10, "y": 20}
+            {"operation": "click", "pause_ms": 100, "x": 8, "y": 12}
         ],
         "apply": True,
     }
@@ -140,6 +143,35 @@ def test_state_preserves_mission_and_full_translation_text(
 
     assert saved["mission"] == mission
     assert saved["events"][0]["decision"]["operations"][0]["text"] == "Precise English"
+
+
+def test_mission_allows_empty_source_field_for_new_split_comment(
+    agent: dict[str, Any],
+) -> None:
+    mission = {
+        "schema_version": 1,
+        "objective": "Split a label into name and comment fields",
+        "context": "Generic editor",
+        "goals": [
+            {
+                "id": "split-1",
+                "objective": "Move an existing description into a new comment",
+                "context": "The original comment field is empty",
+                "success_criteria": ["Both fields are visibly correct"],
+                "allowed_text": [
+                    {
+                        "original": "原名称（描述）",
+                        "english": "SafeName:Description",
+                        "russian": None,
+                    },
+                    {"original": "原名称（描述）", "english": "SafeName", "russian": None},
+                    {"original": "", "english": "Description", "russian": None},
+                ],
+            }
+        ],
+    }
+
+    assert agent["_validate_mission"](mission) == mission
 
 
 def test_active_goal_rejects_unapproved_typed_text(agent: dict[str, Any]) -> None:
@@ -202,6 +234,61 @@ def test_sequence_cannot_cross_unverified_ui_transitions(agent: dict[str, Any]) 
             frame={"width": 800, "height": 600},
             allowed_type_text={"Precise English"},
         )
+
+
+def test_focused_field_can_be_replaced_without_another_click(
+    agent: dict[str, Any],
+) -> None:
+    value = _decision(
+        operations=[
+            {
+                "operation": "key_ctrl_a",
+                "x": None,
+                "y": None,
+                "delta": None,
+                "text": None,
+                "pause_ms": 100,
+            },
+            {
+                "operation": "type_text",
+                "x": None,
+                "y": None,
+                "delta": None,
+                "text": "Precise English",
+                "pause_ms": 100,
+            },
+        ]
+    )
+
+    agent["_validate_decision"](
+        value,
+        windows=[_window()],
+        frame={"width": 800, "height": 600},
+        allowed_type_text={"Precise English"},
+    )
+
+
+def test_verified_six_tab_field_route_can_end_in_atomic_replacement(
+    agent: dict[str, Any],
+) -> None:
+    operations = [
+        {
+            "operation": operation,
+            "x": None,
+            "y": None,
+            "delta": None,
+            "text": "Precise English" if operation == "type_text" else None,
+            "pause_ms": 100,
+        }
+        for operation in (*("tab",) * 6, "key_ctrl_a", "type_text")
+    ]
+
+    agent["_validate_decision"](
+        _decision(operations=operations),
+        windows=[_window()],
+        frame={"width": 800, "height": 600},
+        allowed_type_text={"Precise English"},
+    )
 
 
 def test_worker_handshake_records_exact_remote_build(
@@ -284,3 +371,43 @@ def test_model_uses_bounded_output_and_falls_back_after_grammar_rejection(
     assert requests[0]["max_tokens"] == 512
     assert "response_format" in requests[0]
     assert "response_format" not in requests[1]
+
+
+def test_foreground_owned_popup_is_routed_before_visual_input(
+    agent: dict[str, Any],
+) -> None:
+    main = {**_window(), "enabled": False, "foreground": False, "owner_handle": 0}
+    popup = {
+        **_window(),
+        "handle": 303,
+        "title": "Modal",
+        "enabled": True,
+        "foreground": True,
+        "owner_handle": 101,
+    }
+
+    assert agent["_foreground_route"](main, [main, popup]) == popup
+
+    popup["foreground"] = False
+    assert agent["_foreground_route"](main, [main, popup]) == popup
+
+
+def test_identical_frame_and_input_has_a_stable_repeat_signature(
+    agent: dict[str, Any],
+) -> None:
+    frame = {"png_sha256": "a" * 64}
+    operations = _decision()["operations"]
+    signature = agent["_input_signature"](
+        frame=frame, window=_window(), operations=operations
+    )
+    state = {
+        "events": [
+            {
+                "event": "decision",
+                "phase": "intent",
+                "input_signature": signature,
+            }
+        ]
+    }
+
+    assert agent["_input_attempt_count"](state, signature) == 1

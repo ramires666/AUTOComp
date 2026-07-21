@@ -24,6 +24,7 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 DEFAULT_PROMPT = Path(__file__).resolve().parents[1] / "prompts" / "universal-windows-agent.md"
+NORMALIZED_COORDINATE_MAX = 1000
 
 OPERATIONS = (
     "click",
@@ -54,8 +55,16 @@ DECISION_SCHEMA: dict[str, Any] = {
                 "type": "object",
                 "properties": {
                     "operation": {"type": "string", "enum": list(OPERATIONS)},
-                    "x": {"type": ["integer", "null"]},
-                    "y": {"type": ["integer", "null"]},
+                    "x": {
+                        "type": ["integer", "null"],
+                        "minimum": 0,
+                        "maximum": NORMALIZED_COORDINATE_MAX,
+                    },
+                    "y": {
+                        "type": ["integer", "null"],
+                        "minimum": 0,
+                        "maximum": NORMALIZED_COORDINATE_MAX,
+                    },
                     "delta": {"type": ["integer", "null"]},
                     "text": {"type": ["string", "null"]},
                     "pause_ms": {"type": "integer", "minimum": 0, "maximum": 1000},
@@ -162,7 +171,7 @@ def _request_json(
     *,
     payload: dict[str, Any] | None = None,
     token: str = "",
-    timeout: float = 180,
+    timeout: float = 45,
 ) -> Any:
     headers = {"Accept": "application/json"}
     if token:
@@ -196,7 +205,9 @@ def _load_settings(worker_env: Path, llm_env: Path) -> Settings:
         raise RuntimeError("AUTOCOMP_WORKER_ENDPOINT and AUTOCOMP_WORKER_TOKEN are required")
     if model.casefold() == "auto":
         response = _request_json(
-            f"{llm_endpoint}/models", token=values.get("AUTOCOMP_LLM_API_KEY", "")
+            f"{llm_endpoint}/models",
+            token=values.get("AUTOCOMP_LLM_API_KEY", ""),
+            timeout=10,
         )
         entries = response.get("data", []) if isinstance(response, dict) else []
         model_ids = [item.get("id") for item in entries if isinstance(item, dict)]
@@ -217,7 +228,7 @@ def _worker(settings: Settings, payload: dict[str, Any]) -> dict[str, Any]:
         f"{settings.worker_endpoint}/v1/action",
         payload=payload,
         token=settings.worker_token,
-        timeout=120,
+        timeout=30,
     )
     if not isinstance(result, dict):
         raise RuntimeError("worker returned a non-object response")
@@ -292,6 +303,49 @@ def _matching_window(
         if _window_identity(window) == selected:
             return window
     return None
+
+
+def _foreground_route(
+    selected: dict[str, Any] | None, windows: list[dict[str, Any]]
+) -> dict[str, Any] | None:
+    """Route an app-owned foreground popup before the model can click through it."""
+    if selected is None:
+        return None
+    selected_handle = int(selected["handle"])
+    selected_pid = int(selected["process_id"])
+    selected_enabled = bool(selected.get("enabled", True))
+    for window in windows:
+        direct_owned_popup = int(window.get("owner_handle", 0)) == selected_handle
+        if (
+            int(window["handle"]) != selected_handle
+            and int(window["process_id"]) == selected_pid
+            and bool(window.get("enabled", True))
+            and (
+                direct_owned_popup
+                or (
+                    bool(window.get("foreground"))
+                    and (int(window.get("owner_handle", 0)) > 0 or not selected_enabled)
+                )
+            )
+        ):
+            return window
+    return None
+
+
+def _same_process_foreground(
+    previous_identity: dict[str, Any], windows: list[dict[str, Any]]
+) -> dict[str, Any] | None:
+    previous_pid = int(previous_identity["process_id"])
+    return next(
+        (
+            window
+            for window in windows
+            if int(window["process_id"]) == previous_pid
+            and bool(window.get("foreground"))
+            and bool(window.get("enabled", True))
+        ),
+        None,
+    )
 
 
 def _snapshot(settings: Settings, window: dict[str, Any]) -> dict[str, Any]:
@@ -407,8 +461,8 @@ def _validate_operation(
     if coordinate:
         if any(isinstance(item, bool) or not isinstance(item, int) for item in (x, y)):
             raise ValueError(f"operations[{index}] requires integer x/y")
-        if not 0 <= x < int(frame["width"]) or not 0 <= y < int(frame["height"]):
-            raise ValueError(f"operations[{index}] coordinates are outside the frame")
+        if not 0 <= x <= NORMALIZED_COORDINATE_MAX or not 0 <= y <= NORMALIZED_COORDINATE_MAX:
+            raise ValueError(f"operations[{index}] normalized coordinates are outside 0..1000")
     elif x is not None or y is not None:
         raise ValueError(f"operations[{index}] must use null x/y")
     if operation == "wheel":
@@ -432,13 +486,21 @@ def _validate_operation_sequence(operations: list[dict[str, Any]]) -> None:
     if len(operations) <= 1:
         return
     names = [str(item["operation"]) for item in operations]
-    allowed = (
-        names in (["click", "type_text"], ["click", "key_ctrl_a", "type_text"])
+    basic_replacement = names in (
+        ["key_ctrl_a", "type_text"],
+        ["click", "type_text"],
+        ["click", "key_ctrl_a", "type_text"],
     )
-    if not allowed:
+    verified_tab_replacement = (
+        names[-2:] == ["key_ctrl_a", "type_text"]
+        and 1 <= len(names[:-2]) <= 6
+        and all(name == "tab" for name in names[:-2])
+    )
+    if not (basic_replacement or verified_tab_replacement):
         raise ValueError(
-            "multi-operation input may only be click + optional Ctrl+A + type_text; "
-            "menus, dialogs, navigation, and confirmation require a fresh frame"
+            "multi-operation input may only replace a focused/clicked field, optionally "
+            "after one to six mission-verified Tab steps; menus, scrolling, new dialogs, "
+            "and confirmation require a fresh frame"
         )
 
 
@@ -469,7 +531,7 @@ def _prompt(
     recent = state.get("events", [])[-8:]
     frame_note = (
         f"Attached image is the exact selected-window client frame, {frame['width']}x"
-        f"{frame['height']}; all x/y coordinates are relative to it."
+        f"{frame['height']} pixels; return x/y normalized to 0..1000 across this full frame."
         if frame
         else "No screenshot is attached because no current window is selected."
     )
@@ -506,7 +568,8 @@ Choose the next smallest reliable step:
   fresh frame. Do not assume focus that is not visible.
 - when approved text records are non-empty, type_text may use only an exact non-null value
   present in original/english/russian. Never paraphrase, truncate, or invent translation text.
-- inspect the fresh screenshot before clicking. Never invent coordinates outside it.
+- inspect the full fresh screenshot before clicking. Return normalized 0..1000 coordinates,
+  not internal resized-image pixels.
 - after input, use the next fresh screenshot to verify the visible result.
 - if an action had no visible effect, change strategy instead of repeating it blindly.
 - return done only when this active goal's success criteria are visibly proven. The controller
@@ -555,6 +618,7 @@ def _model_decision(
                 f"{settings.llm_endpoint}/chat/completions",
                 payload=body,
                 token=settings.llm_key,
+                timeout=45,
             )
         except RuntimeError as exc:
             backend_error = str(exc).casefold()
@@ -569,6 +633,7 @@ def _model_decision(
                     f"{settings.llm_endpoint}/chat/completions",
                     payload=body,
                     token=settings.llm_key,
+                    timeout=45,
                 )
             else:
                 raise
@@ -583,11 +648,17 @@ def _model_decision(
             validation_error = (
                 f"\nYour prior response was invalid ({exc}). Return one corrected JSON object."
             )
-    raise RuntimeError(f"vision model returned invalid decisions {retries} times")
+    raise RuntimeError(
+        f"vision model returned invalid decisions {retries} times:{validation_error}"
+    )
 
 
 def _input_payload(
-    *, window: dict[str, Any], operations: list[dict[str, Any]], checkpoint: str
+    *,
+    window: dict[str, Any],
+    frame: dict[str, Any],
+    operations: list[dict[str, Any]],
+    checkpoint: str,
 ) -> dict[str, Any]:
     identity = _window_identity(window)
     clean_operations = []
@@ -598,7 +669,12 @@ def _input_payload(
         }.get(operation["operation"], operation["operation"])
         clean = {"operation": worker_operation, "pause_ms": operation["pause_ms"]}
         if operation["x"] is not None:
-            clean.update(x=operation["x"], y=operation["y"])
+            width = int(frame["width"])
+            height = int(frame["height"])
+            clean.update(
+                x=min(width - 1, round(operation["x"] * (width - 1) / 1000)),
+                y=min(height - 1, round(operation["y"] * (height - 1) / 1000)),
+            )
         if operation["delta"] is not None:
             clean["delta"] = operation["delta"]
         if operation["text"] is not None:
@@ -613,6 +689,28 @@ def _input_payload(
         "operations": clean_operations,
         "apply": True,
     }
+
+
+def _input_signature(
+    *, frame: dict[str, Any], window: dict[str, Any], operations: list[dict[str, Any]]
+) -> str:
+    value = {
+        "coordinate_contract": "normalized-0-1000-v1",
+        "frame_sha256": frame.get("png_sha256", ""),
+        "window": _window_identity(window),
+        "operations": operations,
+    }
+    encoded = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
+
+
+def _input_attempt_count(state: dict[str, Any], signature: str) -> int:
+    return sum(
+        event.get("event") == "decision"
+        and event.get("phase") == "intent"
+        and event.get("input_signature") == signature
+        for event in state.get("events", [])
+    )
 
 
 def _write_state(path: Path, state: dict[str, Any]) -> None:
@@ -768,7 +866,7 @@ def _validate_mission(value: object) -> dict[str, Any]:
                 )
             for field in translation_fields:
                 text = translation.get(field)
-                if field == "original" and (not isinstance(text, str) or not text):
+                if field == "original" and not isinstance(text, str):
                     raise ValueError(
                         f"goals[{index}].allowed_text[{translation_index}].original is invalid"
                     )
@@ -799,6 +897,18 @@ def run(
     prompt_sha256 = hashlib.sha256(system_prompt.encode("utf-8")).hexdigest()
     state = _load_state(state_path, mission, prompt_sha256=prompt_sha256)
     handshake = _worker_handshake(settings)
+    print(
+        json.dumps(
+            {
+                "event": "preflight_ok",
+                "worker_build_id": handshake["build_id"],
+                "worker_boot_id": handshake.get("boot_id"),
+                "llm_model": settings.llm_model,
+            },
+            ensure_ascii=False,
+        ),
+        flush=True,
+    )
     if state.get("worker_build_id") != handshake["build_id"]:
         state["worker_build_id"] = handshake["build_id"]
         state.setdefault("worker_build_history", []).append(handshake)
@@ -819,10 +929,34 @@ def run(
         windows = _windows(settings)
         selected = _matching_window(state.get("selected_window"), windows)
         if state.get("selected_window") and selected is None:
-            state["selected_window"] = None
+            previous_identity = state["selected_window"]
+            recovered = _same_process_foreground(previous_identity, windows)
+            state["selected_window"] = (
+                _window_identity(recovered) if recovered is not None else None
+            )
             _append_event(
                 state,
-                {"step": step, "event": "selected_window_disappeared"},
+                {
+                    "step": step,
+                    "event": "selected_window_disappeared",
+                    "previous_window": previous_identity,
+                    "recovered_window": state["selected_window"],
+                },
+                state_path,
+            )
+            continue
+        routed = _foreground_route(selected, windows)
+        if routed is not None:
+            previous_identity = state["selected_window"]
+            state["selected_window"] = _window_identity(routed)
+            _append_event(
+                state,
+                {
+                    "step": step,
+                    "event": "foreground_popup_routed",
+                    "previous_window": previous_identity,
+                    "selected_window": state["selected_window"],
+                },
                 state_path,
             )
             continue
@@ -835,6 +969,7 @@ def run(
             selected=state.get("selected_window"),
             state=state,
             frame=frame,
+            validation_error=str(state.get("validation_error", "")),
         )
         decision = _model_decision(
             settings,
@@ -860,6 +995,39 @@ def run(
         elif kind == "input":
             if selected is None:
                 raise RuntimeError("validated input decision has no selected window")
+            signature = _input_signature(
+                frame=frame, window=selected, operations=decision["operations"]
+            )
+            event["input_signature"] = signature
+            attempt_count = _input_attempt_count(state, signature)
+            if attempt_count:
+                blocked_count = int(state.get("blocked_repeat_count", 0)) + 1
+                state["blocked_repeat_count"] = blocked_count
+                state["validation_error"] = (
+                    "The exact same input was already attempted on the identical frame. "
+                    "It is blocked. Reinspect windows and pixels and choose a materially "
+                    "different recovery action."
+                )
+                blocked_event = {
+                    "step": step,
+                    "event": "repeated_input_blocked",
+                    "goal_id": goal["id"],
+                    "frame_sha256": frame.get("png_sha256", ""),
+                    "input_signature": signature,
+                    "blocked_count": blocked_count,
+                }
+                _append_event(state, blocked_event, state_path)
+                print(json.dumps(blocked_event, ensure_ascii=False), flush=True)
+                if blocked_count >= 2:
+                    state["status"] = "paused"
+                    state["result"] = {
+                        "reason": "model repeated a blocked input twice; operator review required"
+                    }
+                    _write_state(state_path, state)
+                    return 4
+                continue
+            state.pop("validation_error", None)
+            state["blocked_repeat_count"] = 0
             checkpoint = f"vision-{mission_id}-{step:05d}"
             event["phase"] = "intent"
             event["checkpoint"] = checkpoint
@@ -869,6 +1037,7 @@ def run(
                     settings,
                     _input_payload(
                         window=selected,
+                        frame=frame,
                         operations=decision["operations"],
                         checkpoint=checkpoint,
                     ),

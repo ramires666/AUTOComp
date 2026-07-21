@@ -31,6 +31,7 @@ Thumbs.db
 checkpoints/
 reports/*
 !reports/04-full-tree-bilingual-catalog.json
+!reports/05-remaining-cjk-report.json
 screenshots/
 *.local.json
 *.log

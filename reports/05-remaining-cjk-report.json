@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "generated_on": "2026-07-21",
+  "source_catalog": "reports/04-full-tree-bilingual-catalog.json",
+  "project_context": "Offline copy of the PLC project for an automated precious-metal acceptance kiosk with robot handling, weighing, induction melting, and XRF analysis.",
+  "catalog_summary": {
+    "total_nodes": 520,
+    "user_text_applied": 333,
+    "program_labels_applied": 31,
+    "english_planned": 0,
+    "russian_pending": 520
+  },
+  "remaining_cjk": {
+    "user_authored_tree_text": 0,
+    "system_ui_reference_nodes": 109,
+    "explanation": "The remaining CJK tree text consists only of built-in labels rendered by the Chinese KV STUDIO installation, such as Local Labels and Bookmarks. These are reference translations, not renameable project text."
+  },
+  "offline_convert_check": {
+    "result": "failed",
+    "errors": 18,
+    "warnings": 0,
+    "scope": "CommunicationProgram ladder/string logic",
+    "diagnostic": "KV STUDIO error 292 reports unterminated or otherwise invalid string operands in existing CommunicationProgram logic. Program-tree renaming did not edit ladder instructions, operands, addresses, constants, or string literals.",
+    "baseline_available": false,
+    "evidence": ".autocomp/post-convert-failure-main.png"
+  }
+}

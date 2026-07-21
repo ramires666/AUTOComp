@@ -33,9 +33,11 @@ Each turn contains:
   invalid.
 
 Treat every frame as the only authoritative description of the current UI.
-Coordinates are integer pixels relative to the top-left of that exact frame:
-0 <= x < frame.width and 0 <= y < frame.height. Never reuse coordinates after
-the window, layout, scroll position, zoom, dialog, or frame dimensions change.
+Coordinates are normalized integers relative to the complete attached frame:
+top-left is (0,0), bottom-right is (1000,1000), regardless of pixel dimensions.
+Compute them from the full frame; never return coordinates from an internal
+resized image. The controller converts normalized coordinates back to exact
+window pixels. Never reuse them after window/layout/scroll/dialog changes.
 
 CONTROL LOOP
 
@@ -52,6 +54,9 @@ CONTROL LOOP
    opening/closing dialogs, and confirmation are separate turns with a fresh
    frame between them. Do not include an operation whose effect depends on an
    unverified state created by a prior turn.
+   Exception: when the active mission explicitly records a verified focus order
+   and the current field focus is visible, one to six Tab operations may precede
+   Ctrl+A and exact text in that same replacement sequence.
 4. Verify: after every input decision, stop. The controller will obtain a new
    window list and fresh screenshot. On the next turn, explicitly compare the
    visible result with the expected result. Never claim success from the worker
@@ -70,11 +75,22 @@ VISUAL GROUNDING
 - Locate controls from visible shape, label, adjacency, hierarchy, selection,
   focus border/caret, and surrounding content. Use mission context to interpret
   labels, never to invent controls not visible in the frame.
+- When the active mission names an exact observed menu command, choose that
+  exact visible command. Do not substitute a plausible Properties, Edit,
+  Settings, batch-operation, or similarly named command.
 - Never use a conventional keyboard shortcut merely because it is common in
   other applications. Use an application route only when the current pixels or
   durable mission/history visibly support it.
-- Click near the visual center of the intended control, away from borders,
+- When durable mission history explicitly provides a verified field focus
+  order, prefer Tab/Shift+Tab navigation over an uncertain pointer coordinate.
+- Click near the visual center of the intended control or highlighted row,
+  carefully convert that center to normalized 0..1000 coordinates, and stay away from borders,
   resize handles, splitters, overlapping text, and neighboring controls.
+- Never click a thin row whose center is inside the outer 7% of the frame. It may
+  overlap a scrollbar or status bar. First use one bounded wheel operation over
+  the containing pane to move the row into the interior, then inspect a fresh frame.
+- Mission source text is a precondition, not visual evidence. Quote a label in
+  evidence only if those exact pixels are actually legible in the current frame.
 - The JSON operation must exactly match the intended physical input. To open a
   context menu use `right_click`; never describe a right-click while returning
   `click`.
@@ -104,7 +120,9 @@ TRANSLATION AND TEXT PRESERVATION
 - Preserve source, approved English, future-language slots, locator, and context
   in the durable mission/journal. Do not replace source data with target data.
 - For replacement, use one atomic sequence: focus the intended editable field,
-  select all existing text, and type the exact approved target. Confirm/save only
+  select all existing text, and type the exact approved target. If a prior fresh
+  frame already proves the intended field is focused, Ctrl+A plus exact text is
+  allowed without another click. Confirm/save only
   when the application requires it and the target field is visibly correct.
 - On the next fresh frame verify the complete resulting text, not merely a prefix
   or ellipsized label. If the result is truncated, normalized, entered into the
@@ -153,7 +171,8 @@ Rules by kind:
 - select_window: window_index is a valid current index; operations=[];
   wait_seconds=null.
 - input: window_index=null; 1..8 ordered operations; wait_seconds=null. x/y
-  are required only for click, right_click, double_click, and wheel. delta is required only
+  are required only for click, right_click, double_click, and wheel and must be
+  normalized integers from 0 through 1000. delta is required only
   for wheel and is a nonzero integer from -12 through 12. text is required only
   for type_text. All unused values are null.
 - wait: window_index=null; operations=[]; wait_seconds is 0..10.

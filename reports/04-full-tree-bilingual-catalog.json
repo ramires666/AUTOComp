@@ -10,15 +10,14 @@
   },
   "summary": {
     "total_nodes": 520,
-    "english_applied": 333,
-    "english_planned": 31,
+    "english_applied": 364,
+    "english_planned": 0,
     "system_reference_translations": 109,
     "russian_pending": 520,
     "by_status": {
       "reference": 109,
       "unchanged": 47,
-      "applied": 333,
-      "planned": 31
+      "applied": 364
     },
     "by_category": {
       "system_ui": 109,
@@ -5475,10 +5474,10 @@
       ],
       "category": "program",
       "original_name": "A50Command:（2#：取盘位、3#：闸门位）",
-      "english_name": "A50Command: (2#: Tray-Pickup Station; 3#: Gate Station)",
+      "english_name": "A50Command:(2#: Tray Pickup; 3#: Gate)",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A50Command:（2#：取盘位、3#：闸门位）",
+      "english_status": "applied",
+      "current_tree_name": "A50Command:(2#: Tray Pickup; 3#: Gate)",
       "translation_record_id": "a57c4e250730d2578767",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -5488,7 +5487,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A50Command: (2#: Tray-Pickup Station; 3#: Gate Station)"
+        "A50Command:(2#: Tray Pickup; 3#: Gate)"
       ]
     },
     {
@@ -5514,7 +5513,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A50Command: (2#: Tray-Pickup Station; 3#: Gate Station)",
+        "A50Command:(2#: Tray Pickup; 3#: Gate)",
         "Local Labels"
       ]
     },
@@ -5541,7 +5540,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A50Command: (2#: Tray-Pickup Station; 3#: Gate Station)",
+        "A50Command:(2#: Tray Pickup; 3#: Gate)",
         "Bookmarks"
       ]
     },
@@ -5570,7 +5569,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A50Command: (2#: Tray-Pickup Station; 3#: Gate Station)",
+        "A50Command:(2#: Tray Pickup; 3#: Gate)",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -5600,7 +5599,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A50Command: (2#: Tray-Pickup Station; 3#: Gate Station)",
+        "A50Command:(2#: Tray Pickup; 3#: Gate)",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -5630,7 +5629,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A50Command: (2#: Tray-Pickup Station; 3#: Gate Station)",
+        "A50Command:(2#: Tray Pickup; 3#: Gate)",
         "Bookmarks",
         "/*2# Command: Fine-Weighing Station- Tray-Pickup Station*/"
       ]
@@ -5660,7 +5659,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A50Command: (2#: Tray-Pickup Station; 3#: Gate Station)",
+        "A50Command:(2#: Tray Pickup; 3#: Gate)",
         "Bookmarks",
         "--------------"
       ]
@@ -5690,7 +5689,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A50Command: (2#: Tray-Pickup Station; 3#: Gate Station)",
+        "A50Command:(2#: Tray Pickup; 3#: Gate)",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -5720,7 +5719,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A50Command: (2#: Tray-Pickup Station; 3#: Gate Station)",
+        "A50Command:(2#: Tray Pickup; 3#: Gate)",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -5750,7 +5749,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A50Command: (2#: Tray-Pickup Station; 3#: Gate Station)",
+        "A50Command:(2#: Tray Pickup; 3#: Gate)",
         "Bookmarks",
         "/*3# Command: Tray-Pickup Station- Gate Station*/"
       ]
@@ -6597,10 +6596,10 @@
       ],
       "category": "program",
       "original_name": "A_30号指令:去纯金位取盘拿到石墨位",
-      "english_name": "A_30 Command: Pick Up Tray at Pure-Gold Station and Move to Graphite-Crucible Station",
+      "english_name": "A_30Command:Move Tray Pure Gold to Graphite",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_30号指令:去纯金位取盘拿到石墨位",
+      "english_status": "applied",
+      "current_tree_name": "A_30Command:Move Tray Pure Gold to Graphite",
       "translation_record_id": "b41f6cf860e60ed1eef2",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -6610,7 +6609,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_30 Command: Pick Up Tray at Pure-Gold Station and Move to Graphite-Crucible Station"
+        "A_30Command:Move Tray Pure Gold to Graphite"
       ]
     },
     {
@@ -6636,7 +6635,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_30 Command: Pick Up Tray at Pure-Gold Station and Move to Graphite-Crucible Station",
+        "A_30Command:Move Tray Pure Gold to Graphite",
         "Local Labels"
       ]
     },
@@ -6663,7 +6662,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_30 Command: Pick Up Tray at Pure-Gold Station and Move to Graphite-Crucible Station",
+        "A_30Command:Move Tray Pure Gold to Graphite",
         "Bookmarks"
       ]
     },
@@ -6675,10 +6674,10 @@
       ],
       "category": "program",
       "original_name": "A_31号指令:去K金位取盘拿到石墨位",
-      "english_name": "A_31 Command: Pick Up Tray at Karat-Gold Station and Move to Graphite-Crucible Station",
+      "english_name": "A_31Command:Move Tray K-Gold to Graphite",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_31号指令:去K金位取盘拿到石墨位",
+      "english_status": "applied",
+      "current_tree_name": "A_31Command:Move Tray K-Gold to Graphite",
       "translation_record_id": "96e998415aab105ab0df",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -6688,7 +6687,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_31 Command: Pick Up Tray at Karat-Gold Station and Move to Graphite-Crucible Station"
+        "A_31Command:Move Tray K-Gold to Graphite"
       ]
     },
     {
@@ -6714,7 +6713,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_31 Command: Pick Up Tray at Karat-Gold Station and Move to Graphite-Crucible Station",
+        "A_31Command:Move Tray K-Gold to Graphite",
         "Local Labels"
       ]
     },
@@ -6741,7 +6740,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_31 Command: Pick Up Tray at Karat-Gold Station and Move to Graphite-Crucible Station",
+        "A_31Command:Move Tray K-Gold to Graphite",
         "Bookmarks"
       ]
     },
@@ -6753,10 +6752,10 @@
       ],
       "category": "program",
       "original_name": "A_52号指令:（10#-21#：测金，石墨，载盘）",
-      "english_name": "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+      "english_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_52号指令:（10#-21#：测金，石墨，载盘）",
+      "english_status": "applied",
+      "current_tree_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
       "translation_record_id": "d052f1832472f4c7f065",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -6766,7 +6765,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)"
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops"
       ]
     },
     {
@@ -6792,7 +6791,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Local Labels"
       ]
     },
@@ -6819,7 +6818,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks"
       ]
     },
@@ -6848,7 +6847,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -6878,7 +6877,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -6908,7 +6907,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*10# XRF Assay Station*/"
       ]
@@ -6938,7 +6937,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "--------------"
       ]
@@ -6968,7 +6967,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -6998,7 +6997,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -7028,7 +7027,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*27# XRF Assay Station → Carrier-Tray Station*/"
       ]
@@ -7058,7 +7057,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "--------------"
       ]
@@ -7088,7 +7087,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -7118,7 +7117,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -7148,7 +7147,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*11# Tip Carrier Tray toward Graphite-Crucible Station*/"
       ]
@@ -7178,7 +7177,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "--------------"
       ]
@@ -7208,7 +7207,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -7238,7 +7237,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -7268,7 +7267,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*18# Open Lid*/"
       ]
@@ -7298,7 +7297,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "--------------"
       ]
@@ -7328,7 +7327,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -7358,7 +7357,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -7388,7 +7387,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*12# Graphite-Crucible Station → Induction-Furnace Station*/"
       ]
@@ -7418,7 +7417,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "--------------"
       ]
@@ -7448,7 +7447,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -7478,7 +7477,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -7508,7 +7507,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*13# Close Lid*/"
       ]
@@ -7538,7 +7537,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "--------------"
       ]
@@ -7568,7 +7567,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -7598,7 +7597,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -7628,7 +7627,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*14# Evacuate Chamber*/"
       ]
@@ -7658,7 +7657,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "--------------"
       ]
@@ -7688,7 +7687,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*15#: Induction Gold Melting Runs as a Separate Program*/"
       ]
@@ -7718,7 +7717,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "--------------"
       ]
@@ -7748,7 +7747,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -7778,7 +7777,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -7808,7 +7807,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+        "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
         "Bookmarks",
         "/*21# Graphite-Crucible Station → Carrier-Tray Station*/"
       ]
@@ -7821,10 +7820,10 @@
       ],
       "category": "program",
       "original_name": "A_15号指令（融金程序）",
-      "english_name": "A_15 Command (Induction Gold-Melting Program)",
+      "english_name": "A_15Command:Gold-Melting Program",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_15号指令（融金程序）",
+      "english_status": "applied",
+      "current_tree_name": "A_15Command:Gold-Melting Program",
       "translation_record_id": "ce7427e2e63ca1776907",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -7834,7 +7833,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)"
+        "A_15Command:Gold-Melting Program"
       ]
     },
     {
@@ -7860,7 +7859,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Local Labels"
       ]
     },
@@ -7887,7 +7886,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks"
       ]
     },
@@ -7916,7 +7915,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -7946,7 +7945,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -7976,7 +7975,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/*Induction Melting*/ @MR0, @DM0"
       ]
@@ -8006,7 +8005,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "--------------"
       ]
@@ -8036,7 +8035,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -8066,7 +8065,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -8096,7 +8095,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/*Close Furnace, Natural Cooling, Release Vacuum*/ @MR100, @DM1"
       ]
@@ -8126,7 +8125,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "--------------"
       ]
@@ -8156,7 +8155,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -8186,7 +8185,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -8216,7 +8215,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/*Open Lid*/ @MR200, @DM2"
       ]
@@ -8246,7 +8245,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "--------------"
       ]
@@ -8276,7 +8275,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -8306,7 +8305,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -8336,7 +8335,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/*Air Blow*/ @MR300, @DM3"
       ]
@@ -8366,7 +8365,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "--------------"
       ]
@@ -8396,7 +8395,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -8426,7 +8425,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -8456,7 +8455,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_15 Command (Induction Gold-Melting Program)",
+        "A_15Command:Gold-Melting Program",
         "Bookmarks",
         "/*Induction-Furnace Station → Graphite-Crucible Station; Close Lid*/ @MR400, @DM4"
       ]
@@ -8469,10 +8468,10 @@
       ],
       "category": "program",
       "original_name": "A_32号指令:石墨盘放回原位",
-      "english_name": "A_32 Command: Return Graphite Crucible to Home Station",
+      "english_name": "A_32Command:Return Graphite Crucible Home",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_32号指令:石墨盘放回原位",
+      "english_status": "applied",
+      "current_tree_name": "A_32Command:Return Graphite Crucible Home",
       "translation_record_id": "0ac2b34aa32089a278be",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -8482,7 +8481,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_32 Command: Return Graphite Crucible to Home Station"
+        "A_32Command:Return Graphite Crucible Home"
       ]
     },
     {
@@ -8508,7 +8507,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_32 Command: Return Graphite Crucible to Home Station",
+        "A_32Command:Return Graphite Crucible Home",
         "Local Labels"
       ]
     },
@@ -8535,7 +8534,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_32 Command: Return Graphite Crucible to Home Station",
+        "A_32Command:Return Graphite Crucible Home",
         "Bookmarks"
       ]
     },
@@ -8547,10 +8546,10 @@
       ],
       "category": "program",
       "original_name": "A_22号指令:载盘位→相机位",
-      "english_name": "A_22 Command: Carrier-Tray Station → Vision Station",
+      "english_name": "A_22Command:Carrier Tray to Vision Station",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_22号指令:载盘位→相机位",
+      "english_status": "applied",
+      "current_tree_name": "A_22Command:Carrier Tray to Vision Station",
       "translation_record_id": "7ad9b5a4d2f0cf2c2479",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -8560,7 +8559,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_22 Command: Carrier-Tray Station → Vision Station"
+        "A_22Command:Carrier Tray to Vision Station"
       ]
     },
     {
@@ -8586,7 +8585,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_22 Command: Carrier-Tray Station → Vision Station",
+        "A_22Command:Carrier Tray to Vision Station",
         "Local Labels"
       ]
     },
@@ -8613,7 +8612,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_22 Command: Carrier-Tray Station → Vision Station",
+        "A_22Command:Carrier Tray to Vision Station",
         "Bookmarks"
       ]
     },
@@ -8642,7 +8641,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_22 Command: Carrier-Tray Station → Vision Station",
+        "A_22Command:Carrier Tray to Vision Station",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -8672,7 +8671,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_22 Command: Carrier-Tray Station → Vision Station",
+        "A_22Command:Carrier Tray to Vision Station",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -8702,7 +8701,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_22 Command: Carrier-Tray Station → Vision Station",
+        "A_22Command:Carrier Tray to Vision Station",
         "Bookmarks",
         "/*22# Command Detailed Procedure*/"
       ]
@@ -8715,10 +8714,10 @@
       ],
       "category": "program",
       "original_name": "A_23号指令:测金位→精称位",
-      "english_name": "A_23 Command: XRF Assay Station → Fine-Weighing Station",
+      "english_name": "A_23Command:XRF Station to Fine Scale",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_23号指令:测金位→精称位",
+      "english_status": "applied",
+      "current_tree_name": "A_23Command:XRF Station to Fine Scale",
       "translation_record_id": "c99757212cbc9eaf00c6",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -8728,7 +8727,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_23 Command: XRF Assay Station → Fine-Weighing Station"
+        "A_23Command:XRF Station to Fine Scale"
       ]
     },
     {
@@ -8754,7 +8753,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_23 Command: XRF Assay Station → Fine-Weighing Station",
+        "A_23Command:XRF Station to Fine Scale",
         "Local Labels"
       ]
     },
@@ -8781,7 +8780,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_23 Command: XRF Assay Station → Fine-Weighing Station",
+        "A_23Command:XRF Station to Fine Scale",
         "Bookmarks"
       ]
     },
@@ -8810,7 +8809,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_23 Command: XRF Assay Station → Fine-Weighing Station",
+        "A_23Command:XRF Station to Fine Scale",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -8840,7 +8839,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_23 Command: XRF Assay Station → Fine-Weighing Station",
+        "A_23Command:XRF Station to Fine Scale",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -8870,7 +8869,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_23 Command: XRF Assay Station → Fine-Weighing Station",
+        "A_23Command:XRF Station to Fine Scale",
         "Bookmarks",
         "/*23# Command Detailed Procedure*/"
       ]
@@ -8883,10 +8882,10 @@
       ],
       "category": "program",
       "original_name": "A_24号指令:精称位→载盘位",
-      "english_name": "A_24 Command: Fine-Weighing Station → Carrier-Tray Station",
+      "english_name": "A_24Command:Fine Scale to Carrier Tray",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_24号指令:精称位→载盘位",
+      "english_status": "applied",
+      "current_tree_name": "A_24Command:Fine Scale to Carrier Tray",
       "translation_record_id": "cc30eaf1b17efe7b1616",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -8896,7 +8895,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_24 Command: Fine-Weighing Station → Carrier-Tray Station"
+        "A_24Command:Fine Scale to Carrier Tray"
       ]
     },
     {
@@ -8922,7 +8921,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_24 Command: Fine-Weighing Station → Carrier-Tray Station",
+        "A_24Command:Fine Scale to Carrier Tray",
         "Local Labels"
       ]
     },
@@ -8949,7 +8948,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_24 Command: Fine-Weighing Station → Carrier-Tray Station",
+        "A_24Command:Fine Scale to Carrier Tray",
         "Bookmarks"
       ]
     },
@@ -8978,7 +8977,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_24 Command: Fine-Weighing Station → Carrier-Tray Station",
+        "A_24Command:Fine Scale to Carrier Tray",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -9008,7 +9007,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_24 Command: Fine-Weighing Station → Carrier-Tray Station",
+        "A_24Command:Fine Scale to Carrier Tray",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -9038,7 +9037,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_24 Command: Fine-Weighing Station → Carrier-Tray Station",
+        "A_24Command:Fine Scale to Carrier Tray",
         "Bookmarks",
         "/*24# Command Detailed Procedure*/"
       ]
@@ -9051,10 +9050,10 @@
       ],
       "category": "program",
       "original_name": "A_25号指令:载盘倾倒",
-      "english_name": "A_25 Command: Tip Carrier Tray",
+      "english_name": "A_25Command:Tip Carrier Tray",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_25号指令:载盘倾倒",
+      "english_status": "applied",
+      "current_tree_name": "A_25Command:Tip Carrier Tray",
       "translation_record_id": "7a08ca0f9c1b0c229fcb",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -9064,7 +9063,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_25 Command: Tip Carrier Tray"
+        "A_25Command:Tip Carrier Tray"
       ]
     },
     {
@@ -9090,7 +9089,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_25 Command: Tip Carrier Tray",
+        "A_25Command:Tip Carrier Tray",
         "Local Labels"
       ]
     },
@@ -9117,7 +9116,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_25 Command: Tip Carrier Tray",
+        "A_25Command:Tip Carrier Tray",
         "Bookmarks"
       ]
     },
@@ -9146,7 +9145,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_25 Command: Tip Carrier Tray",
+        "A_25Command:Tip Carrier Tray",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -9176,7 +9175,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_25 Command: Tip Carrier Tray",
+        "A_25Command:Tip Carrier Tray",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -9206,7 +9205,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_25 Command: Tip Carrier Tray",
+        "A_25Command:Tip Carrier Tray",
         "Bookmarks",
         "/*25# Command Detailed Procedure*/"
       ]
@@ -9219,10 +9218,10 @@
       ],
       "category": "program",
       "original_name": "A_26号指令:测金位XY移动一步",
-      "english_name": "A_26 Command: One-Step XY Move at XRF Assay Station",
+      "english_name": "A_26Command:XRF Station One-Step XY Move",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_26号指令:测金位XY移动一步",
+      "english_status": "applied",
+      "current_tree_name": "A_26Command:XRF Station One-Step XY Move",
       "translation_record_id": "8b5c1c50417e0506bd73",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -9232,7 +9231,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_26 Command: One-Step XY Move at XRF Assay Station"
+        "A_26Command:XRF Station One-Step XY Move"
       ]
     },
     {
@@ -9258,7 +9257,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_26 Command: One-Step XY Move at XRF Assay Station",
+        "A_26Command:XRF Station One-Step XY Move",
         "Local Labels"
       ]
     },
@@ -9285,7 +9284,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_26 Command: One-Step XY Move at XRF Assay Station",
+        "A_26Command:XRF Station One-Step XY Move",
         "Bookmarks"
       ]
     },
@@ -9314,7 +9313,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_26 Command: One-Step XY Move at XRF Assay Station",
+        "A_26Command:XRF Station One-Step XY Move",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -9344,7 +9343,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_26 Command: One-Step XY Move at XRF Assay Station",
+        "A_26Command:XRF Station One-Step XY Move",
         "Bookmarks",
         "/*26# Command Detailed Procedure*/"
       ]
@@ -9357,10 +9356,10 @@
       ],
       "category": "program",
       "original_name": "A_28号指令:取盘位→载盘位",
-      "english_name": "A_28 Command: Tray-Pickup Station → Carrier-Tray Station",
+      "english_name": "A_28Command:Tray Pickup to Carrier Tray",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_28号指令:取盘位→载盘位",
+      "english_status": "applied",
+      "current_tree_name": "A_28Command:Tray Pickup to Carrier Tray",
       "translation_record_id": "a0483ebe8fd02575edaa",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -9370,7 +9369,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_28 Command: Tray-Pickup Station → Carrier-Tray Station"
+        "A_28Command:Tray Pickup to Carrier Tray"
       ]
     },
     {
@@ -9396,7 +9395,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_28 Command: Tray-Pickup Station → Carrier-Tray Station",
+        "A_28Command:Tray Pickup to Carrier Tray",
         "Local Labels"
       ]
     },
@@ -9423,7 +9422,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_28 Command: Tray-Pickup Station → Carrier-Tray Station",
+        "A_28Command:Tray Pickup to Carrier Tray",
         "Bookmarks"
       ]
     },
@@ -9452,7 +9451,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_28 Command: Tray-Pickup Station → Carrier-Tray Station",
+        "A_28Command:Tray Pickup to Carrier Tray",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -9482,7 +9481,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_28 Command: Tray-Pickup Station → Carrier-Tray Station",
+        "A_28Command:Tray Pickup to Carrier Tray",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -9512,7 +9511,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_28 Command: Tray-Pickup Station → Carrier-Tray Station",
+        "A_28Command:Tray Pickup to Carrier Tray",
         "Bookmarks",
         "/*28# Command Detailed Procedure*/"
       ]
@@ -9525,10 +9524,10 @@
       ],
       "category": "program",
       "original_name": "A_53号指令:测金位→取盘位",
-      "english_name": "A_53 Command: XRF Assay Station → Tray-Pickup Station",
+      "english_name": "A_53Command:XRF Station to Tray Pickup",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_53号指令:测金位→取盘位",
+      "english_status": "applied",
+      "current_tree_name": "A_53Command:XRF Station to Tray Pickup",
       "translation_record_id": "87e693e5fea67d89b88f",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -9538,7 +9537,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_53 Command: XRF Assay Station → Tray-Pickup Station"
+        "A_53Command:XRF Station to Tray Pickup"
       ]
     },
     {
@@ -9564,7 +9563,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_53 Command: XRF Assay Station → Tray-Pickup Station",
+        "A_53Command:XRF Station to Tray Pickup",
         "Local Labels"
       ]
     },
@@ -9591,7 +9590,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_53 Command: XRF Assay Station → Tray-Pickup Station",
+        "A_53Command:XRF Station to Tray Pickup",
         "Bookmarks"
       ]
     },
@@ -9620,7 +9619,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_53 Command: XRF Assay Station → Tray-Pickup Station",
+        "A_53Command:XRF Station to Tray Pickup",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -9650,7 +9649,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_53 Command: XRF Assay Station → Tray-Pickup Station",
+        "A_53Command:XRF Station to Tray Pickup",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -9680,7 +9679,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_53 Command: XRF Assay Station → Tray-Pickup Station",
+        "A_53Command:XRF Station to Tray Pickup",
         "Bookmarks",
         "/* Move from XRF Assay Station to Tray-Pickup Station*/"
       ]
@@ -9710,7 +9709,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_53 Command: XRF Assay Station → Tray-Pickup Station",
+        "A_53Command:XRF Station to Tray Pickup",
         "Bookmarks",
         "/* Switch from Tray-Pickup Station to Gate Station*/"
       ]
@@ -9740,7 +9739,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_53 Command: XRF Assay Station → Tray-Pickup Station",
+        "A_53Command:XRF Station to Tray Pickup",
         "Bookmarks",
         "/*Wait for cargo removal*/"
       ]
@@ -9770,7 +9769,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_53 Command: XRF Assay Station → Tray-Pickup Station",
+        "A_53Command:XRF Station to Tray Pickup",
         "Bookmarks",
         "/*Switch from Gate Station to Tray-Pickup Station*/"
       ]
@@ -9800,7 +9799,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_53 Command: XRF Assay Station → Tray-Pickup Station",
+        "A_53Command:XRF Station to Tray Pickup",
         "Bookmarks",
         "/*Move from Tray-Pickup Station to Carrier-Tray Station*/"
       ]
@@ -9830,7 +9829,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_53 Command: XRF Assay Station → Tray-Pickup Station",
+        "A_53Command:XRF Station to Tray Pickup",
         "Bookmarks",
         "/*Return main spindle to home position*/"
       ]
@@ -9843,10 +9842,10 @@
       ],
       "category": "program",
       "original_name": "A_54号指令:（在工控指令）",
-      "english_name": "A_54 Command: (IPC Command)",
+      "english_name": "A_54Command:IPC Command",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_54号指令:（在工控指令）",
+      "english_status": "applied",
+      "current_tree_name": "A_54Command:IPC Command",
       "translation_record_id": "bf61fc680c80860ee59b",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -9856,7 +9855,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_54 Command: (IPC Command)"
+        "A_54Command:IPC Command"
       ]
     },
     {
@@ -9882,7 +9881,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_54 Command: (IPC Command)",
+        "A_54Command:IPC Command",
         "Local Labels"
       ]
     },
@@ -9909,7 +9908,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_54 Command: (IPC Command)",
+        "A_54Command:IPC Command",
         "Bookmarks"
       ]
     },
@@ -9921,10 +9920,10 @@
       ],
       "category": "program",
       "original_name": "A_55号指令:精秤位→取盘位",
-      "english_name": "A_55 Command: Fine-Weighing Station → Tray-Pickup Station",
+      "english_name": "A_55Command:Fine Scale to Tray Pickup",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_55号指令:精秤位→取盘位",
+      "english_status": "applied",
+      "current_tree_name": "A_55Command:Fine Scale to Tray Pickup",
       "translation_record_id": "f8f57f9665fd09a599ee",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -9934,7 +9933,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_55 Command: Fine-Weighing Station → Tray-Pickup Station"
+        "A_55Command:Fine Scale to Tray Pickup"
       ]
     },
     {
@@ -9960,7 +9959,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_55 Command: Fine-Weighing Station → Tray-Pickup Station",
+        "A_55Command:Fine Scale to Tray Pickup",
         "Local Labels"
       ]
     },
@@ -9987,7 +9986,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_55 Command: Fine-Weighing Station → Tray-Pickup Station",
+        "A_55Command:Fine Scale to Tray Pickup",
         "Bookmarks"
       ]
     },
@@ -10016,7 +10015,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_55 Command: Fine-Weighing Station → Tray-Pickup Station",
+        "A_55Command:Fine Scale to Tray Pickup",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -10046,7 +10045,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_55 Command: Fine-Weighing Station → Tray-Pickup Station",
+        "A_55Command:Fine Scale to Tray Pickup",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -10076,7 +10075,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_55 Command: Fine-Weighing Station → Tray-Pickup Station",
+        "A_55Command:Fine Scale to Tray Pickup",
         "Bookmarks",
         "/*Move from Fine-Weighing Station to Tray-Pickup Station*/"
       ]
@@ -10106,7 +10105,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_55 Command: Fine-Weighing Station → Tray-Pickup Station",
+        "A_55Command:Fine Scale to Tray Pickup",
         "Bookmarks",
         "/* Switch from Tray-Pickup Station to Gate Station*/"
       ]
@@ -10136,7 +10135,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_55 Command: Fine-Weighing Station → Tray-Pickup Station",
+        "A_55Command:Fine Scale to Tray Pickup",
         "Bookmarks",
         "/*Wait for cargo removal*/"
       ]
@@ -10166,7 +10165,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_55 Command: Fine-Weighing Station → Tray-Pickup Station",
+        "A_55Command:Fine Scale to Tray Pickup",
         "Bookmarks",
         "/*Switch from Gate Station to Tray-Pickup Station*/"
       ]
@@ -10196,7 +10195,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_55 Command: Fine-Weighing Station → Tray-Pickup Station",
+        "A_55Command:Fine Scale to Tray Pickup",
         "Bookmarks",
         "/*Move from Tray-Pickup Station to Carrier-Tray Station*/"
       ]
@@ -10226,7 +10225,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_55 Command: Fine-Weighing Station → Tray-Pickup Station",
+        "A_55Command:Fine Scale to Tray Pickup",
         "Bookmarks",
         "/*Return main spindle to home position*/"
       ]
@@ -10239,10 +10238,10 @@
       ],
       "category": "program",
       "original_name": "A_56号指令:载盘位→取盘位",
-      "english_name": "A_56 Command: Carrier-Tray Station → Tray-Pickup Station",
+      "english_name": "A_56Command:Carrier Tray to Tray Pickup",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_56号指令:载盘位→取盘位",
+      "english_status": "applied",
+      "current_tree_name": "A_56Command:Carrier Tray to Tray Pickup",
       "translation_record_id": "c3c9e1ae7fd4adffeb44",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -10252,7 +10251,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_56 Command: Carrier-Tray Station → Tray-Pickup Station"
+        "A_56Command:Carrier Tray to Tray Pickup"
       ]
     },
     {
@@ -10278,7 +10277,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_56 Command: Carrier-Tray Station → Tray-Pickup Station",
+        "A_56Command:Carrier Tray to Tray Pickup",
         "Local Labels"
       ]
     },
@@ -10305,7 +10304,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_56 Command: Carrier-Tray Station → Tray-Pickup Station",
+        "A_56Command:Carrier Tray to Tray Pickup",
         "Bookmarks"
       ]
     },
@@ -10334,7 +10333,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_56 Command: Carrier-Tray Station → Tray-Pickup Station",
+        "A_56Command:Carrier Tray to Tray Pickup",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -10364,7 +10363,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_56 Command: Carrier-Tray Station → Tray-Pickup Station",
+        "A_56Command:Carrier Tray to Tray Pickup",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -10394,7 +10393,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_56 Command: Carrier-Tray Station → Tray-Pickup Station",
+        "A_56Command:Carrier Tray to Tray Pickup",
         "Bookmarks",
         "/*Move from Carrier-Tray Station to Tray-Pickup Station*/"
       ]
@@ -10424,7 +10423,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_56 Command: Carrier-Tray Station → Tray-Pickup Station",
+        "A_56Command:Carrier Tray to Tray Pickup",
         "Bookmarks",
         "/* Switch from Tray-Pickup Station to Gate Station*/"
       ]
@@ -10454,7 +10453,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_56 Command: Carrier-Tray Station → Tray-Pickup Station",
+        "A_56Command:Carrier Tray to Tray Pickup",
         "Bookmarks",
         "/*Wait for cargo removal*/"
       ]
@@ -10484,7 +10483,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_56 Command: Carrier-Tray Station → Tray-Pickup Station",
+        "A_56Command:Carrier Tray to Tray Pickup",
         "Bookmarks",
         "/*Switch from Gate Station to Tray-Pickup Station*/"
       ]
@@ -10514,7 +10513,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_56 Command: Carrier-Tray Station → Tray-Pickup Station",
+        "A_56Command:Carrier Tray to Tray Pickup",
         "Bookmarks",
         "/*Move from Tray-Pickup Station to Carrier-Tray Station*/"
       ]
@@ -10544,7 +10543,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_56 Command: Carrier-Tray Station → Tray-Pickup Station",
+        "A_56Command:Carrier Tray to Tray Pickup",
         "Bookmarks",
         "/*Return main spindle to home position*/"
       ]
@@ -10574,7 +10573,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_56 Command: Carrier-Tray Station → Tray-Pickup Station",
+        "A_56Command:Carrier Tray to Tray Pickup",
         "Bookmarks",
         "/*Compatible with 1.0 Version; 56# Command*/"
       ]
@@ -10587,10 +10586,10 @@
       ],
       "category": "program",
       "original_name": "A_57号指令:相机位→取盘位",
-      "english_name": "A_57 Command: Vision Station → Tray-Pickup Station",
+      "english_name": "A_57Command:Vision Station to Tray Pickup",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "A_57号指令:相机位→取盘位",
+      "english_status": "applied",
+      "current_tree_name": "A_57Command:Vision Station to Tray Pickup",
       "translation_record_id": "966c6edff90f99a3c023",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -10600,7 +10599,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_57 Command: Vision Station → Tray-Pickup Station"
+        "A_57Command:Vision Station to Tray Pickup"
       ]
     },
     {
@@ -10626,7 +10625,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_57 Command: Vision Station → Tray-Pickup Station",
+        "A_57Command:Vision Station to Tray Pickup",
         "Local Labels"
       ]
     },
@@ -10653,7 +10652,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_57 Command: Vision Station → Tray-Pickup Station",
+        "A_57Command:Vision Station to Tray Pickup",
         "Bookmarks"
       ]
     },
@@ -10682,7 +10681,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_57 Command: Vision Station → Tray-Pickup Station",
+        "A_57Command:Vision Station to Tray Pickup",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -10712,7 +10711,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_57 Command: Vision Station → Tray-Pickup Station",
+        "A_57Command:Vision Station to Tray Pickup",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -10742,7 +10741,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_57 Command: Vision Station → Tray-Pickup Station",
+        "A_57Command:Vision Station to Tray Pickup",
         "Bookmarks",
         "/* Move from XRF Assay Station to Tray-Pickup Station*/"
       ]
@@ -10772,7 +10771,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_57 Command: Vision Station → Tray-Pickup Station",
+        "A_57Command:Vision Station to Tray Pickup",
         "Bookmarks",
         "/* Switch from Tray-Pickup Station to Gate Station*/"
       ]
@@ -10802,7 +10801,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_57 Command: Vision Station → Tray-Pickup Station",
+        "A_57Command:Vision Station to Tray Pickup",
         "Bookmarks",
         "/*Wait for cargo removal*/"
       ]
@@ -10832,7 +10831,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_57 Command: Vision Station → Tray-Pickup Station",
+        "A_57Command:Vision Station to Tray Pickup",
         "Bookmarks",
         "/*Switch from Gate Station to Tray-Pickup Station*/"
       ]
@@ -10862,7 +10861,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_57 Command: Vision Station → Tray-Pickup Station",
+        "A_57Command:Vision Station to Tray Pickup",
         "Bookmarks",
         "/*Move from Tray-Pickup Station to Carrier-Tray Station*/"
       ]
@@ -10892,7 +10891,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "A_57 Command: Vision Station → Tray-Pickup Station",
+        "A_57Command:Vision Station to Tray Pickup",
         "Bookmarks",
         "/*Return main spindle to home position*/"
       ]
@@ -10983,10 +10982,10 @@
       ],
       "category": "program",
       "original_name": "通信程序:1#：粗称；3#水机；4#温度；9#语音",
-      "english_name": "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+      "english_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "通信程序:1#：粗称；3#水机；4#温度；9#语音",
+      "english_status": "applied",
+      "current_tree_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
       "translation_record_id": "948a6ff920488bcc07c6",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -10996,7 +10995,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation"
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice"
       ]
     },
     {
@@ -11022,7 +11021,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Local Labels"
       ]
     },
@@ -11049,7 +11048,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks"
       ]
     },
@@ -11078,7 +11077,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "/* Reset */"
       ]
@@ -11108,7 +11107,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -11138,7 +11137,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "-------Z2=2-------"
       ]
@@ -11168,7 +11167,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "/*Coarse Weighing Communication*/（1#）"
       ]
@@ -11198,7 +11197,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "A_Cancel Coarse-Scale Tare, =2"
       ]
@@ -11228,7 +11227,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "A_Tare Coarse Scale, =1"
       ]
@@ -11258,7 +11257,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "B_Zero Coarse Scale, =1"
       ]
@@ -11288,7 +11287,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "B_Weight calibration"
       ]
@@ -11318,7 +11317,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "C_Zero drift setting"
       ]
@@ -11348,7 +11347,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "D_Current Coarse-Scale Weight, Z2=2"
       ]
@@ -11378,7 +11377,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "E_Disable write protection, =1"
       ]
@@ -11408,7 +11407,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "E_Enable write protection, =0"
       ]
@@ -11438,7 +11437,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "-------"
       ]
@@ -11468,7 +11467,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "-------Z1=0~10-------"
       ]
@@ -11498,7 +11497,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "/*Chiller Communication*/（3#）"
       ]
@@ -11528,7 +11527,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "A_Chiller tank temperature setting DM500；Z1=2"
       ]
@@ -11558,7 +11557,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "B_Chiller tank return-temperature setting: DM502（start temperature difference）、DM503（stop temperature difference）；Z1=4"
       ]
@@ -11588,7 +11587,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "C_Chiller cooling water real-time temperature DM2008；Z1=6"
       ]
@@ -11618,7 +11617,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "-------"
       ]
@@ -11648,7 +11647,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "/*Temperature controller Communication*/（4#）"
       ]
@@ -11678,7 +11677,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "CH1_Vacuum chamber internal temperature PV1_HMI DM390；PLC:DM2000；Z1=8"
       ]
@@ -11708,7 +11707,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "CH2_Graphite Crucible cooling station temperature PV2_HMI DM392；PLC:DM2002；Z1=10"
       ]
@@ -11738,7 +11737,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "CH3_Return water temperature PV2_HMI:DM2004；Z1=12"
       ]
@@ -11768,7 +11767,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "CH4_Vacuum chamber body temperature PV2_HMI：DM2006；Z1=14"
       ]
@@ -11798,7 +11797,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "Temperature and humidity Communication: HMI：DM??；Z1=26；Z1=28"
       ]
@@ -11828,7 +11827,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "/*Data transmission and reception*/【Coarse Weighing+ temperature controller】"
       ]
@@ -11858,7 +11857,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "/*Data transmission and reception*/【Chiller+ temperature controller】"
       ]
@@ -11888,7 +11887,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "-------"
       ]
@@ -11918,7 +11917,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "/*Anti-stuck program*/（temperature communication）_5S"
       ]
@@ -11948,7 +11947,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "/*HMI Temperature display*/"
       ]
@@ -11978,7 +11977,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "------------------"
       ]
@@ -12008,7 +12007,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "/*Voice Annunciation*/"
       ]
@@ -12038,7 +12037,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "==Mandarin Version=="
       ]
@@ -12068,7 +12067,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "==English Version=="
       ]
@@ -12098,7 +12097,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "/*Black New-Design Voice Module*/"
       ]
@@ -12128,7 +12127,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "/*Voice Annunciation- Command Send*/"
       ]
@@ -12158,7 +12157,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "/*After Voice Annunciation Completion: Reset Coarse Weighing and Temperature Communication*/"
       ]
@@ -12188,7 +12187,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "-------"
       ]
@@ -12218,7 +12217,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+        "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
         "Bookmarks",
         "/*Anti-Lag Program*/ (Voice Annunciation)_1S"
       ]
@@ -12231,10 +12230,10 @@
       ],
       "category": "program",
       "original_name": "【回水+真空箱】报警程序",
-      "english_name": "[Cooling-Water Return + Vacuum Chamber] Alarm Program",
+      "english_name": "WaterVacuumAlarmProgram:CW Return + Vacuum Chamber",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "【回水+真空箱】报警程序",
+      "english_status": "applied",
+      "current_tree_name": "WaterVacuumAlarmProgram:CW Return + Vacuum Chamber",
       "translation_record_id": "10ee2e5c9f5bc2a5a0e5",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -12244,7 +12243,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "[Cooling-Water Return + Vacuum Chamber] Alarm Program"
+        "WaterVacuumAlarmProgram:CW Return + Vacuum Chamber"
       ]
     },
     {
@@ -12270,7 +12269,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "[Cooling-Water Return + Vacuum Chamber] Alarm Program",
+        "WaterVacuumAlarmProgram:CW Return + Vacuum Chamber",
         "Local Labels"
       ]
     },
@@ -12297,7 +12296,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "[Cooling-Water Return + Vacuum Chamber] Alarm Program",
+        "WaterVacuumAlarmProgram:CW Return + Vacuum Chamber",
         "Bookmarks"
       ]
     },
@@ -12309,10 +12308,10 @@
       ],
       "category": "program",
       "original_name": "气罐程序+抽真空:20240806，优化",
-      "english_name": "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
+      "english_name": "AirTankVacuumProgram:20240806 Optimization",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "气罐程序+抽真空:20240806，优化",
+      "english_status": "applied",
+      "current_tree_name": "AirTankVacuumProgram:20240806 Optimization",
       "translation_record_id": "20a55e239ad30aa09e73",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -12322,7 +12321,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Air-Tank Program + Vacuum Evacuation: Optimized 20240806"
+        "AirTankVacuumProgram:20240806 Optimization"
       ]
     },
     {
@@ -12348,7 +12347,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
+        "AirTankVacuumProgram:20240806 Optimization",
         "Local Labels"
       ]
     },
@@ -12375,7 +12374,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
+        "AirTankVacuumProgram:20240806 Optimization",
         "Bookmarks"
       ]
     },
@@ -12404,7 +12403,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
+        "AirTankVacuumProgram:20240806 Optimization",
         "Bookmarks",
         "/*Default Time*/ (Vacuum Evacuation, Gas Replenishment)"
       ]
@@ -12434,7 +12433,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
+        "AirTankVacuumProgram:20240806 Optimization",
         "Bookmarks",
         "[Air-Tank Program]//MR21200-21215"
       ]
@@ -12464,7 +12463,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
+        "AirTankVacuumProgram:20240806 Optimization",
         "Bookmarks",
         "[Vacuum Evacuation Program]//MR21300-21315"
       ]
@@ -12494,7 +12493,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
+        "AirTankVacuumProgram:20240806 Optimization",
         "Bookmarks",
         "/*Prevent Air Pump Overheating*/"
       ]
@@ -12507,10 +12506,10 @@
       ],
       "category": "program",
       "original_name": "报警映射（MR--DM102）",
-      "english_name": "Alarm Mapping (MR--DM102)",
+      "english_name": "AlarmMap:MR--DM102",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "报警映射（MR--DM102）",
+      "english_status": "applied",
+      "current_tree_name": "AlarmMap:MR--DM102",
       "translation_record_id": "148f4b00ddd58dd05965",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -12520,7 +12519,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Alarm Mapping (MR--DM102)"
+        "AlarmMap:MR--DM102"
       ]
     },
     {
@@ -12546,7 +12545,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Alarm Mapping (MR--DM102)",
+        "AlarmMap:MR--DM102",
         "Local Labels"
       ]
     },
@@ -12573,7 +12572,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Alarm Mapping (MR--DM102)",
+        "AlarmMap:MR--DM102",
         "Bookmarks"
       ]
     },
@@ -12602,7 +12601,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Alarm Mapping (MR--DM102)",
+        "AlarmMap:MR--DM102",
         "Bookmarks",
         "/* Reset */"
       ]
@@ -12632,7 +12631,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Alarm Mapping (MR--DM102)",
+        "AlarmMap:MR--DM102",
         "Bookmarks",
         "/*Equipment Mechanical Motion Error Category*/ (1000-1999)"
       ]
@@ -12662,7 +12661,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Alarm Mapping (MR--DM102)",
+        "AlarmMap:MR--DM102",
         "Bookmarks",
         "/*Equipment Communication Error Category*/ (2000-2999)"
       ]
@@ -12692,7 +12691,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Alarm Mapping (MR--DM102)",
+        "AlarmMap:MR--DM102",
         "Bookmarks",
         "/*XRF Analyzer Error Codes*/ (3000-3999)"
       ]
@@ -12722,7 +12721,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Alarm Mapping (MR--DM102)",
+        "AlarmMap:MR--DM102",
         "Bookmarks",
         "/*Induction-Melting Error Codes*/ (4000-4999)"
       ]
@@ -12752,7 +12751,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Alarm Mapping (MR--DM102)",
+        "AlarmMap:MR--DM102",
         "Bookmarks",
         "/*Equipment Cooling Error Category*/ (5000-5999)"
       ]
@@ -12782,7 +12781,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Alarm Mapping (MR--DM102)",
+        "AlarmMap:MR--DM102",
         "Bookmarks",
         "/*Equipment Weighing Error Category*/ (6000-6999)"
       ]
@@ -12795,10 +12794,10 @@
       ],
       "category": "program",
       "original_name": "售后_点对点",
-      "english_name": "Service_Point-to-Point",
+      "english_name": "AfterSalesPointToPoint",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "售后_点对点",
+      "english_status": "applied",
+      "current_tree_name": "AfterSalesPointToPoint",
       "translation_record_id": "dfcfeaec957e34f3eda8",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -12808,7 +12807,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point"
+        "AfterSalesPointToPoint"
       ]
     },
     {
@@ -12834,7 +12833,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Local Labels"
       ]
     },
@@ -12861,7 +12860,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks"
       ]
     },
@@ -12890,7 +12889,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "Judge"
       ]
@@ -12920,7 +12919,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "Reset"
       ]
@@ -12950,7 +12949,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "Alarm"
       ]
@@ -12980,7 +12979,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "After Reset, Move to Lid-Opening Station"
       ]
@@ -13010,7 +13009,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "Graphite-Crucible Station → Induction-Furnace Station"
       ]
@@ -13040,7 +13039,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "Induction-Furnace Station → Graphite-Crucible Station"
       ]
@@ -13070,7 +13069,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "Lid-Opening Station → Lid-Handling Station"
       ]
@@ -13100,7 +13099,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "Lid-Handling Station → Lid-Opening Station"
       ]
@@ -13130,7 +13129,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "Graphite-Crucible Station → Karat-Gold Station"
       ]
@@ -13160,7 +13159,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "Karat-Gold Station → Graphite-Crucible Station"
       ]
@@ -13190,7 +13189,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "Graphite-Crucible Station → Pure-Gold Station"
       ]
@@ -13220,7 +13219,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "Pure-Gold Station → Graphite-Crucible Station"
       ]
@@ -13250,7 +13249,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "Graphite-Crucible Station → Lid-Handling Station"
       ]
@@ -13280,7 +13279,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "Lid-Handling Station → Induction-Furnace Station"
       ]
@@ -13310,7 +13309,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "/*Combined Command 1: Open Lid + Induction-Furnace Station - Graphite-Crucible Station + Close Lid*/ @DM0, @MR100"
       ]
@@ -13340,7 +13339,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Service_Point-to-Point",
+        "AfterSalesPointToPoint",
         "Bookmarks",
         "/*Combined Command 2: Tip Graphite Crucible into Carrier Tray*/ @DM0, @MR200"
       ]
@@ -13353,10 +13352,10 @@
       ],
       "category": "program",
       "original_name": "“一键”程序",
-      "english_name": "One-Touch Program",
+      "english_name": "OneTouchProgram",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "“一键”程序",
+      "english_status": "applied",
+      "current_tree_name": "OneTouchProgram",
       "translation_record_id": "89d0f7477b30422de693",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -13366,7 +13365,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "One-Touch Program"
+        "OneTouchProgram"
       ]
     },
     {
@@ -13392,7 +13391,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "One-Touch Program",
+        "OneTouchProgram",
         "Local Labels"
       ]
     },
@@ -13419,7 +13418,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "One-Touch Program",
+        "OneTouchProgram",
         "Bookmarks"
       ]
     },
@@ -13448,7 +13447,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "One-Touch Program",
+        "OneTouchProgram",
         "Bookmarks",
         "/*One-Touch XRF Calibration*/"
       ]
@@ -13461,10 +13460,10 @@
       ],
       "category": "program",
       "original_name": "基恩士HMI",
-      "english_name": "KEYENCE HMI",
+      "english_name": "KEYENCE_HMI",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "基恩士HMI",
+      "english_status": "applied",
+      "current_tree_name": "KEYENCE_HMI",
       "translation_record_id": "02b9dc8b4d67d59aa0bc",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -13474,7 +13473,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "KEYENCE HMI"
+        "KEYENCE_HMI"
       ]
     },
     {
@@ -13500,7 +13499,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "KEYENCE HMI",
+        "KEYENCE_HMI",
         "Local Labels"
       ]
     },
@@ -13527,7 +13526,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "KEYENCE HMI",
+        "KEYENCE_HMI",
         "Bookmarks"
       ]
     },
@@ -13556,7 +13555,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "KEYENCE HMI",
+        "KEYENCE_HMI",
         "Bookmarks",
         "/*Command Debugging*/"
       ]
@@ -13569,10 +13568,10 @@
       ],
       "category": "program",
       "original_name": "——预研——",
-      "english_name": "-- Preliminary R&D --",
+      "english_name": "PreliminaryRD:Preliminary R&D",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "——预研——",
+      "english_status": "applied",
+      "current_tree_name": "PreliminaryRD:Preliminary R&D",
       "translation_record_id": "d70e6babc3e47a4bf4f7",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -13582,7 +13581,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "-- Preliminary R&D --"
+        "PreliminaryRD:Preliminary R&D"
       ]
     },
     {
@@ -13608,7 +13607,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "-- Preliminary R&D --",
+        "PreliminaryRD:Preliminary R&D",
         "Local Labels"
       ]
     },
@@ -13635,7 +13634,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "-- Preliminary R&D --",
+        "PreliminaryRD:Preliminary R&D",
         "Bookmarks"
       ]
     },
@@ -13647,10 +13646,10 @@
       ],
       "category": "program",
       "original_name": "新冷水机（状态、报警）",
-      "english_name": "New Chiller (Status and Alarms)",
+      "english_name": "NewChillerStatusAlarms",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "新冷水机（状态、报警）",
+      "english_status": "applied",
+      "current_tree_name": "NewChillerStatusAlarms",
       "translation_record_id": "04017e416d370647496d",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -13660,7 +13659,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "New Chiller (Status and Alarms)"
+        "NewChillerStatusAlarms"
       ]
     },
     {
@@ -13686,7 +13685,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "New Chiller (Status and Alarms)",
+        "NewChillerStatusAlarms",
         "Local Labels"
       ]
     },
@@ -13713,7 +13712,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "New Chiller (Status and Alarms)",
+        "NewChillerStatusAlarms",
         "Bookmarks"
       ]
     },
@@ -13742,7 +13741,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "New Chiller (Status and Alarms)",
+        "NewChillerStatusAlarms",
         "Bookmarks",
         "/*Chiller: Read Status and Alarm*/ Z1=16"
       ]
@@ -13772,7 +13771,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "New Chiller (Status and Alarms)",
+        "NewChillerStatusAlarms",
         "Bookmarks",
         "/*Chiller Upper/Lower Limit Alarm Temperature Setting*/HMI: MR22500, DM498, DM499; Z1=22"
       ]
@@ -13802,7 +13801,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "New Chiller (Status and Alarms)",
+        "NewChillerStatusAlarms",
         "Bookmarks",
         "/*Data Send/Receive*/"
       ]
@@ -13832,7 +13831,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "New Chiller (Status and Alarms)",
+        "NewChillerStatusAlarms",
         "Bookmarks",
         "/*Chiller Status and Alarm - Data Parsing*/ FRM Port2: DM2316~DM2318 (FRM Chiller); MR22615~MR23115..."
       ]
@@ -13845,10 +13844,10 @@
       ],
       "category": "program",
       "original_name": "MQTT:4G通信模块",
-      "english_name": "MQTT: 4G Communication Module",
+      "english_name": "MQTT:4G Communication Module",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "MQTT:4G通信模块",
+      "english_status": "applied",
+      "current_tree_name": "MQTT:4G Communication Module",
       "translation_record_id": "4c2464b8659b130b867e",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -13858,7 +13857,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "MQTT: 4G Communication Module"
+        "MQTT:4G Communication Module"
       ]
     },
     {
@@ -13884,7 +13883,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "MQTT: 4G Communication Module",
+        "MQTT:4G Communication Module",
         "Local Labels"
       ]
     },
@@ -13911,7 +13910,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "MQTT: 4G Communication Module",
+        "MQTT:4G Communication Module",
         "Bookmarks"
       ]
     },
@@ -13923,10 +13922,10 @@
       ],
       "category": "program",
       "original_name": "二次去皮",
-      "english_name": "Secondary Tare",
+      "english_name": "SecondaryTare",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "二次去皮",
+      "english_status": "applied",
+      "current_tree_name": "SecondaryTare",
       "translation_record_id": "49551f100f4c2f1442f1",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -13936,7 +13935,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Secondary Tare"
+        "SecondaryTare"
       ]
     },
     {
@@ -13962,7 +13961,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Secondary Tare",
+        "SecondaryTare",
         "Local Labels"
       ]
     },
@@ -13989,7 +13988,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Secondary Tare",
+        "SecondaryTare",
         "Bookmarks"
       ]
     },
@@ -14018,7 +14017,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Secondary Tare",
+        "SecondaryTare",
         "Bookmarks",
         "/*Alarm*/"
       ]
@@ -14048,7 +14047,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Secondary Tare",
+        "SecondaryTare",
         "Bookmarks",
         "/* Pause*/"
       ]
@@ -14078,7 +14077,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Secondary Tare",
+        "SecondaryTare",
         "Bookmarks",
         "/*Secondary Tare Process*/"
       ]
@@ -14091,10 +14090,10 @@
       ],
       "category": "program",
       "original_name": "Port0与精称通信:读取重量、去皮；一、二检重量",
-      "english_name": "Port0 Communication with Fine Scale: Read Weight and Tare; First/Second Check Weights",
+      "english_name": "Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "Port0与精称通信:读取重量、去皮；一、二检重量",
+      "english_status": "applied",
+      "current_tree_name": "Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2",
       "translation_record_id": "ca4080b15c8266a4e2ea",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -14104,7 +14103,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Port0 Communication with Fine Scale: Read Weight and Tare; First/Second Check Weights"
+        "Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2"
       ]
     },
     {
@@ -14130,7 +14129,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Port0 Communication with Fine Scale: Read Weight and Tare; First/Second Check Weights",
+        "Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2",
         "Local Labels"
       ]
     },
@@ -14157,7 +14156,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Port0 Communication with Fine Scale: Read Weight and Tare; First/Second Check Weights",
+        "Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2",
         "Bookmarks"
       ]
     },
@@ -14186,7 +14185,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Port0 Communication with Fine Scale: Read Weight and Tare; First/Second Check Weights",
+        "Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2",
         "Bookmarks",
         "/* Reset */"
       ]
@@ -14216,7 +14215,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Port0 Communication with Fine Scale: Read Weight and Tare; First/Second Check Weights",
+        "Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2",
         "Bookmarks",
         "/*Read Weight, Tare*/"
       ]
@@ -14246,7 +14245,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Port0 Communication with Fine Scale: Read Weight and Tare; First/Second Check Weights",
+        "Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2",
         "Bookmarks",
         "/*Fine-Scale Residue Check*/"
       ]
@@ -14276,7 +14275,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Port0 Communication with Fine Scale: Read Weight and Tare; First/Second Check Weights",
+        "Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2",
         "Bookmarks",
         "/*Save First/Second Check Weights*/ (To HMI Display)"
       ]
@@ -14289,10 +14288,10 @@
       ],
       "category": "program",
       "original_name": "熔炼计时:熔炼、炉内冷却、吹气、铜板冷却",
-      "english_name": "Process Timers: Induction Melting, In-Furnace Cooling, Air Blow, Copper-Plate Cooling",
+      "english_name": "MeltingTimers:Melt,Furn Cool,Blow,CuPlateCool",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "熔炼计时:熔炼、炉内冷却、吹气、铜板冷却",
+      "english_status": "applied",
+      "current_tree_name": "MeltingTimers:Melt,Furn Cool,Blow,CuPlateCool",
       "translation_record_id": "65d0f040401e7a4de217",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -14302,7 +14301,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Process Timers: Induction Melting, In-Furnace Cooling, Air Blow, Copper-Plate Cooling"
+        "MeltingTimers:Melt,Furn Cool,Blow,CuPlateCool"
       ]
     },
     {
@@ -14328,7 +14327,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Process Timers: Induction Melting, In-Furnace Cooling, Air Blow, Copper-Plate Cooling",
+        "MeltingTimers:Melt,Furn Cool,Blow,CuPlateCool",
         "Local Labels"
       ]
     },
@@ -14355,7 +14354,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Process Timers: Induction Melting, In-Furnace Cooling, Air Blow, Copper-Plate Cooling",
+        "MeltingTimers:Melt,Furn Cool,Blow,CuPlateCool",
         "Bookmarks"
       ]
     },
@@ -14367,10 +14366,10 @@
       ],
       "category": "program",
       "original_name": "夹子气缸老化",
-      "english_name": "Gripper-Cylinder Aging Test",
+      "english_name": "GripperCylinderEndurance",
       "russian_name": "",
-      "english_status": "planned",
-      "current_tree_name": "夹子气缸老化",
+      "english_status": "applied",
+      "current_tree_name": "GripperCylinderEndurance",
       "translation_record_id": "ee9cf7246dad917f8502",
       "original_path": [
         "程序: V3-6-0-8new",
@@ -14380,7 +14379,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Gripper-Cylinder Aging Test"
+        "GripperCylinderEndurance"
       ]
     },
     {
@@ -14406,7 +14405,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Gripper-Cylinder Aging Test",
+        "GripperCylinderEndurance",
         "Local Labels"
       ]
     },
@@ -14433,7 +14432,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Gripper-Cylinder Aging Test",
+        "GripperCylinderEndurance",
         "Bookmarks"
       ]
     },
@@ -14462,7 +14461,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Gripper-Cylinder Aging Test",
+        "GripperCylinderEndurance",
         "Bookmarks",
         "/*Z-Axis Gripper Endurance Test*/"
       ]
@@ -14492,7 +14491,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Gripper-Cylinder Aging Test",
+        "GripperCylinderEndurance",
         "Bookmarks",
         "/* Reset */"
       ]
@@ -14522,7 +14521,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Gripper-Cylinder Aging Test",
+        "GripperCylinderEndurance",
         "Bookmarks",
         "/*Stop*/"
       ]
@@ -14552,7 +14551,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Gripper-Cylinder Aging Test",
+        "GripperCylinderEndurance",
         "Bookmarks",
         "/*Endurance Test Program*/"
       ]
@@ -14582,7 +14581,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Gripper-Cylinder Aging Test",
+        "GripperCylinderEndurance",
         "Bookmarks",
         "***************************************"
       ]
@@ -14612,7 +14611,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Gripper-Cylinder Aging Test",
+        "GripperCylinderEndurance",
         "Bookmarks",
         "/*Carrier-Tray, Graphite-Crucible, and Tipping-Gripper Endurance Test*/"
       ]
@@ -14642,7 +14641,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Gripper-Cylinder Aging Test",
+        "GripperCylinderEndurance",
         "Bookmarks",
         "/* Reset */"
       ]
@@ -14672,7 +14671,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Gripper-Cylinder Aging Test",
+        "GripperCylinderEndurance",
         "Bookmarks",
         "/*Stop*/"
       ]
@@ -14702,7 +14701,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Gripper-Cylinder Aging Test",
+        "GripperCylinderEndurance",
         "Bookmarks",
         "/*Endurance Test Program*/"
       ]

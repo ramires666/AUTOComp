@@ -1,616 +1,630 @@
 {
   "schema_version": 1,
   "objective": "Translate every remaining authorized Chinese program-tree label to approved technical English using visual reasoning only, while preserving every original and an empty future Russian slot in durable state.",
-  "context": "Chinese KV STUDIO is only the current visible application, not an automation assumption. Work application-agnostically from pixels. Offline project copy. Domain: automated precious-metal acceptance kiosk, robotic arm, coarse/fine weighing, induction furnace for gold and precious-metal melting, and XRF analyzer for assay and valuation.",
+  "context": "Chinese KV STUDIO is only the current visible application, not an automation assumption. Work application-agnostically from pixels. Offline project copy. For this reviewed mission, the exact program-row context-menu command is 更改名称(N)... (Change Name), the third enabled menu item; never choose 属性(A)... (Properties), 密码设定 (Password Settings), 编辑/Edit, or a batch-change command. When a fresh standalone context-menu frame visibly matches the observed 211x358 layout, the verified normalized center of 更改名称(N)... is approximately (500,165); re-read the label before using this anchor. In a fresh matching Program Properties dialog, verified normalized control centers are Program Name (646,118), Comment (500,642), and OK (674,940). Prefer these fresh-frame verified anchors over guessed coordinates. Update the name/comment fields separately according to the allowed split records; do not type the full combined display label into one field. The fallback keyboard route from initial Program Name focus to Comment is exactly six Tab operations: Program Type, Creation Time, Update Time, Transfer Time, Login Time, then Comment. Domain: automated precious-metal acceptance kiosk, robotic arm, coarse/fine weighing, induction furnace for gold and precious-metal melting, and XRF analyzer for assay and valuation.",
   "goals": [
     {
-      "id": "program-4-0-12",
-      "objective": "In the visible project tree, rename only the exact program node 'A50Command:（2#：取盘位、3#：闸门位）' at locator [4, 0, 12] to the approved English display text 'A50Command: (2#: Tray-Pickup Station; 3#: Gate Station)'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
-      "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A50Command: (2#: Tray-Pickup Station; 3#: Gate Station)'.",
-        "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
-      ],
-      "allowed_text": [
-        {
-          "original": "A50Command:（2#：取盘位、3#：闸门位）",
-          "english": "A50Command: (2#: Tray-Pickup Station; 3#: Gate Station)",
-          "russian": null
-        },
-        {
-          "original": "A50Command",
-          "english": "A50Command",
-          "russian": null
-        },
-        {
-          "original": "（2#：取盘位、3#：闸门位）",
-          "english": " (2#: Tray-Pickup Station; 3#: Gate Station)",
-          "russian": null
-        }
-      ]
-    },
-    {
       "id": "program-4-0-16",
-      "objective": "In the visible project tree, rename only the exact program node 'A_30号指令:去纯金位取盘拿到石墨位' at locator [4, 0, 16] to the approved English display text 'A_30 Command: Pick Up Tray at Pure-Gold Station and Move to Graphite-Crucible Station'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_30号指令:去纯金位取盘拿到石墨位' at locator [4, 0, 16] to the approved English display text 'A_30Command:Move Tray Pure Gold to Graphite'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_30 Command: Pick Up Tray at Pure-Gold Station and Move to Graphite-Crucible Station'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_30Command:Move Tray Pure Gold to Graphite'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_30号指令:去纯金位取盘拿到石墨位",
-          "english": "A_30 Command: Pick Up Tray at Pure-Gold Station and Move to Graphite-Crucible Station",
+          "english": "A_30Command:Move Tray Pure Gold to Graphite",
           "russian": null
         },
         {
           "original": "A_30号指令",
-          "english": "A_30 Command",
+          "english": "A_30Command",
           "russian": null
         },
         {
           "original": "去纯金位取盘拿到石墨位",
-          "english": " Pick Up Tray at Pure-Gold Station and Move to Graphite-Crucible Station",
+          "english": "Move Tray Pure Gold to Graphite",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-17",
-      "objective": "In the visible project tree, rename only the exact program node 'A_31号指令:去K金位取盘拿到石墨位' at locator [4, 0, 17] to the approved English display text 'A_31 Command: Pick Up Tray at Karat-Gold Station and Move to Graphite-Crucible Station'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_31号指令:去K金位取盘拿到石墨位' at locator [4, 0, 17] to the approved English display text 'A_31Command:Move Tray K-Gold to Graphite'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_31 Command: Pick Up Tray at Karat-Gold Station and Move to Graphite-Crucible Station'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_31Command:Move Tray K-Gold to Graphite'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_31号指令:去K金位取盘拿到石墨位",
-          "english": "A_31 Command: Pick Up Tray at Karat-Gold Station and Move to Graphite-Crucible Station",
+          "english": "A_31Command:Move Tray K-Gold to Graphite",
           "russian": null
         },
         {
           "original": "A_31号指令",
-          "english": "A_31 Command",
+          "english": "A_31Command",
           "russian": null
         },
         {
           "original": "去K金位取盘拿到石墨位",
-          "english": " Pick Up Tray at Karat-Gold Station and Move to Graphite-Crucible Station",
+          "english": "Move Tray K-Gold to Graphite",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-18",
-      "objective": "In the visible project tree, rename only the exact program node 'A_52号指令:（10#-21#：测金，石墨，载盘）' at locator [4, 0, 18] to the approved English display text 'A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_52号指令:（10#-21#：测金，石墨，载盘）' at locator [4, 0, 18] to the approved English display text 'A_52Command:10#-21#: XRF/Graphite/Tray Ops'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_52Command:10#-21#: XRF/Graphite/Tray Ops'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_52号指令:（10#-21#：测金，石墨，载盘）",
-          "english": "A_52 Command: (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+          "english": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
           "russian": null
         },
         {
           "original": "A_52号指令",
-          "english": "A_52 Command",
+          "english": "A_52Command",
           "russian": null
         },
         {
           "original": "（10#-21#：测金，石墨，载盘）",
-          "english": " (10#-21#: XRF Assay, Graphite-Crucible, and Carrier-Tray Handling)",
+          "english": "10#-21#: XRF/Graphite/Tray Ops",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-19",
-      "objective": "In the visible project tree, rename only the exact program node 'A_15号指令（融金程序）' at locator [4, 0, 19] to the approved English display text 'A_15 Command (Induction Gold-Melting Program)'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_15号指令（融金程序）' at locator [4, 0, 19] to the approved English display text 'A_15Command:Gold-Melting Program'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_15 Command (Induction Gold-Melting Program)'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_15Command:Gold-Melting Program'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_15号指令（融金程序）",
-          "english": "A_15 Command (Induction Gold-Melting Program)",
+          "english": "A_15Command:Gold-Melting Program",
+          "russian": null
+        },
+        {
+          "original": "A_15号指令（融金程序）",
+          "english": "A_15Command",
+          "russian": null
+        },
+        {
+          "original": "",
+          "english": "Gold-Melting Program",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-20",
-      "objective": "In the visible project tree, rename only the exact program node 'A_32号指令:石墨盘放回原位' at locator [4, 0, 20] to the approved English display text 'A_32 Command: Return Graphite Crucible to Home Station'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_32号指令:石墨盘放回原位' at locator [4, 0, 20] to the approved English display text 'A_32Command:Return Graphite Crucible Home'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_32 Command: Return Graphite Crucible to Home Station'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_32Command:Return Graphite Crucible Home'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_32号指令:石墨盘放回原位",
-          "english": "A_32 Command: Return Graphite Crucible to Home Station",
+          "english": "A_32Command:Return Graphite Crucible Home",
           "russian": null
         },
         {
           "original": "A_32号指令",
-          "english": "A_32 Command",
+          "english": "A_32Command",
           "russian": null
         },
         {
           "original": "石墨盘放回原位",
-          "english": " Return Graphite Crucible to Home Station",
+          "english": "Return Graphite Crucible Home",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-21",
-      "objective": "In the visible project tree, rename only the exact program node 'A_22号指令:载盘位→相机位' at locator [4, 0, 21] to the approved English display text 'A_22 Command: Carrier-Tray Station → Vision Station'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_22号指令:载盘位→相机位' at locator [4, 0, 21] to the approved English display text 'A_22Command:Carrier Tray to Vision Station'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_22 Command: Carrier-Tray Station → Vision Station'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_22Command:Carrier Tray to Vision Station'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_22号指令:载盘位→相机位",
-          "english": "A_22 Command: Carrier-Tray Station → Vision Station",
+          "english": "A_22Command:Carrier Tray to Vision Station",
           "russian": null
         },
         {
           "original": "A_22号指令",
-          "english": "A_22 Command",
+          "english": "A_22Command",
           "russian": null
         },
         {
           "original": "载盘位→相机位",
-          "english": " Carrier-Tray Station → Vision Station",
+          "english": "Carrier Tray to Vision Station",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-22",
-      "objective": "In the visible project tree, rename only the exact program node 'A_23号指令:测金位→精称位' at locator [4, 0, 22] to the approved English display text 'A_23 Command: XRF Assay Station → Fine-Weighing Station'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_23号指令:测金位→精称位' at locator [4, 0, 22] to the approved English display text 'A_23Command:XRF Station to Fine Scale'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_23 Command: XRF Assay Station → Fine-Weighing Station'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_23Command:XRF Station to Fine Scale'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_23号指令:测金位→精称位",
-          "english": "A_23 Command: XRF Assay Station → Fine-Weighing Station",
+          "english": "A_23Command:XRF Station to Fine Scale",
           "russian": null
         },
         {
           "original": "A_23号指令",
-          "english": "A_23 Command",
+          "english": "A_23Command",
           "russian": null
         },
         {
           "original": "测金位→精称位",
-          "english": " XRF Assay Station → Fine-Weighing Station",
+          "english": "XRF Station to Fine Scale",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-23",
-      "objective": "In the visible project tree, rename only the exact program node 'A_24号指令:精称位→载盘位' at locator [4, 0, 23] to the approved English display text 'A_24 Command: Fine-Weighing Station → Carrier-Tray Station'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_24号指令:精称位→载盘位' at locator [4, 0, 23] to the approved English display text 'A_24Command:Fine Scale to Carrier Tray'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_24 Command: Fine-Weighing Station → Carrier-Tray Station'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_24Command:Fine Scale to Carrier Tray'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_24号指令:精称位→载盘位",
-          "english": "A_24 Command: Fine-Weighing Station → Carrier-Tray Station",
+          "english": "A_24Command:Fine Scale to Carrier Tray",
           "russian": null
         },
         {
           "original": "A_24号指令",
-          "english": "A_24 Command",
+          "english": "A_24Command",
           "russian": null
         },
         {
           "original": "精称位→载盘位",
-          "english": " Fine-Weighing Station → Carrier-Tray Station",
+          "english": "Fine Scale to Carrier Tray",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-24",
-      "objective": "In the visible project tree, rename only the exact program node 'A_25号指令:载盘倾倒' at locator [4, 0, 24] to the approved English display text 'A_25 Command: Tip Carrier Tray'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_25号指令:载盘倾倒' at locator [4, 0, 24] to the approved English display text 'A_25Command:Tip Carrier Tray'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_25 Command: Tip Carrier Tray'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_25Command:Tip Carrier Tray'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_25号指令:载盘倾倒",
-          "english": "A_25 Command: Tip Carrier Tray",
+          "english": "A_25Command:Tip Carrier Tray",
           "russian": null
         },
         {
           "original": "A_25号指令",
-          "english": "A_25 Command",
+          "english": "A_25Command",
           "russian": null
         },
         {
           "original": "载盘倾倒",
-          "english": " Tip Carrier Tray",
+          "english": "Tip Carrier Tray",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-25",
-      "objective": "In the visible project tree, rename only the exact program node 'A_26号指令:测金位XY移动一步' at locator [4, 0, 25] to the approved English display text 'A_26 Command: One-Step XY Move at XRF Assay Station'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_26号指令:测金位XY移动一步' at locator [4, 0, 25] to the approved English display text 'A_26Command:XRF Station One-Step XY Move'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_26 Command: One-Step XY Move at XRF Assay Station'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_26Command:XRF Station One-Step XY Move'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_26号指令:测金位XY移动一步",
-          "english": "A_26 Command: One-Step XY Move at XRF Assay Station",
+          "english": "A_26Command:XRF Station One-Step XY Move",
           "russian": null
         },
         {
           "original": "A_26号指令",
-          "english": "A_26 Command",
+          "english": "A_26Command",
           "russian": null
         },
         {
           "original": "测金位XY移动一步",
-          "english": " One-Step XY Move at XRF Assay Station",
+          "english": "XRF Station One-Step XY Move",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-26",
-      "objective": "In the visible project tree, rename only the exact program node 'A_28号指令:取盘位→载盘位' at locator [4, 0, 26] to the approved English display text 'A_28 Command: Tray-Pickup Station → Carrier-Tray Station'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_28号指令:取盘位→载盘位' at locator [4, 0, 26] to the approved English display text 'A_28Command:Tray Pickup to Carrier Tray'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_28 Command: Tray-Pickup Station → Carrier-Tray Station'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_28Command:Tray Pickup to Carrier Tray'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_28号指令:取盘位→载盘位",
-          "english": "A_28 Command: Tray-Pickup Station → Carrier-Tray Station",
+          "english": "A_28Command:Tray Pickup to Carrier Tray",
           "russian": null
         },
         {
           "original": "A_28号指令",
-          "english": "A_28 Command",
+          "english": "A_28Command",
           "russian": null
         },
         {
           "original": "取盘位→载盘位",
-          "english": " Tray-Pickup Station → Carrier-Tray Station",
+          "english": "Tray Pickup to Carrier Tray",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-27",
-      "objective": "In the visible project tree, rename only the exact program node 'A_53号指令:测金位→取盘位' at locator [4, 0, 27] to the approved English display text 'A_53 Command: XRF Assay Station → Tray-Pickup Station'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_53号指令:测金位→取盘位' at locator [4, 0, 27] to the approved English display text 'A_53Command:XRF Station to Tray Pickup'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_53 Command: XRF Assay Station → Tray-Pickup Station'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_53Command:XRF Station to Tray Pickup'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_53号指令:测金位→取盘位",
-          "english": "A_53 Command: XRF Assay Station → Tray-Pickup Station",
+          "english": "A_53Command:XRF Station to Tray Pickup",
           "russian": null
         },
         {
           "original": "A_53号指令",
-          "english": "A_53 Command",
+          "english": "A_53Command",
           "russian": null
         },
         {
           "original": "测金位→取盘位",
-          "english": " XRF Assay Station → Tray-Pickup Station",
+          "english": "XRF Station to Tray Pickup",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-28",
-      "objective": "In the visible project tree, rename only the exact program node 'A_54号指令:（在工控指令）' at locator [4, 0, 28] to the approved English display text 'A_54 Command: (IPC Command)'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_54号指令:（在工控指令）' at locator [4, 0, 28] to the approved English display text 'A_54Command:IPC Command'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_54 Command: (IPC Command)'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_54Command:IPC Command'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_54号指令:（在工控指令）",
-          "english": "A_54 Command: (IPC Command)",
+          "english": "A_54Command:IPC Command",
           "russian": null
         },
         {
           "original": "A_54号指令",
-          "english": "A_54 Command",
+          "english": "A_54Command",
           "russian": null
         },
         {
           "original": "（在工控指令）",
-          "english": " (IPC Command)",
+          "english": "IPC Command",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-29",
-      "objective": "In the visible project tree, rename only the exact program node 'A_55号指令:精秤位→取盘位' at locator [4, 0, 29] to the approved English display text 'A_55 Command: Fine-Weighing Station → Tray-Pickup Station'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_55号指令:精秤位→取盘位' at locator [4, 0, 29] to the approved English display text 'A_55Command:Fine Scale to Tray Pickup'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_55 Command: Fine-Weighing Station → Tray-Pickup Station'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_55Command:Fine Scale to Tray Pickup'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_55号指令:精秤位→取盘位",
-          "english": "A_55 Command: Fine-Weighing Station → Tray-Pickup Station",
+          "english": "A_55Command:Fine Scale to Tray Pickup",
           "russian": null
         },
         {
           "original": "A_55号指令",
-          "english": "A_55 Command",
+          "english": "A_55Command",
           "russian": null
         },
         {
           "original": "精秤位→取盘位",
-          "english": " Fine-Weighing Station → Tray-Pickup Station",
+          "english": "Fine Scale to Tray Pickup",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-30",
-      "objective": "In the visible project tree, rename only the exact program node 'A_56号指令:载盘位→取盘位' at locator [4, 0, 30] to the approved English display text 'A_56 Command: Carrier-Tray Station → Tray-Pickup Station'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_56号指令:载盘位→取盘位' at locator [4, 0, 30] to the approved English display text 'A_56Command:Carrier Tray to Tray Pickup'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_56 Command: Carrier-Tray Station → Tray-Pickup Station'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_56Command:Carrier Tray to Tray Pickup'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_56号指令:载盘位→取盘位",
-          "english": "A_56 Command: Carrier-Tray Station → Tray-Pickup Station",
+          "english": "A_56Command:Carrier Tray to Tray Pickup",
           "russian": null
         },
         {
           "original": "A_56号指令",
-          "english": "A_56 Command",
+          "english": "A_56Command",
           "russian": null
         },
         {
           "original": "载盘位→取盘位",
-          "english": " Carrier-Tray Station → Tray-Pickup Station",
+          "english": "Carrier Tray to Tray Pickup",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-31",
-      "objective": "In the visible project tree, rename only the exact program node 'A_57号指令:相机位→取盘位' at locator [4, 0, 31] to the approved English display text 'A_57 Command: Vision Station → Tray-Pickup Station'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'A_57号指令:相机位→取盘位' at locator [4, 0, 31] to the approved English display text 'A_57Command:Vision Station to Tray Pickup'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_57 Command: Vision Station → Tray-Pickup Station'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'A_57Command:Vision Station to Tray Pickup'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "A_57号指令:相机位→取盘位",
-          "english": "A_57 Command: Vision Station → Tray-Pickup Station",
+          "english": "A_57Command:Vision Station to Tray Pickup",
           "russian": null
         },
         {
           "original": "A_57号指令",
-          "english": "A_57 Command",
+          "english": "A_57Command",
           "russian": null
         },
         {
           "original": "相机位→取盘位",
-          "english": " Vision Station → Tray-Pickup Station",
+          "english": "Vision Station to Tray Pickup",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-33",
-      "objective": "In the visible project tree, rename only the exact program node '通信程序:1#：粗称；3#水机；4#温度；9#语音' at locator [4, 0, 33] to the approved English display text 'Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node '通信程序:1#：粗称；3#水机；4#温度；9#语音' at locator [4, 0, 33] to the approved English display text 'CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "通信程序:1#：粗称；3#水机；4#温度；9#语音",
-          "english": "Communication Program: 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+          "english": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
           "russian": null
         },
         {
           "original": "通信程序",
-          "english": "Communication Program",
+          "english": "CommunicationProgram",
           "russian": null
         },
         {
           "original": "1#：粗称；3#水机；4#温度；9#语音",
-          "english": " 1#: Coarse Scale; 3#: Chiller; 4#: Temperature Controller; 9#: Voice Annunciation",
+          "english": "1#Scale;3#Chlr;4#Temp;9#Voice",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-34",
-      "objective": "In the visible project tree, rename only the exact program node '【回水+真空箱】报警程序' at locator [4, 0, 34] to the approved English display text '[Cooling-Water Return + Vacuum Chamber] Alarm Program'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node '【回水+真空箱】报警程序' at locator [4, 0, 34] to the approved English display text 'WaterVacuumAlarmProgram:CW Return + Vacuum Chamber'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly '[Cooling-Water Return + Vacuum Chamber] Alarm Program'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'WaterVacuumAlarmProgram:CW Return + Vacuum Chamber'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "【回水+真空箱】报警程序",
-          "english": "[Cooling-Water Return + Vacuum Chamber] Alarm Program",
+          "english": "WaterVacuumAlarmProgram:CW Return + Vacuum Chamber",
+          "russian": null
+        },
+        {
+          "original": "【回水+真空箱】报警程序",
+          "english": "WaterVacuumAlarmProgram",
+          "russian": null
+        },
+        {
+          "original": "",
+          "english": "CW Return + Vacuum Chamber",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-35",
-      "objective": "In the visible project tree, rename only the exact program node '气罐程序+抽真空:20240806，优化' at locator [4, 0, 35] to the approved English display text 'Air-Tank Program + Vacuum Evacuation: Optimized 20240806'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node '气罐程序+抽真空:20240806，优化' at locator [4, 0, 35] to the approved English display text 'AirTankVacuumProgram:20240806 Optimization'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'Air-Tank Program + Vacuum Evacuation: Optimized 20240806'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'AirTankVacuumProgram:20240806 Optimization'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "气罐程序+抽真空:20240806，优化",
-          "english": "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
+          "english": "AirTankVacuumProgram:20240806 Optimization",
           "russian": null
         },
         {
           "original": "气罐程序+抽真空",
-          "english": "Air-Tank Program + Vacuum Evacuation",
+          "english": "AirTankVacuumProgram",
           "russian": null
         },
         {
           "original": "20240806，优化",
-          "english": " Optimized 20240806",
+          "english": "20240806 Optimization",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-36",
-      "objective": "In the visible project tree, rename only the exact program node '报警映射（MR--DM102）' at locator [4, 0, 36] to the approved English display text 'Alarm Mapping (MR--DM102)'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node '报警映射（MR--DM102）' at locator [4, 0, 36] to the approved English display text 'AlarmMap:MR--DM102'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'Alarm Mapping (MR--DM102)'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'AlarmMap:MR--DM102'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "报警映射（MR--DM102）",
-          "english": "Alarm Mapping (MR--DM102)",
+          "english": "AlarmMap:MR--DM102",
+          "russian": null
+        },
+        {
+          "original": "报警映射（MR--DM102）",
+          "english": "AlarmMap",
+          "russian": null
+        },
+        {
+          "original": "",
+          "english": "MR--DM102",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-37",
-      "objective": "In the visible project tree, rename only the exact program node '售后_点对点' at locator [4, 0, 37] to the approved English display text 'Service_Point-to-Point'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node '售后_点对点' at locator [4, 0, 37] to the approved English display text 'AfterSalesPointToPoint'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'Service_Point-to-Point'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'AfterSalesPointToPoint'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "售后_点对点",
-          "english": "Service_Point-to-Point",
+          "english": "AfterSalesPointToPoint",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-38",
-      "objective": "In the visible project tree, rename only the exact program node '“一键”程序' at locator [4, 0, 38] to the approved English display text 'One-Touch Program'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node '“一键”程序' at locator [4, 0, 38] to the approved English display text 'OneTouchProgram'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'One-Touch Program'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'OneTouchProgram'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "“一键”程序",
-          "english": "One-Touch Program",
+          "english": "OneTouchProgram",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-39",
-      "objective": "In the visible project tree, rename only the exact program node '基恩士HMI' at locator [4, 0, 39] to the approved English display text 'KEYENCE HMI'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node '基恩士HMI' at locator [4, 0, 39] to the approved English display text 'KEYENCE_HMI'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'KEYENCE HMI'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'KEYENCE_HMI'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "基恩士HMI",
-          "english": "KEYENCE HMI",
+          "english": "KEYENCE_HMI",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-40",
-      "objective": "In the visible project tree, rename only the exact program node '——预研——' at locator [4, 0, 40] to the approved English display text '-- Preliminary R&D --'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node '——预研——' at locator [4, 0, 40] to the approved English display text 'PreliminaryRD:Preliminary R&D'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly '-- Preliminary R&D --'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'PreliminaryRD:Preliminary R&D'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "——预研——",
-          "english": "-- Preliminary R&D --",
+          "english": "PreliminaryRD:Preliminary R&D",
+          "russian": null
+        },
+        {
+          "original": "——预研——",
+          "english": "PreliminaryRD",
+          "russian": null
+        },
+        {
+          "original": "",
+          "english": "Preliminary R&D",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-41",
-      "objective": "In the visible project tree, rename only the exact program node '新冷水机（状态、报警）' at locator [4, 0, 41] to the approved English display text 'New Chiller (Status and Alarms)'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node '新冷水机（状态、报警）' at locator [4, 0, 41] to the approved English display text 'NewChillerStatusAlarms'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'New Chiller (Status and Alarms)'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'NewChillerStatusAlarms'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "新冷水机（状态、报警）",
-          "english": "New Chiller (Status and Alarms)",
+          "english": "NewChillerStatusAlarms",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-42",
-      "objective": "In the visible project tree, rename only the exact program node 'MQTT:4G通信模块' at locator [4, 0, 42] to the approved English display text 'MQTT: 4G Communication Module'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'MQTT:4G通信模块' at locator [4, 0, 42] to the approved English display text 'MQTT:4G Communication Module'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'MQTT: 4G Communication Module'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'MQTT:4G Communication Module'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "MQTT:4G通信模块",
-          "english": "MQTT: 4G Communication Module",
+          "english": "MQTT:4G Communication Module",
           "russian": null
         },
         {
@@ -620,91 +634,91 @@
         },
         {
           "original": "4G通信模块",
-          "english": " 4G Communication Module",
+          "english": "4G Communication Module",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-43",
-      "objective": "In the visible project tree, rename only the exact program node '二次去皮' at locator [4, 0, 43] to the approved English display text 'Secondary Tare'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node '二次去皮' at locator [4, 0, 43] to the approved English display text 'SecondaryTare'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'Secondary Tare'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'SecondaryTare'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "二次去皮",
-          "english": "Secondary Tare",
+          "english": "SecondaryTare",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-44",
-      "objective": "In the visible project tree, rename only the exact program node 'Port0与精称通信:读取重量、去皮；一、二检重量' at locator [4, 0, 44] to the approved English display text 'Port0 Communication with Fine Scale: Read Weight and Tare; First/Second Check Weights'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node 'Port0与精称通信:读取重量、去皮；一、二检重量' at locator [4, 0, 44] to the approved English display text 'Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'Port0 Communication with Fine Scale: Read Weight and Tare; First/Second Check Weights'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "Port0与精称通信:读取重量、去皮；一、二检重量",
-          "english": "Port0 Communication with Fine Scale: Read Weight and Tare; First/Second Check Weights",
+          "english": "Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2",
           "russian": null
         },
         {
           "original": "Port0与精称通信",
-          "english": "Port0 Communication with Fine Scale",
+          "english": "Port0FineScaleComms",
           "russian": null
         },
         {
           "original": "读取重量、去皮；一、二检重量",
-          "english": " Read Weight and Tare; First/Second Check Weights",
+          "english": "Read Wt/Tare; Check Wt 1/2",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-45",
-      "objective": "In the visible project tree, rename only the exact program node '熔炼计时:熔炼、炉内冷却、吹气、铜板冷却' at locator [4, 0, 45] to the approved English display text 'Process Timers: Induction Melting, In-Furnace Cooling, Air Blow, Copper-Plate Cooling'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node '熔炼计时:熔炼、炉内冷却、吹气、铜板冷却' at locator [4, 0, 45] to the approved English display text 'MeltingTimers:Melt,Furn Cool,Blow,CuPlateCool'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'Process Timers: Induction Melting, In-Furnace Cooling, Air Blow, Copper-Plate Cooling'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'MeltingTimers:Melt,Furn Cool,Blow,CuPlateCool'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "熔炼计时:熔炼、炉内冷却、吹气、铜板冷却",
-          "english": "Process Timers: Induction Melting, In-Furnace Cooling, Air Blow, Copper-Plate Cooling",
+          "english": "MeltingTimers:Melt,Furn Cool,Blow,CuPlateCool",
           "russian": null
         },
         {
           "original": "熔炼计时",
-          "english": "Process Timers",
+          "english": "MeltingTimers",
           "russian": null
         },
         {
           "original": "熔炼、炉内冷却、吹气、铜板冷却",
-          "english": " Induction Melting, In-Furnace Cooling, Air Blow, Copper-Plate Cooling",
+          "english": "Melt,Furn Cool,Blow,CuPlateCool",
           "russian": null
         }
       ]
     },
     {
       "id": "program-4-0-46",
-      "objective": "In the visible project tree, rename only the exact program node '夹子气缸老化' at locator [4, 0, 46] to the approved English display text 'Gripper-Cylinder Aging Test'.",
-      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame.",
+      "objective": "In the visible project tree, rename only the exact program node '夹子气缸老化' at locator [4, 0, 46] to the approved English display text 'GripperCylinderEndurance'.",
+      "context": "Use visible hierarchy and the program-properties dialog. The displayed label may split into a program-name field and a comment field at the first ASCII colon. Preserve unchanged identifier parts exactly. This is an offline disposable PLC project copy for a precious-metal kiosk with robot handling, weighing, induction melting, and XRF analysis. Durable visual history from the current project: F2 did not open a usable editor for program nodes. The observed reliable route is to right-click the exact program row, inspect the fresh context-menu frame, choose the visible Chinese Change Name command, then inspect the fresh Program Properties dialog. Do not assume menu coordinates; ground every click in the current frame. Each Program Name must match ^[A-Za-z][A-Za-z0-9_]{0,30}$; each Comment must be ASCII and at most 31 characters; split comments must not begin with a space.",
       "success_criteria": [
-        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'Gripper-Cylinder Aging Test'.",
+        "A fresh project-tree or properties-dialog view proves the complete resulting display text is exactly 'GripperCylinderEndurance'.",
         "No partial edit or unexpected modal remains open, and no PLC logic, operands, addresses, constants, or hardware settings changed."
       ],
       "allowed_text": [
         {
           "original": "夹子气缸老化",
-          "english": "Gripper-Cylinder Aging Test",
+          "english": "GripperCylinderEndurance",
           "russian": null
         }
       ]
