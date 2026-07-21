@@ -206,10 +206,16 @@ Choose exactly ONE next action. Inspect the image carefully. You may expand tree
 scroll the project tree, open the ladder/program, use Chinese context menus or dialogs,
 select an edit field, type the supplied target, and confirm. Do not touch PLC transfer,
 monitor, run, simulator, online, download, upload, or communication commands.
+The dark-blue project tree is only the left pane below the toolbar (roughly x=0..360,
+y>=125 in a full-window screenshot). Never click menu/toolbar coordinates when selecting
+a tree node. If the required program already has a visible tab, click that tab first.
+If an unexpected dialog appears, dismiss it with Escape or its visible Cancel/X before
+touching the main editor. Never repeat an ineffective action at the same coordinates.
 If the exact target text is visibly committed, return done. If waiting for UI, return wait.
 Never invent coordinates outside the screenshot. For wheel use delta -6 to scroll down or
 +6 to scroll up at a point inside the project tree. For type_text, return exactly the target
-text when an editor is focused. Keep reason short.
+text when an editor is focused. Keep reason short. Return only one JSON object with exactly
+these fields: action, x, y, delta, text, reason. Use null for fields not needed by the action.
 
 Recent actions: {json.dumps(history[-8:], ensure_ascii=False)}
 """
@@ -230,14 +236,6 @@ Recent actions: {json.dumps(history[-8:], ensure_ascii=False)}
                 ],
             }
         ],
-        "response_format": {
-            "type": "json_schema",
-            "json_schema": {
-                "name": "kv_visual_action",
-                "strict": True,
-                "schema": ACTION_SCHEMA,
-            },
-        },
     }
     completion = _json_request(
         f"{settings.llm_endpoint}/chat/completions",
@@ -247,7 +245,14 @@ Recent actions: {json.dumps(history[-8:], ensure_ascii=False)}
     )
     try:
         content = completion["choices"][0]["message"]["content"]
-        action = json.loads(content) if isinstance(content, str) else content
+        if isinstance(content, str):
+            start = content.find("{")
+            end = content.rfind("}")
+            if start < 0 or end < start:
+                raise ValueError("response contains no JSON object")
+            action = json.loads(content[start : end + 1])
+        else:
+            action = content
     except (KeyError, IndexError, TypeError, json.JSONDecodeError) as exc:
         raise RuntimeError(f"invalid vision model response: {completion}") from exc
     if not isinstance(action, dict) or action.get("action") not in ACTION_SCHEMA["properties"][
@@ -347,6 +352,14 @@ def main() -> int:
                 action = _model_action(settings, snapshot, history=history, **{
                     key: target[key] for key in ("source", "target", "path")
                 })
+                if len(history) >= 2 and all(
+                    previous.get("action") == action.get("action")
+                    and previous.get("x") == action.get("x")
+                    and previous.get("y") == action.get("y")
+                    for previous in history[-2:]
+                ):
+                    print("Stopped repeated visual action; controller needs a fresh frame.")
+                    return 2
                 event = {
                     "target_index": target_index,
                     "record_id": target["record_id"],
