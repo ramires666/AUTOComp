@@ -95,6 +95,11 @@ finally {
     Pop-Location
 }
 
+& $venvPython -c "from PIL import ImageGrab; import PIL; print(f'Pillow {PIL.__version__} OK')"
+if ($LASTEXITCODE -ne 0) {
+    throw "Pillow/ImageGrab is unavailable in $venvPath. Re-run this installer after checking Python and pip output."
+}
+
 if (-not (Test-Path -LiteralPath $configLocal)) {
     Copy-Item -LiteralPath $configExample -Destination $configLocal
 }

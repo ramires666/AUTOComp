@@ -13,9 +13,14 @@ param(
 $ErrorActionPreference = "Stop"
 $projectRoot = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
 $workerExe = Join-Path $projectRoot ".venv\Scripts\autocomp.exe"
+$venvPython = Join-Path $projectRoot ".venv\Scripts\python.exe"
 
 if (-not (Test-Path -LiteralPath $workerExe)) {
     throw "AUTOComp is not installed. Run scripts\install-worker.ps1 first."
+}
+& $venvPython -c "from PIL import ImageGrab" 2>$null
+if ($LASTEXITCODE -ne 0) {
+    throw "Pillow/ImageGrab is missing. Run scripts\install-worker.ps1 again before starting the worker."
 }
 if ([string]::IsNullOrWhiteSpace($Config)) {
     $Config = Join-Path $projectRoot "config.local.json"
