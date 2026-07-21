@@ -3,17 +3,59 @@
 from __future__ import annotations
 
 import re
+from typing import Protocol
+
+from autocomp.desktop import DesktopFrame, DesktopWindow
 
 from .adapter import KVStudioAdapter
 from .models import ActionKind, ActionRequest, ActionResult
 
 
+class DesktopAdapter(Protocol):
+    """App-agnostic eyes/hands surface with pinned window identity only."""
+
+    def enumerate_windows(self) -> tuple[DesktopWindow, ...]: ...
+
+    def snapshot(
+        self,
+        *,
+        handle: int,
+        expected_pid: int,
+        expected_title: str,
+    ) -> DesktopFrame: ...
+
+    def input(
+        self,
+        *,
+        handle: int,
+        expected_pid: int,
+        expected_title: str,
+        operation: str,
+        x: int | None,
+        y: int | None,
+        delta: int | None,
+        text: str,
+    ) -> bool: ...
+
+
 class KVStudioWorker:
     """Offline worker for inspecting, never programming, the editor UI."""
 
-    def __init__(self, adapter: KVStudioAdapter, *, apply_enabled: bool = False) -> None:
+    def __init__(
+        self,
+        adapter: KVStudioAdapter,
+        *,
+        apply_enabled: bool = False,
+        desktop_adapter: DesktopAdapter | None = None,
+    ) -> None:
         self._adapter = adapter
         self._apply_enabled = apply_enabled
+        self._desktop_adapter = desktop_adapter
+
+    @property
+    def desktop_available(self) -> bool:
+        """Whether universal desktop actions were explicitly wired at startup."""
+        return self._desktop_adapter is not None
 
     def execute(self, request: ActionRequest) -> ActionResult:
         if request.kind is ActionKind.STATUS:
@@ -52,7 +94,73 @@ class KVStudioWorker:
             )
         if request.kind is ActionKind.VISUAL_INPUT:
             return self._visual_input(request)
+        if request.kind is ActionKind.DESKTOP_WINDOWS:
+            desktop = self._require_desktop_adapter()
+            return ActionResult(
+                kind=request.kind,
+                performed=False,
+                message="Desktop window inventory collected (read-only).",
+                audit={"mode": "dry-run", "operation": "desktop_windows"},
+                desktop_windows=desktop.enumerate_windows(),
+            )
+        if request.kind is ActionKind.DESKTOP_SNAPSHOT:
+            desktop = self._require_desktop_adapter()
+            return ActionResult(
+                kind=request.kind,
+                performed=False,
+                message="Pinned desktop window snapshot captured (read-only).",
+                audit={"mode": "dry-run", "operation": "desktop_snapshot"},
+                desktop_snapshot=desktop.snapshot(
+                    handle=request.window_handle,
+                    expected_pid=request.expected_pid,
+                    expected_title=request.expected_title,
+                ),
+            )
+        if request.kind is ActionKind.DESKTOP_INPUT:
+            return self._desktop_input(request)
         raise ValueError(f"Unsupported UI action: {request.kind!r}")
+
+    def _desktop_input(self, request: ActionRequest) -> ActionResult:
+        desktop = self._require_desktop_adapter()
+        if request.desktop_operation is None:
+            raise ValueError("desktop input operation is required")
+        if not request.apply:
+            return ActionResult(
+                kind=request.kind,
+                performed=False,
+                message="Dry-run: desktop input was validated but not performed.",
+                audit={"mode": "dry-run", "operation": request.desktop_operation.value},
+            )
+        self._require_apply(request)
+        performed = desktop.input(
+            handle=request.window_handle,
+            expected_pid=request.expected_pid,
+            expected_title=request.expected_title,
+            operation=request.desktop_operation.value,
+            x=request.x,
+            y=request.y,
+            delta=request.delta,
+            text=request.text,
+        )
+        return ActionResult(
+            kind=request.kind,
+            performed=performed,
+            message=(
+                "Pinned desktop input performed."
+                if performed
+                else "Pinned desktop input was not performed."
+            ),
+            audit={
+                "mode": "apply",
+                "checkpoint": request.checkpoint,
+                "operation": request.desktop_operation.value,
+            },
+        )
+
+    def _require_desktop_adapter(self) -> DesktopAdapter:
+        if self._desktop_adapter is None:
+            raise ValueError("desktop automation is not configured")
+        return self._desktop_adapter
 
     def _expand_tree_item(self, request: ActionRequest) -> ActionResult:
         if not request.apply:

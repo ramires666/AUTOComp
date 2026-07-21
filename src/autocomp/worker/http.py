@@ -1,8 +1,8 @@
 """Authenticated HTTP facade for the allowlisted KV STUDIO UI worker.
 
 The transport deliberately exposes structured worker actions only.  There is
-no route capable of accepting command lines, arbitrary key presses, clicks, or
-filesystem paths.
+no route capable of accepting command lines, process launches, filesystem
+paths, or input outside the fixed operation and pinned-window allowlists.
 """
 
 from __future__ import annotations
@@ -167,13 +167,27 @@ def _audit_request(request: ActionRequest, *, request_id: str, phase: str) -> di
         "action": _bounded_text(kind),
         "apply": bool(getattr(request, "apply", False)),
     }
-    for field_name in ("checkpoint", "expected_source", "target", "operation", "text"):
+    for field_name in (
+        "checkpoint",
+        "expected_source",
+        "target",
+        "expected_title",
+    ):
         value = getattr(request, field_name, "")
         if value:
             record[field_name] = _bounded_text(value)
-    for field_name in ("x", "y", "delta"):
+    operation = getattr(request, "desktop_operation", None) or getattr(
+        request, "operation", None
+    )
+    if operation is not None:
+        record["operation"] = _bounded_text(getattr(operation, "value", operation))
+    text_value = getattr(request, "text", "")
+    if text_value:
+        # Audit the fact and size of typing without persisting possible secrets.
+        record["text_length"] = len(text_value)
+    for field_name in ("window_handle", "expected_pid", "x", "y", "delta"):
         value = getattr(request, field_name, None)
-        if value is not None:
+        if value not in {None, 0}:
             record[field_name] = value
     for field_name in ("target_path", "expected_path", "locator"):
         value = getattr(request, field_name, ())
@@ -262,6 +276,12 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                 "VISUAL_SNAPSHOT",
                 "VISUAL_INPUT",
             )
+            if self.server.worker.desktop_available:
+                supported_names += (
+                    "DESKTOP_WINDOWS",
+                    "DESKTOP_SNAPSHOT",
+                    "DESKTOP_INPUT",
+                )
             actions = [
                 member.value
                 for name in supported_names
@@ -276,8 +296,10 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                     "RENAME_TREE_ITEM",
                     "INSPECT_TREE_ITEM_MENU",
                     "VISUAL_INPUT",
+                    "DESKTOP_INPUT",
                 )
                 if (member := getattr(ActionKind, name, None)) is not None
+                and member.value in actions
             ]
             return {
                 "service": "autocomp-worker",
@@ -292,6 +314,8 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                 },
                 "arbitrary_shell": False,
                 "arbitrary_input": False,
+                "process_launch": False,
+                "constrained_desktop_input": self.server.worker.desktop_available,
                 "plc_operations": False,
             }
 

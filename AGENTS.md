@@ -9,16 +9,17 @@
 
 ## Product objective
 
-Build a local-first automation tool that inventories and translates user-owned text in Chinese KV STUDIO 11.62 projects, applies changes through supported exports or the interactive Windows UI, and verifies that PLC program logic remains unchanged.
+Build a local-first visual Windows automation tool for one-off translation of user-owned PLC editor projects, initially Chinese KV STUDIO 11.62 and later Schneider Electric engineering software. Application-specific reasoning belongs in the controller/VLM, not the remote worker.
 
-- For the one-off live translation, intelligence and task state stay in the controller. The local VLM interprets screenshots and chooses the next step; the remote worker is only a constrained KV STUDIO screenshot/input executor (eyes and hands), not an autonomous planner.
+- Intelligence and task state stay in the controller. The local VLM interprets screenshots and chooses the next step; the remote worker is only an application-agnostic Windows screenshot/input executor (eyes and hands), not an autonomous planner.
+- Do not hard-code KV STUDIO UI structure into the universal visual worker. The same window enumeration, pinned-window screenshot, mouse, wheel, fixed-key, and Unicode-text primitives must work with other Windows PLC editors.
 
 ## Safety requirements
 
 - Work on project copies only. Never overwrite the sole source project.
 - Default to dry-run. Mutating commands require an explicit apply mode and a named checkpoint.
 - Never connect to, monitor, write to, or transfer data to a PLC. The automation must operate in editor/offline mode.
-- The UI worker must allowlist KV STUDIO windows and operations. The model must never receive arbitrary shell execution capability.
+- The UI worker must pin every input to an explicitly selected visible window identity (native handle, PID, and expected title). The model must never receive shell execution or process-launch capability.
 - The remote worker binds to loopback by default. On a trusted isolated LAN or VMware host-only network, direct HTTP is allowed with explicit non-loopback opt-in and a bearer token; SSH and extra firewall setup are optional. Do not expose it through router port forwarding or a public interface.
 - Every remote mutation requires global apply enablement, an explicit per-request apply flag, a named checkpoint, an exact structured tree locator/path/source precondition, and a durable intent audit record before UI input.
 - Rename operations must verify the resulting text and automatically attempt rollback to the exact source text after partial, truncated, normalized, or otherwise failed edits.

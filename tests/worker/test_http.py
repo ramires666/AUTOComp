@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from autocomp.desktop import DesktopFrame, DesktopWindow
 from autocomp.worker.adapter import FakeKVStudioAdapter
 from autocomp.worker.http import WorkerHttpServer
 from autocomp.worker.models import ActionRequest, ActionResult, WindowSnapshot
@@ -21,6 +22,44 @@ class CountingWorker(KVStudioWorker):
     def execute(self, request: ActionRequest) -> ActionResult:
         self.execute_calls += 1
         return super().execute(request)
+
+
+class HttpDesktopStub:
+    def __init__(self) -> None:
+        self.input_calls = 0
+
+    def enumerate_windows(self) -> tuple[DesktopWindow, ...]:
+        return (DesktopWindow(101, "Calculator", 202, (0, 0, 400, 300), False),)
+
+    def snapshot(
+        self, *, handle: int, expected_pid: int, expected_title: str
+    ) -> DesktopFrame:
+        return DesktopFrame(
+            handle,
+            expected_title,
+            expected_pid,
+            (0, 0, 400, 300),
+            400,
+            300,
+            "cG5n",
+            "a" * 64,
+        )
+
+    def input(
+        self,
+        *,
+        handle: int,
+        expected_pid: int,
+        expected_title: str,
+        operation: str,
+        x: int | None,
+        y: int | None,
+        delta: int | None,
+        text: str,
+    ) -> bool:
+        del handle, expected_pid, expected_title, operation, x, y, delta, text
+        self.input_calls += 1
+        return True
 
 
 @pytest.fixture
@@ -92,6 +131,8 @@ def test_capabilities_explicitly_exclude_shell_input_and_plc(server) -> None:
     assert payload["plc_operations"] is False
     assert "inventory" in payload["actions"]
     assert "rename_tree_item" in payload["actions"]
+    assert "desktop_input" not in payload["actions"]
+    assert payload["constrained_desktop_input"] is False
     assert payload["post_action_audit"] == {"required": True, "configured": True}
 
 
@@ -111,6 +152,71 @@ def test_status_is_authenticated_and_does_not_require_an_audit_log() -> None:
 
     assert status == 200
     assert json.loads(body)["worker"]["performed"] is False
+
+
+def test_http_exposes_desktop_actions_only_when_adapter_is_wired(tmp_path: Path) -> None:
+    desktop = HttpDesktopStub()
+    instance = WorkerHttpServer(
+        KVStudioWorker(
+            FakeKVStudioAdapter(),
+            apply_enabled=True,
+            desktop_adapter=desktop,
+        ),
+        token=TOKEN,
+        audit_log_path=tmp_path / "worker-audit.jsonl",
+    )
+    thread = threading.Thread(target=instance.serve_forever, daemon=True)
+    thread.start()
+    try:
+        capability_status, capability_body, _ = request(
+            instance, "GET", "/v1/capabilities"
+        )
+        windows_status, windows_body, _ = request(
+            instance,
+            "POST",
+            "/v1/action",
+            body=b'{"action":"desktop_windows"}',
+            headers={"Content-Type": "application/json"},
+        )
+        secret_text = "temporary-secret-not-for-audit"
+        input_body = json.dumps(
+            {
+                "action": "desktop_input",
+                "window_handle": 101,
+                "expected_pid": 202,
+                "expected_title": "Calculator",
+                "checkpoint": "desktop_01",
+                "operation": "type_text",
+                "text": secret_text,
+                "apply": True,
+            }
+        ).encode()
+        input_status, input_response, _ = request(
+            instance,
+            "POST",
+            "/v1/action",
+            body=input_body,
+            headers={"Content-Type": "application/json"},
+        )
+    finally:
+        instance.shutdown()
+        instance.server_close()
+        thread.join()
+
+    capabilities = json.loads(capability_body)
+    assert capability_status == 200
+    assert capabilities["constrained_desktop_input"] is True
+    assert "desktop_windows" in capabilities["actions"]
+    assert "desktop_snapshot" in capabilities["actions"]
+    assert "desktop_input" in capabilities["mutating_actions"]
+    assert windows_status == 200
+    assert json.loads(windows_body)["desktop_windows"][0]["handle"] == 101
+    assert input_status == 200
+    assert json.loads(input_response)["performed"] is True
+    assert desktop.input_calls == 1
+    audit_text = instance.audit_log_path.read_text(encoding="utf-8")
+    assert secret_text not in audit_text
+    assert f'"text_length":{len(secret_text)}' in audit_text
 
 
 def test_inventory_post_is_executed_and_durably_audited(server) -> None:

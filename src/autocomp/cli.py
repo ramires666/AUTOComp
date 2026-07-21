@@ -14,6 +14,7 @@ from typing import Any
 
 from . import __version__
 from .config import ConfigError, load_config
+from .desktop import UniversalDesktopAdapter
 from .extraction import extract_mnemonic_inventory, extract_project_tree_inventory
 from .translation.client import OpenAICompatibleConfig, OpenAICompatibleProvider
 from .translation.inventory import with_assessed_risk
@@ -318,7 +319,11 @@ def _cmd_worker_serve(args: argparse.Namespace) -> int:
     config = load_config(args.config, args.env_file)
     adapter = PywinautoKVStudioAdapter(config.kv_studio.window_title_pattern)
     server = WorkerHttpServer(
-        KVStudioWorker(adapter, apply_enabled=config.safety.apply_enabled),
+        KVStudioWorker(
+            adapter,
+            apply_enabled=config.safety.apply_enabled,
+            desktop_adapter=UniversalDesktopAdapter(),
+        ),
         token=config.worker_token,
         host=args.host,
         port=args.port,

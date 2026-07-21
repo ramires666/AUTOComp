@@ -145,9 +145,40 @@ def _worker(settings: Settings, payload: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
-def _snapshot(settings: Settings) -> dict[str, Any]:
-    result = _worker(settings, {"action": "visual_snapshot"})
-    snapshot = result.get("visual_snapshot")
+def _desktop_windows(settings: Settings) -> list[dict[str, Any]]:
+    result = _worker(settings, {"action": "desktop_windows"})
+    windows = result.get("desktop_windows")
+    if not isinstance(windows, list):
+        raise RuntimeError(f"worker returned no desktop window list: {result}")
+    return [item for item in windows if isinstance(item, dict)]
+
+
+def _select_window(settings: Settings, title_fragment: str) -> dict[str, Any]:
+    matches = [
+        item
+        for item in _desktop_windows(settings)
+        if title_fragment.casefold() in str(item.get("title", "")).casefold()
+        and not item.get("minimized")
+    ]
+    if len(matches) != 1:
+        titles = [item.get("title", "") for item in matches]
+        raise RuntimeError(
+            f"expected one visible window containing {title_fragment!r}; found {titles}"
+        )
+    return matches[0]
+
+
+def _snapshot(settings: Settings, window: dict[str, Any]) -> dict[str, Any]:
+    result = _worker(
+        settings,
+        {
+            "action": "desktop_snapshot",
+            "window_handle": int(window["handle"]),
+            "expected_pid": int(window["process_id"]),
+            "expected_title": str(window["title"]),
+        },
+    )
+    snapshot = result.get("desktop_snapshot")
     if not isinstance(snapshot, dict) or not snapshot.get("png_base64"):
         raise RuntimeError(f"worker returned no screenshot: {result}")
     return snapshot
@@ -226,15 +257,27 @@ Recent actions: {json.dumps(history[-8:], ensure_ascii=False)}
     return action
 
 
-def _perform(settings: Settings, action: dict[str, Any], checkpoint: str) -> dict[str, Any]:
+def _perform(
+    settings: Settings,
+    window: dict[str, Any],
+    action: dict[str, Any],
+    checkpoint: str,
+) -> dict[str, Any]:
     operation = str(action["action"])
+    operation = {
+        "right_click": "right",
+        "double_click": "double",
+    }.get(operation, operation)
     payload: dict[str, Any] = {
-        "action": "visual_input",
+        "action": "desktop_input",
+        "window_handle": int(window["handle"]),
+        "expected_pid": int(window["process_id"]),
+        "expected_title": str(window["title"]),
         "checkpoint": checkpoint,
         "operation": operation,
         "apply": True,
     }
-    if operation in {"click", "right_click", "double_click", "wheel"}:
+    if operation in {"click", "right", "double", "wheel"}:
         payload["x"] = int(action["x"])
         payload["y"] = int(action["y"])
     if operation == "wheel":
@@ -275,12 +318,14 @@ def main() -> int:
     parser.add_argument("--limit", type=int, default=1)
     parser.add_argument("--max-steps", type=int, default=30)
     parser.add_argument("--start-record", default="")
+    parser.add_argument("--window-title-contains", default="KV STUDIO - [")
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
     if not args.apply:
         raise SystemExit("This one-off controller requires explicit --apply")
     project = Path(__file__).resolve().parent.parent
     settings = _settings(project, project / args.worker_env, project / args.llm_env)
+    window = _select_window(settings, args.window_title_contains)
     targets = _targets(project)
     if args.start_record:
         start = next(
@@ -298,7 +343,7 @@ def main() -> int:
             history: list[dict[str, Any]] = []
             completed = False
             for step in range(1, args.max_steps + 1):
-                snapshot = _snapshot(settings)
+                snapshot = _snapshot(settings, window)
                 action = _model_action(settings, snapshot, history=history, **{
                     key: target[key] for key in ("source", "target", "path")
                 })
@@ -326,6 +371,7 @@ def main() -> int:
                 else:
                     worker_result = _perform(
                         settings,
+                        window,
                         action,
                         checkpoint=f"visual_{target_index:03d}_{step:03d}",
                     )

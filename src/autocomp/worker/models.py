@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import StrEnum
 
+from autocomp.desktop import DesktopFrame, DesktopInputOperation, DesktopWindow
+
 
 class ActionKind(StrEnum):
     """The deliberately small set of operations understood by this worker."""
@@ -18,6 +20,9 @@ class ActionKind(StrEnum):
     INSPECT_TREE_ITEM_MENU = "inspect_tree_item_menu"
     VISUAL_SNAPSHOT = "visual_snapshot"
     VISUAL_INPUT = "visual_input"
+    DESKTOP_WINDOWS = "desktop_windows"
+    DESKTOP_SNAPSHOT = "desktop_snapshot"
+    DESKTOP_INPUT = "desktop_input"
 
 
 class VisualInputOperation(StrEnum):
@@ -178,6 +183,10 @@ class ActionRequest:
     y: int | None = None
     delta: int | None = None
     text: str = ""
+    window_handle: int = 0
+    expected_pid: int = 0
+    expected_title: str = ""
+    desktop_operation: DesktopInputOperation | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -197,6 +206,8 @@ class ActionResult:
     window_state: WindowState | None = None
     tree_item_menu_inspection: TreeItemMenuInspection | None = None
     visual_snapshot: VisualSnapshot | None = None
+    desktop_windows: tuple[DesktopWindow, ...] = ()
+    desktop_snapshot: DesktopFrame | None = None
 
 
 def action_request_from_payload(payload: object) -> ActionRequest:
@@ -286,6 +297,35 @@ def action_request_from_payload(payload: object) -> ActionRequest:
             {"action", "checkpoint", "operation", "x", "y", "delta", "text", "apply"},
             {"action", "checkpoint", "operation", "apply"},
         ),
+        ActionKind.DESKTOP_WINDOWS: ({"action"}, {"action"}),
+        ActionKind.DESKTOP_SNAPSHOT: (
+            {"action", "window_handle", "expected_pid", "expected_title"},
+            {"action", "window_handle", "expected_pid", "expected_title"},
+        ),
+        ActionKind.DESKTOP_INPUT: (
+            {
+                "action",
+                "window_handle",
+                "expected_pid",
+                "expected_title",
+                "checkpoint",
+                "operation",
+                "x",
+                "y",
+                "delta",
+                "text",
+                "apply",
+            },
+            {
+                "action",
+                "window_handle",
+                "expected_pid",
+                "expected_title",
+                "checkpoint",
+                "operation",
+                "apply",
+            },
+        ),
     }
     allowed, required = schemas[kind]
     keys = set(payload)
@@ -317,6 +357,10 @@ def action_request_from_payload(payload: object) -> ActionRequest:
     y: int | None = None
     delta: int | None = None
     text = ""
+    window_handle = 0
+    expected_pid = 0
+    expected_title = ""
+    desktop_operation: DesktopInputOperation | None = None
     if kind is ActionKind.VISUAL_INPUT:
         try:
             operation = VisualInputOperation(payload.get("operation"))
@@ -345,6 +389,60 @@ def action_request_from_payload(payload: object) -> ActionRequest:
                 raise ValueError("text must not be empty")
         if set(payload) != required_fields:
             raise ValueError("visual input payload has missing or unexpected fields")
+    if kind in {ActionKind.DESKTOP_SNAPSHOT, ActionKind.DESKTOP_INPUT}:
+        window_handle = _payload_integer(
+            payload.get("window_handle"),
+            "window_handle",
+            minimum=1,
+            maximum=2**63 - 1,
+        )
+        expected_pid = _payload_integer(
+            payload.get("expected_pid"),
+            "expected_pid",
+            minimum=1,
+            maximum=2**31 - 1,
+        )
+        expected_title = _payload_text(
+            payload.get("expected_title"), "expected_title", maximum=512
+        )
+        if not expected_title:
+            raise ValueError("expected_title must not be empty")
+    if kind is ActionKind.DESKTOP_INPUT:
+        try:
+            desktop_operation = DesktopInputOperation(payload.get("operation"))
+        except (TypeError, ValueError) as exc:
+            raise ValueError("unsupported desktop input operation") from exc
+        coordinate_operations = {
+            DesktopInputOperation.CLICK,
+            DesktopInputOperation.RIGHT,
+            DesktopInputOperation.DOUBLE,
+            DesktopInputOperation.WHEEL,
+        }
+        required_fields = {
+            "action",
+            "window_handle",
+            "expected_pid",
+            "expected_title",
+            "checkpoint",
+            "operation",
+            "apply",
+        }
+        if desktop_operation in coordinate_operations:
+            required_fields |= {"x", "y"}
+            x = _payload_integer(payload.get("x"), "x", minimum=0, maximum=100_000)
+            y = _payload_integer(payload.get("y"), "y", minimum=0, maximum=100_000)
+        if desktop_operation is DesktopInputOperation.WHEEL:
+            required_fields.add("delta")
+            delta = _payload_integer(payload.get("delta"), "delta", minimum=-12, maximum=12)
+            if delta == 0:
+                raise ValueError("wheel delta must not be zero")
+        if desktop_operation is DesktopInputOperation.TYPE_TEXT:
+            required_fields.add("text")
+            text = _payload_text(payload.get("text"), "text", maximum=512)
+            if not text:
+                raise ValueError("text must not be empty")
+        if set(payload) != required_fields:
+            raise ValueError("desktop input payload has missing or unexpected fields")
     return ActionRequest(
         kind=kind,
         checkpoint=checkpoint,
@@ -361,6 +459,10 @@ def action_request_from_payload(payload: object) -> ActionRequest:
         y=y,
         delta=delta,
         text=text,
+        window_handle=window_handle,
+        expected_pid=expected_pid,
+        expected_title=expected_title,
+        desktop_operation=desktop_operation,
     )
 
 
