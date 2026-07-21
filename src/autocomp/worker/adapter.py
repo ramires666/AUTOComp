@@ -23,6 +23,9 @@ _EXPANSION_STATES = {
     3: "leaf",
 }
 
+_TVM_GETEDITCONTROL = 0x110F
+_TREE_RENAME_KEYS = frozenset({"{F2}", "{ENTER}", "{ESC}"})
+
 
 class KVStudioAdapter(Protocol):
     """Minimal adapter surface; implementations must never access a PLC."""
@@ -180,9 +183,7 @@ class PywinautoKVStudioAdapter:
         if not windows:
             raise RuntimeError("KV STUDIO editor window was not found")
         with_project_tree = tuple(
-            (window, trees)
-            for window in windows
-            if (trees := self._project_trees(window))
+            (window, trees) for window in windows if (trees := self._project_trees(window))
         )
         if len(with_project_tree) > 1:
             raise RuntimeError(
@@ -535,41 +536,133 @@ class PywinautoKVStudioAdapter:
                 )
             time.sleep(0.05)
 
-    def _commit_tree_item_text(self, window, tree, item, target: str) -> None:  # type: ignore[no-untyped-def]
-        """Use only KV's in-place TreeView editor and the fixed F2/Enter sequence."""
-        item.select()
-        item.type_keys("{F2}", set_foreground=False)
-        deadline = time.monotonic() + 2.0
-        while True:
-            edits: list[object] = []
-            for scope in (tree, window):
-                try:
-                    candidates = scope.descendants(control_type="Edit")
-                except Exception:
-                    continue
-                for candidate in candidates:
-                    info = candidate.element_info
-                    same_process = int(getattr(info, "process_id", 0) or 0) in {
-                        0,
-                        int(window.process_id()),
-                    }
-                    if same_process and candidate.is_visible() and candidate.is_enabled():
-                        edits.append(candidate)
-                if edits:
-                    break
-            unique = {
-                int(getattr(edit.element_info, "handle", 0) or id(edit)): edit for edit in edits
-            }
-            if len(unique) == 1:
-                edit = next(iter(unique.values()))
-                edit.set_edit_text(target)
-                edit.type_keys("{ENTER}", set_foreground=False)
+    @staticmethod
+    def _native_tree_wrapper(handle: int):  # type: ignore[no-untyped-def]
+        """Create a native TreeView wrapper lazily for portable imports."""
+        from pywinauto.controls.common_controls import TreeViewWrapper
+
+        return TreeViewWrapper(handle)
+
+    @staticmethod
+    def _native_edit_wrapper(handle: int):  # type: ignore[no-untyped-def]
+        """Create a native Edit wrapper with an exact-text setter."""
+        from pywinauto.controls.win32_controls import EditWrapper
+
+        return EditWrapper(handle)
+
+    def _native_project_tree(self, window, tree):  # type: ignore[no-untyped-def]
+        info = tree.element_info
+        handle = int(getattr(info, "handle", 0) or 0)
+        class_name = str(getattr(info, "class_name", "") or "")
+        window_pid = int(window.process_id())
+        tree_pid = int(getattr(info, "process_id", 0) or 0)
+        if not handle or "SysTreeView32" not in class_name:
+            raise RuntimeError("ProjectTreeView has no supported native TreeView handle")
+        if tree_pid not in {0, window_pid}:
+            raise RuntimeError("ProjectTreeView process identity does not match KV STUDIO")
+
+        native_tree = self._native_tree_wrapper(handle)
+        native_handle = int(getattr(native_tree, "handle", 0) or 0)
+        if native_handle != handle or int(native_tree.process_id()) != window_pid:
+            raise RuntimeError("native ProjectTreeView identity does not match KV STUDIO")
+        return native_tree
+
+    @staticmethod
+    def _active_tree_edit_handle(native_tree) -> int:  # type: ignore[no-untyped-def]
+        return int(native_tree.send_message(_TVM_GETEDITCONTROL, 0, 0) or 0)
+
+    @staticmethod
+    def _send_tree_rename_key(control, key: str) -> None:  # type: ignore[no-untyped-def]
+        if key not in _TREE_RENAME_KEYS:
+            raise RuntimeError("refusing non-allowlisted ProjectTreeView key input")
+        control.type_keys(key, set_foreground=False)
+
+    def _validated_tree_edit(
+        self,
+        *,
+        edit_handle: int,
+        native_tree,
+        expected_process_id: int,
+    ):  # type: ignore[no-untyped-def]
+        edit = self._native_edit_wrapper(edit_handle)
+        if int(getattr(edit, "handle", 0) or 0) != edit_handle:
+            raise RuntimeError("native tree editor handle changed during activation")
+        if int(edit.process_id()) != expected_process_id:
+            raise RuntimeError("native tree editor process identity does not match KV STUDIO")
+        parent = edit.parent()
+        if int(getattr(parent, "handle", 0) or 0) != int(native_tree.handle):
+            raise RuntimeError("native tree editor is not a child of ProjectTreeView")
+        if str(edit.class_name() or "") != "Edit":
+            raise RuntimeError("native ProjectTreeView editor has an unsupported window class")
+        if not edit.is_visible() or not edit.is_enabled():
+            raise RuntimeError("native ProjectTreeView editor is not ready for input")
+        return edit
+
+    def _cancel_tree_edit(
+        self,
+        native_tree,
+        edit_handle: int,
+        expected_process_id: int,
+    ) -> None:  # type: ignore[no-untyped-def]
+        """Cancel only the exact edit HWND activated by this operation."""
+        try:
+            if self._active_tree_edit_handle(native_tree) != edit_handle:
                 return
-            if len(unique) > 1:
-                raise RuntimeError("multiple KV STUDIO in-place editors were found")
+            edit = self._validated_tree_edit(
+                edit_handle=edit_handle,
+                native_tree=native_tree,
+                expected_process_id=expected_process_id,
+            )
+            self._send_tree_rename_key(edit, "{ESC}")
+        except Exception:
+            # The original error remains authoritative. Post-write verification and
+            # the outer exact-source rollback still decide the operation result.
+            return
+
+    def _commit_tree_item_text(self, window, tree, item, target: str) -> None:  # type: ignore[no-untyped-def]
+        """Use the exact native TreeView editor and only F2/Enter/Escape keys."""
+        native_tree = self._native_project_tree(window, tree)
+        window_pid = int(window.process_id())
+        if self._active_tree_edit_handle(native_tree):
+            raise RuntimeError("ProjectTreeView already has an active editor")
+
+        # UIA resolves/selects the exact pinned item; native focus/key delivery is
+        # required for the WindowsForms SysTreeView32 label editor used by KV.
+        native_tree.set_focus()
+        item.select()
+        native_tree.set_focus()
+        self._send_tree_rename_key(native_tree, "{F2}")
+
+        edit_handle = 0
+        deadline = time.monotonic() + 2.0
+        while not edit_handle:
+            edit_handle = self._active_tree_edit_handle(native_tree)
+            if edit_handle:
+                break
             if time.monotonic() >= deadline:
-                raise RuntimeError("KV STUDIO in-place tree editor was not found")
+                raise RuntimeError("KV STUDIO native in-place tree editor was not found")
             time.sleep(0.05)
+
+        try:
+            edit = self._validated_tree_edit(
+                edit_handle=edit_handle,
+                native_tree=native_tree,
+                expected_process_id=window_pid,
+            )
+            edit.set_focus()
+            edit.set_edit_text(target)
+            if edit.window_text() != target:
+                raise RuntimeError("native tree editor did not accept the exact target text")
+            self._send_tree_rename_key(edit, "{ENTER}")
+
+            close_deadline = time.monotonic() + 2.0
+            while self._active_tree_edit_handle(native_tree):
+                if time.monotonic() >= close_deadline:
+                    raise RuntimeError("native tree editor remained active after commit")
+                time.sleep(0.05)
+        except Exception:
+            self._cancel_tree_edit(native_tree, edit_handle, window_pid)
+            raise
 
     def _crawl_project_node(
         self,
