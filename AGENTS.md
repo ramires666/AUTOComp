@@ -21,8 +21,10 @@
 
 Build a local-first visual Windows automation tool for one-off translation of user-owned PLC editor projects, initially Chinese KV STUDIO 11.62 and later Schneider Electric engineering software. Application-specific reasoning belongs in the controller/VLM, not the remote worker.
 
-- Intelligence and task state stay in the controller. The local VLM interprets screenshots and chooses the next step; the remote worker is only an application-agnostic Windows screenshot/input executor (eyes and hands), not an autonomous planner.
+- The primary execution path is one application-agnostic VLM mission controller. On every step it receives a fresh screenshot, current window metadata, mission data, and durable history; it chooses the next action, verifies the following frame, and resumes from saved state after interruption.
+- Intelligence and task state stay in the controller, which may be deployed beside the worker as one target-machine bundle. The remote worker remains an application-agnostic Windows screenshot/input executor (eyes and hands), not an autonomous planner.
 - Do not hard-code KV STUDIO UI structure into the universal visual worker. The same window enumeration, pinned-window screenshot, mouse, wheel, fixed-key, and Unicode-text primitives must work with other Windows PLC editors.
+- Normal application changes must require only a new mission/context file and prompt tuning, never a new application-specific controller script. Keep the universal VLM system prompt versioned and record its hash in mission state.
 
 ## Safety requirements
 
@@ -39,7 +41,7 @@ Build a local-first visual Windows automation tool for one-off translation of us
 
 ## Implementation standards
 
-- Prefer deterministic extraction and Windows UI Automation over vision. Use OCR/VLM only as a fallback.
+- For GUI execution, visual reasoning is primary; deterministic extraction/UI Automation may accelerate inventory and verification but must never be required for a new editor.
 - Keep the inference provider behind an OpenAI-compatible interface so a local vision-language model can be selected by configuration.
 - Keep secrets out of source files and logs. Bind remote worker endpoints conservatively and require authentication.
 - Use typed Python, small modules, structured logs, explicit error handling, and automated tests.

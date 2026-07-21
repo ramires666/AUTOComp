@@ -27,6 +27,10 @@ class DesktopWindow:
     process_id: int
     bounds: tuple[int, int, int, int]
     minimized: bool
+    owner_handle: int = 0
+    foreground: bool = False
+    enabled: bool = True
+    class_name: str = ""
 
 
 @dataclass(frozen=True, slots=True)

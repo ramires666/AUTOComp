@@ -12309,7 +12309,7 @@
       ],
       "category": "program",
       "original_name": "气罐程序+抽真空:20240806，优化",
-      "english_name": "Air-Tank Program + Vacuum Evacuation (Optimized 20240806)",
+      "english_name": "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
       "russian_name": "",
       "english_status": "planned",
       "current_tree_name": "气罐程序+抽真空:20240806，优化",
@@ -12322,7 +12322,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Air-Tank Program + Vacuum Evacuation (Optimized 20240806)"
+        "Air-Tank Program + Vacuum Evacuation: Optimized 20240806"
       ]
     },
     {
@@ -12348,7 +12348,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Air-Tank Program + Vacuum Evacuation (Optimized 20240806)",
+        "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
         "Local Labels"
       ]
     },
@@ -12375,7 +12375,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Air-Tank Program + Vacuum Evacuation (Optimized 20240806)",
+        "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
         "Bookmarks"
       ]
     },
@@ -12404,7 +12404,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Air-Tank Program + Vacuum Evacuation (Optimized 20240806)",
+        "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
         "Bookmarks",
         "/*Default Time*/ (Vacuum Evacuation, Gas Replenishment)"
       ]
@@ -12434,7 +12434,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Air-Tank Program + Vacuum Evacuation (Optimized 20240806)",
+        "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
         "Bookmarks",
         "[Air-Tank Program]//MR21200-21215"
       ]
@@ -12464,7 +12464,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Air-Tank Program + Vacuum Evacuation (Optimized 20240806)",
+        "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
         "Bookmarks",
         "[Vacuum Evacuation Program]//MR21300-21315"
       ]
@@ -12494,7 +12494,7 @@
       "english_path": [
         "Program: V3-6-0-8new",
         "Every-Scan Execution Modules",
-        "Air-Tank Program + Vacuum Evacuation (Optimized 20240806)",
+        "Air-Tank Program + Vacuum Evacuation: Optimized 20240806",
         "Bookmarks",
         "/*Prevent Air Pump Overheating*/"
       ]

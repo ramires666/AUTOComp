@@ -110,12 +110,16 @@ def test_health_is_authenticated(server) -> None:
     status, body, headers = request(server, "GET", "/health")
 
     assert status == 200
-    assert json.loads(body) == {
+    payload = json.loads(body)
+    assert {key: payload[key] for key in ("status", "service", "api_version", "mode")} == {
         "status": "ok",
         "service": "autocomp-worker",
         "api_version": "1",
         "mode": "offline",
     }
+    assert payload["build_id"]
+    assert len(payload["boot_id"]) == 32
+    assert payload["started_at"].endswith("+00:00")
     assert headers["Cache-Control"] == "no-store"
     assert headers["X-Content-Type-Options"] == "nosniff"
 
@@ -136,6 +140,20 @@ def test_capabilities_explicitly_exclude_shell_input_and_plc(server) -> None:
     assert "desktop_input" not in payload["actions"]
     assert payload["constrained_desktop_input"] is False
     assert payload["post_action_audit"] == {"required": True, "configured": True}
+    assert payload["build_id"] == server.build_id
+    assert payload["boot_id"] == server.boot_id
+    assert payload["started_at"] == server.started_at
+    assert payload["operation_limits"] == {
+        "request_body_bytes": 16 * 1024,
+        "request_timeout_seconds": 15.0,
+        "desktop_sequence_operations": 8,
+        "desktop_text_characters": 512,
+        "desktop_pause_milliseconds": 1000,
+        "desktop_wheel_delta": 12,
+        "desktop_frame_pixels": 50_000_000,
+        "desktop_png_bytes": 64 * 1024 * 1024,
+        "enumerated_owned_windows": 64,
+    }
 
 
 def test_status_is_authenticated_and_does_not_require_an_audit_log() -> None:
@@ -252,6 +270,33 @@ def test_http_exposes_desktop_actions_only_when_adapter_is_wired(tmp_path: Path)
     assert [record["phase"] for record in sequence_records] == ["intent", "outcome"]
     assert sequence_records[0]["operation_count"] == 2
     assert sequence_records[0]["operations"][0]["text_length"] == len(sequence_secret)
+
+
+def test_desktop_only_worker_exposes_no_application_specific_actions(
+    tmp_path: Path,
+) -> None:
+    instance = WorkerHttpServer(
+        KVStudioWorker(None, apply_enabled=True, desktop_adapter=HttpDesktopStub()),
+        token=TOKEN,
+        audit_log_path=tmp_path / "worker-audit.jsonl",
+    )
+    thread = threading.Thread(target=instance.serve_forever, daemon=True)
+    thread.start()
+    try:
+        status, body, _ = request(instance, "GET", "/v1/capabilities")
+    finally:
+        instance.shutdown()
+        instance.server_close()
+        thread.join()
+
+    assert status == 200
+    actions = set(json.loads(body)["actions"])
+    assert actions == {
+        "desktop_windows",
+        "desktop_snapshot",
+        "desktop_input",
+        "desktop_input_sequence",
+    }
 
 
 def test_inventory_post_is_executed_and_durably_audited(server) -> None:

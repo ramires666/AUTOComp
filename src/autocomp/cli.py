@@ -31,7 +31,7 @@ from .verification import (
 from .worker.adapter import PywinautoKVStudioAdapter
 from .worker.http import WorkerHttpServer
 from .worker.models import ActionKind, ActionRequest
-from .worker.service import KVStudioWorker
+from .worker.service import DesktopWorker, KVStudioWorker
 
 
 class CliError(RuntimeError):
@@ -317,9 +317,13 @@ def _cmd_translate(args: argparse.Namespace) -> int:
 
 def _cmd_worker_serve(args: argparse.Namespace) -> int:
     config = load_config(args.config, args.env_file)
-    adapter = PywinautoKVStudioAdapter(config.kv_studio.window_title_pattern)
+    adapter = (
+        PywinautoKVStudioAdapter(config.kv_studio.window_title_pattern)
+        if args.enable_kv_studio_adapter
+        else None
+    )
     server = WorkerHttpServer(
-        KVStudioWorker(
+        DesktopWorker(
             adapter,
             apply_enabled=config.safety.apply_enabled,
             desktop_adapter=UniversalDesktopAdapter(),
@@ -332,7 +336,14 @@ def _cmd_worker_serve(args: argparse.Namespace) -> int:
     )
     address, port = server.server_address
     mode = "remote-enabled" if args.allow_remote else "loopback"
-    sys.stdout.write(f"AUTOComp KV worker ({mode}) listening on http://{address}:{port}\n")
+    worker_kind = (
+        "desktop + KV acceleration"
+        if args.enable_kv_studio_adapter
+        else "universal desktop"
+    )
+    sys.stdout.write(
+        f"AUTOComp {worker_kind} worker ({mode}) listening on http://{address}:{port}\n"
+    )
     sys.stdout.flush()
     try:
         server.serve_forever()
@@ -436,7 +447,7 @@ def _parser() -> argparse.ArgumentParser:
 
     worker_serve = subparsers.add_parser(
         "worker-serve",
-        help="serve authenticated, audited allowlisted KV STUDIO UI actions",
+        help="serve authenticated, audited, application-agnostic desktop actions",
     )
     worker_serve.add_argument("--config")
     worker_serve.add_argument("--env-file")
@@ -446,6 +457,11 @@ def _parser() -> argparse.ArgumentParser:
         "--audit-log",
         required=True,
         help="append-only JSONL audit destination required for worker actions",
+    )
+    worker_serve.add_argument(
+        "--enable-kv-studio-adapter",
+        action="store_true",
+        help="also enable the optional legacy KV STUDIO acceleration actions",
     )
     worker_serve.add_argument(
         "--allow-remote",

@@ -39,12 +39,12 @@ class DesktopAdapter(Protocol):
     ) -> bool: ...
 
 
-class KVStudioWorker:
-    """Offline worker for inspecting, never programming, the editor UI."""
+class DesktopWorker:
+    """Offline desktop worker with an optional legacy KV STUDIO adapter."""
 
     def __init__(
         self,
-        adapter: KVStudioAdapter,
+        adapter: KVStudioAdapter | None,
         *,
         apply_enabled: bool = False,
         desktop_adapter: DesktopAdapter | None = None,
@@ -58,7 +58,40 @@ class KVStudioWorker:
         """Whether universal desktop actions were explicitly wired at startup."""
         return self._desktop_adapter is not None
 
+    @property
+    def application_adapter_available(self) -> bool:
+        """Whether the optional KV-specific acceleration layer was enabled."""
+        return self._adapter is not None
+
     def execute(self, request: ActionRequest) -> ActionResult:
+        if request.kind is ActionKind.DESKTOP_WINDOWS:
+            desktop = self._require_desktop_adapter()
+            return ActionResult(
+                kind=request.kind,
+                performed=False,
+                message="Desktop window inventory collected (read-only).",
+                audit={"mode": "dry-run", "operation": "desktop_windows"},
+                desktop_windows=desktop.enumerate_windows(),
+            )
+        if request.kind is ActionKind.DESKTOP_SNAPSHOT:
+            desktop = self._require_desktop_adapter()
+            return ActionResult(
+                kind=request.kind,
+                performed=False,
+                message="Pinned desktop window snapshot captured (read-only).",
+                audit={"mode": "dry-run", "operation": "desktop_snapshot"},
+                desktop_snapshot=desktop.snapshot(
+                    handle=request.window_handle,
+                    expected_pid=request.expected_pid,
+                    expected_title=request.expected_title,
+                ),
+            )
+        if request.kind is ActionKind.DESKTOP_INPUT:
+            return self._desktop_input(request)
+        if request.kind is ActionKind.DESKTOP_INPUT_SEQUENCE:
+            return self._desktop_input_sequence(request)
+        if self._adapter is None:
+            raise ValueError("application-specific adapter is disabled")
         if request.kind is ActionKind.STATUS:
             return ActionResult(
                 kind=request.kind,
@@ -97,32 +130,6 @@ class KVStudioWorker:
             )
         if request.kind is ActionKind.VISUAL_INPUT:
             return self._visual_input(request)
-        if request.kind is ActionKind.DESKTOP_WINDOWS:
-            desktop = self._require_desktop_adapter()
-            return ActionResult(
-                kind=request.kind,
-                performed=False,
-                message="Desktop window inventory collected (read-only).",
-                audit={"mode": "dry-run", "operation": "desktop_windows"},
-                desktop_windows=desktop.enumerate_windows(),
-            )
-        if request.kind is ActionKind.DESKTOP_SNAPSHOT:
-            desktop = self._require_desktop_adapter()
-            return ActionResult(
-                kind=request.kind,
-                performed=False,
-                message="Pinned desktop window snapshot captured (read-only).",
-                audit={"mode": "dry-run", "operation": "desktop_snapshot"},
-                desktop_snapshot=desktop.snapshot(
-                    handle=request.window_handle,
-                    expected_pid=request.expected_pid,
-                    expected_title=request.expected_title,
-                ),
-            )
-        if request.kind is ActionKind.DESKTOP_INPUT:
-            return self._desktop_input(request)
-        if request.kind is ActionKind.DESKTOP_INPUT_SEQUENCE:
-            return self._desktop_input_sequence(request)
         raise ValueError(f"Unsupported UI action: {request.kind!r}")
 
     def _desktop_input(self, request: ActionRequest) -> ActionResult:
@@ -518,7 +525,7 @@ class KVStudioWorker:
 
     @staticmethod
     def _validate_rename_request(request: ActionRequest) -> None:
-        KVStudioWorker._validate_tree_item_precondition(request)
+        DesktopWorker._validate_tree_item_precondition(request)
         for field_name, value in (("target", request.target),):
             if not value or value != value.strip() or len(value) > 512:
                 raise ValueError(f"{field_name} must be non-empty, trimmed, and at most 512 chars")
@@ -544,3 +551,7 @@ class KVStudioWorker:
                 raise ValueError(f"{field_name} must be non-empty, trimmed, and at most 512 chars")
             if any(ord(character) < 32 or ord(character) == 127 for character in value):
                 raise ValueError(f"{field_name} contains control characters")
+
+
+# Backward-compatible name for the deterministic KV-specific CLI/tests.
+KVStudioWorker = DesktopWorker

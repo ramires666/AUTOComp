@@ -6,6 +6,7 @@ import pytest
 from PIL import Image
 
 from autocomp.desktop import DesktopInputOperation, UniversalDesktopAdapter
+from autocomp.desktop import adapter as adapter_module
 
 
 @dataclass
@@ -105,6 +106,7 @@ class _Adapter(UniversalDesktopAdapter):
     def __init__(self, *windows: _Window) -> None:
         self.desktop = _Desktop(*windows)
         self.foreground_handle = next(iter(self.desktop.windows_by_handle))
+        self.focused_handle = self.foreground_handle
         self.native_owners: dict[int, int] = {}
         self.sent_keys: list[str] = []
 
@@ -122,6 +124,9 @@ class _Adapter(UniversalDesktopAdapter):
 
     def _window_process_id(self, handle: int) -> int:
         return self.desktop.windows_by_handle[handle].pid
+
+    def _focused_window_handle(self) -> int:
+        return self.focused_handle
 
     def _send_keys(self, keys: str) -> None:
         self.sent_keys.append(keys)
@@ -147,12 +152,16 @@ def test_enumerates_and_accepts_visible_owned_native_dialog() -> None:
     dialog.owner = main
     dialog.class_name_value = "#32770"
     adapter = _Adapter(main, dialog)
+    adapter.native_owners[dialog.handle] = main.handle
 
     windows = adapter.enumerate_windows()
     assert [(item.handle, item.title) for item in windows] == [
         (101, "KV STUDIO"),
         (102, "Program Properties"),
     ]
+    assert windows[1].owner_handle == main.handle
+    assert windows[1].enabled is True
+    assert windows[1].class_name == "#32770"
 
     adapter.input(
         handle=102,
@@ -182,11 +191,28 @@ def test_accepts_native_owner_as_foreground_for_top_level_modal() -> None:
     assert ("focus",) not in dialog.calls
 
 
+def test_owned_window_discovery_does_not_depend_on_window_class() -> None:
+    main = _Window(101, "Any App", 11, (10, 20, 800, 600))
+    popup = _Window(102, "Custom Toolkit Popup", 11, (100, 100, 500, 400))
+    popup.owner = main
+    popup.class_name_value = "VendorSpecificPopup42"
+    adapter = _Adapter(main, popup)
+    adapter.native_owners[popup.handle] = main.handle
+    adapter.foreground_handle = popup.handle
+
+    windows = adapter.enumerate_windows()
+
+    assert [item.handle for item in windows] == [main.handle, popup.handle]
+    assert windows[1].foreground is True
+    assert windows[1].class_name == "VendorSpecificPopup42"
+
+
 def test_atomic_sequence_keeps_keyboard_on_clicked_child() -> None:
     main = _Window(101, "Any App", 11, (0, 0, 800, 600))
     dialog = _Window(102, "Properties", 11, (100, 100, 500, 400))
     dialog.owner = main
     adapter = _Adapter(main, dialog)
+    adapter.native_owners[dialog.handle] = main.handle
 
     completed = adapter.input_sequence(
         handle=dialog.handle,
@@ -200,6 +226,24 @@ def test_atomic_sequence_keeps_keyboard_on_clicked_child() -> None:
 
     assert completed == 2
     assert adapter.sent_keys == ["^a"]
+
+
+def test_atomic_sequence_stops_if_keyboard_focus_leaves_selected_process() -> None:
+    app = _Window(101, "Any App", 11, (0, 0, 800, 600))
+    other = _Window(202, "Other App", 22, (0, 0, 800, 600))
+    adapter = _Adapter(app, other)
+    adapter.focused_handle = other.handle
+
+    with pytest.raises(RuntimeError, match="keyboard focus left"):
+        adapter.input_sequence(
+            handle=app.handle,
+            expected_pid=app.pid,
+            expected_title=app.title,
+            operations=(
+                {"operation": "click", "x": 100, "y": 150},
+                {"operation": "key_ctrl_a"},
+            ),
+        )
 
 
 def test_rejects_non_dialog_child_window() -> None:
@@ -225,6 +269,53 @@ def test_snapshot_requires_exact_handle_pid_title_and_returns_png_hash() -> None
     assert frame.png_base64.startswith("iVBOR")
     with pytest.raises(RuntimeError, match="identity precondition"):
         adapter.snapshot(handle=101, expected_pid=99, expected_title="Any App")
+
+
+def test_snapshot_prefers_print_window_for_occluded_content() -> None:
+    window = _Window(101, "Occluded App", 11, (10, 20, 110, 70))
+    adapter = _Adapter(window)
+    rendered = Image.new("RGB", (100, 50), "white")
+    rendered.putpixel((0, 0), (0, 0, 0))
+    calls: list[str] = []
+    adapter._print_window = lambda handle, size: (  # type: ignore[method-assign]
+        calls.append(f"print:{handle}:{size}") or rendered
+    )
+    adapter._grab_bbox = lambda bounds: (  # type: ignore[method-assign]
+        calls.append(f"screen:{bounds}") or Image.new("RGB", (100, 50), "red")
+    )
+
+    frame = adapter.snapshot(
+        handle=window.handle,
+        expected_pid=window.pid,
+        expected_title=window.title,
+    )
+
+    assert (frame.width, frame.height) == (100, 50)
+    assert calls == ["print:101:(100, 50)"]
+
+
+@pytest.mark.parametrize("bad_size", [(100, 50), (90, 50)])
+def test_snapshot_falls_back_when_print_window_is_blank_or_wrong_size(
+    bad_size: tuple[int, int],
+) -> None:
+    window = _Window(101, "Any App", 11, (10, 20, 110, 70))
+    adapter = _Adapter(window)
+    calls: list[str] = []
+    adapter._print_window = lambda handle, size: Image.new(  # type: ignore[method-assign]
+        "RGB", bad_size, "black" if bad_size == size else "red"
+    )
+    adapter._grab_bbox = lambda bounds: (  # type: ignore[method-assign]
+        calls.append("screen") or Image.new("RGB", (100, 50), "white")
+    )
+
+    frame = adapter.snapshot(
+        handle=window.handle,
+        expected_pid=window.pid,
+        expected_title=window.title,
+    )
+
+    assert (frame.width, frame.height) == (100, 50)
+    assert calls == ["screen"]
 
 
 def test_pointer_coordinates_are_relative_and_rejected_outside_frame() -> None:
@@ -327,3 +418,26 @@ def test_unknown_operation_and_stale_identity_fail_before_input() -> None:
             operation="key_enter",
         )
     assert window.calls == []
+
+
+def test_dpi_awareness_is_initialized_once(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[int] = []
+
+    class _User32:
+        @staticmethod
+        def SetProcessDpiAwarenessContext(context: object) -> bool:
+            del context
+            calls.append(1)
+            return True
+
+    class _Windll:
+        user32 = _User32()
+
+    monkeypatch.setattr(adapter_module.platform, "system", lambda: "Windows")
+    monkeypatch.setattr(adapter_module.ctypes, "windll", _Windll(), raising=False)
+    monkeypatch.setattr(adapter_module, "_DPI_INITIALIZED", False)
+
+    adapter_module.initialize_windows_dpi_awareness()
+    adapter_module.initialize_windows_dpi_awareness()
+
+    assert calls == [1]

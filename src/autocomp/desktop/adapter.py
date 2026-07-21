@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import base64
+import ctypes
 import hashlib
+import platform
 import threading
 import time
+from contextlib import suppress
 from io import BytesIO
 from typing import Any
 
@@ -15,8 +18,40 @@ _MAX_FRAME_PIXELS = 50_000_000
 _MAX_PNG_BYTES = 64 * 1024 * 1024
 _MAX_TEXT_LENGTH = 4096
 _MAX_DIALOG_WINDOWS = 64
-_DIALOG_CLASSES = frozenset({"#32770", "Window"})
 _CLIPBOARD_LOCK = threading.Lock()
+_DPI_LOCK = threading.Lock()
+_DPI_INITIALIZED = False
+
+
+def initialize_windows_dpi_awareness() -> None:
+    """Use physical screen coordinates before capturing or injecting input.
+
+    The calls are deliberately best-effort: Windows refuses to change DPI mode
+    after another library has created a window, which is not a worker failure.
+    """
+    global _DPI_INITIALIZED
+    if platform.system() != "Windows" or _DPI_INITIALIZED:
+        return
+    with _DPI_LOCK:
+        if _DPI_INITIALIZED:
+            return
+        try:
+            # DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2
+            if ctypes.windll.user32.SetProcessDpiAwarenessContext(ctypes.c_void_p(-4)):
+                _DPI_INITIALIZED = True
+                return
+        except (AttributeError, OSError):
+            pass
+        try:
+            # PROCESS_PER_MONITOR_DPI_AWARE
+            if ctypes.windll.shcore.SetProcessDpiAwareness(2) in (0, -2147024891):
+                _DPI_INITIALIZED = True
+                return
+        except (AttributeError, OSError):
+            pass
+        with suppress(AttributeError, OSError):
+            ctypes.windll.user32.SetProcessDPIAware()
+        _DPI_INITIALIZED = True
 
 
 class UniversalDesktopAdapter:
@@ -25,6 +60,9 @@ class UniversalDesktopAdapter:
     This surface cannot launch processes, execute shell commands, or communicate
     with PLCs. Every snapshot and input revalidates HWND, PID, and exact title.
     """
+
+    def __init__(self) -> None:
+        initialize_windows_dpi_awareness()
 
     def enumerate_windows(self) -> tuple[DesktopWindow, ...]:
         windows: list[DesktopWindow] = []
@@ -40,9 +78,9 @@ class UniversalDesktopAdapter:
                 seen_handles.add(snapshot.handle)
             except Exception:
                 continue
-        # Native modal dialogs can be omitted by pywinauto's top-level list.
-        # Include only bounded, visible dialog windows -- never arbitrary child
-        # controls -- so this remains an application-agnostic eyes/hands surface.
+        # Native owned windows can be omitted by pywinauto's top-level list.
+        # GW_OWNER distinguishes application-owned popups/dialogs from arbitrary
+        # child controls without relying on toolkit- or application-specific classes.
         dialog_count = 0
         for candidate in self._desktop().windows(top_level_only=False, visible_only=True):
             if dialog_count >= _MAX_DIALOG_WINDOWS:
@@ -75,7 +113,7 @@ class UniversalDesktopAdapter:
         if width <= 0 or height <= 0 or width * height > _MAX_FRAME_PIXELS:
             raise RuntimeError("selected window frame has unsafe dimensions")
 
-        image = self._grab_bbox(bounds)
+        image = self._capture_window(handle, bounds)
         if (int(image.width), int(image.height)) != (width, height):
             raise RuntimeError("captured frame dimensions do not match selected window")
         stream = BytesIO()
@@ -148,10 +186,9 @@ class UniversalDesktopAdapter:
         allowed_foreground = self._allowed_foreground_handles(
             window, handle=handle, expected_pid=expected_pid
         )
-        # Re-focusing a modal dialog before every key resets its active child
-        # control (KV STUDIO jumps back to Program Name). Preserve the current
-        # child focus when either the pinned HWND or its same-process owner is
-        # already foreground.
+        # Re-focusing a modal before every key can reset its active child
+        # control. Preserve child focus when the pinned HWND or same-process
+        # owner is already foreground.
         if (
             not _preserve_child_focus
             and self._foreground_window_handle() not in allowed_foreground
@@ -163,6 +200,10 @@ class UniversalDesktopAdapter:
         foreground = self._foreground_window_handle()
         if foreground not in allowed_foreground:
             raise RuntimeError("selected window did not receive foreground focus")
+        if _preserve_child_focus and selected_operation not in pointer_operations:
+            focused = self._focused_window_handle()
+            if not focused or self._window_process_id(focused) != expected_pid:
+                raise RuntimeError("keyboard focus left the selected application")
 
         if selected_operation is DesktopInputOperation.CLICK:
             window.click_input(button="left", coords=coordinates, absolute=False)
@@ -249,20 +290,17 @@ class UniversalDesktopAdapter:
             raise RuntimeError("selected window is not visible")
         return window
 
-    @classmethod
-    def _is_owned_dialog(cls, window, *, owner=None) -> bool:  # type: ignore[no-untyped-def]
-        """Return true only for a visible, bounded native dialog owned by its app."""
-        if not window.is_visible() or str(window.class_name()) not in _DIALOG_CLASSES:
+    def _is_owned_dialog(self, window, *, owner=None) -> bool:  # type: ignore[no-untyped-def]
+        """Return true for a bounded visible native window owned by the same app."""
+        if not window.is_visible():
             return False
-        if not cls._has_sane_bounds(window):
+        if not self._has_sane_bounds(window):
             return False
-        owner = owner if owner is not None else window.top_level_parent()
-        owner_handle = int(getattr(owner, "handle", 0) or 0)
-        return (
-            owner_handle != int(getattr(window, "handle", 0) or 0)
-            and int(owner.process_id()) == int(window.process_id())
-            and bool(owner.is_visible())
-        )
+        handle = int(getattr(window, "handle", 0) or 0)
+        owner_handle = self._native_owner_handle(handle)
+        if not owner_handle or owner_handle == handle:
+            return False
+        return self._window_process_id(owner_handle) == int(window.process_id())
 
     @classmethod
     def _has_sane_bounds(cls, window) -> bool:  # type: ignore[no-untyped-def]
@@ -274,14 +312,18 @@ class UniversalDesktopAdapter:
         height = bottom - top
         return width > 0 and height > 0 and width * height <= _MAX_FRAME_PIXELS
 
-    @staticmethod
-    def _window_snapshot(window) -> DesktopWindow:  # type: ignore[no-untyped-def]
+    def _window_snapshot(self, window) -> DesktopWindow:  # type: ignore[no-untyped-def]
+        handle = int(window.handle)
         return DesktopWindow(
-            handle=int(window.handle),
+            handle=handle,
             title=window.window_text(),
             process_id=int(window.process_id()),
             bounds=UniversalDesktopAdapter._bounds(window),
             minimized=bool(window.is_minimized()),
+            owner_handle=self._native_owner_handle(handle),
+            foreground=self._foreground_window_handle() == handle,
+            enabled=bool(window.is_enabled()),
+            class_name=str(window.class_name()),
         )
 
     @staticmethod
@@ -299,6 +341,67 @@ class UniversalDesktopAdapter:
         from PIL import ImageGrab
 
         return ImageGrab.grab(bbox=bounds, all_screens=True)
+
+    def _capture_window(
+        self, handle: int, bounds: tuple[int, int, int, int]
+    ):  # type: ignore[no-untyped-def]
+        """Capture an HWND when occluded, with a physical-screen fallback."""
+        expected_size = (bounds[2] - bounds[0], bounds[3] - bounds[1])
+        try:
+            image = self._print_window(handle, expected_size)
+            if (
+                (int(image.width), int(image.height)) == expected_size
+                and not self._image_is_blank(image)
+            ):
+                return image
+        except Exception:
+            pass
+        return self._grab_bbox(bounds)
+
+    @staticmethod
+    def _print_window(handle: int, size: tuple[int, int]):  # type: ignore[no-untyped-def]
+        """Render a native window into an in-memory bitmap using PrintWindow."""
+        if platform.system() != "Windows":
+            raise RuntimeError("PrintWindow is available only on Windows")
+        import win32gui
+        import win32ui
+        from PIL import Image
+
+        width, height = size
+        window_dc = win32gui.GetWindowDC(handle)
+        if not window_dc:
+            raise RuntimeError("GetWindowDC failed")
+        source_dc = None
+        target_dc = None
+        bitmap = None
+        try:
+            source_dc = win32ui.CreateDCFromHandle(window_dc)
+            target_dc = source_dc.CreateCompatibleDC()
+            bitmap = win32ui.CreateBitmap()
+            bitmap.CreateCompatibleBitmap(source_dc, width, height)
+            target_dc.SelectObject(bitmap)
+            if not win32gui.PrintWindow(handle, target_dc.GetSafeHdc(), 2):
+                raise RuntimeError("PrintWindow failed")
+            bits = bitmap.GetBitmapBits(True)
+            return Image.frombuffer(
+                "RGB", (width, height), bits, "raw", "BGRX", 0, 1
+            ).copy()
+        finally:
+            if bitmap is not None:
+                with suppress(Exception):
+                    win32gui.DeleteObject(bitmap.GetHandle())
+            if target_dc is not None:
+                with suppress(Exception):
+                    target_dc.DeleteDC()
+            if source_dc is not None:
+                with suppress(Exception):
+                    source_dc.DeleteDC()
+            win32gui.ReleaseDC(handle, window_dc)
+
+    @staticmethod
+    def _image_is_blank(image) -> bool:  # type: ignore[no-untyped-def]
+        extrema = image.convert("RGB").getextrema()
+        return all(low == high for low, high in extrema)
 
     def _paste_unicode(
         self, window, text: str, *, preserve_child_focus: bool = False
@@ -361,14 +464,32 @@ class UniversalDesktopAdapter:
 
     @staticmethod
     def _foreground_window_handle() -> int:
-        import ctypes
-
         return int(ctypes.windll.user32.GetForegroundWindow() or 0)
 
     @staticmethod
-    def _native_owner_handle(handle: int) -> int:
-        import ctypes
+    def _focused_window_handle() -> int:
+        from ctypes import wintypes
 
+        class GuiThreadInfo(ctypes.Structure):
+            _fields_ = [
+                ("cbSize", wintypes.DWORD),
+                ("flags", wintypes.DWORD),
+                ("hwndActive", wintypes.HWND),
+                ("hwndFocus", wintypes.HWND),
+                ("hwndCapture", wintypes.HWND),
+                ("hwndMenuOwner", wintypes.HWND),
+                ("hwndMoveSize", wintypes.HWND),
+                ("hwndCaret", wintypes.HWND),
+                ("rcCaret", wintypes.RECT),
+            ]
+
+        info = GuiThreadInfo(cbSize=ctypes.sizeof(GuiThreadInfo))
+        if not ctypes.windll.user32.GetGUIThreadInfo(0, ctypes.byref(info)):
+            return 0
+        return int(info.hwndFocus or info.hwndActive or 0)
+
+    @staticmethod
+    def _native_owner_handle(handle: int) -> int:
         return int(ctypes.windll.user32.GetWindow(handle, 4) or 0)  # GW_OWNER
 
     def _allowed_foreground_handles(

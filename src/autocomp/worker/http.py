@@ -1,4 +1,4 @@
-"""Authenticated HTTP facade for the allowlisted KV STUDIO UI worker.
+"""Authenticated HTTP facade for the application-agnostic Windows UI worker.
 
 The transport deliberately exposes structured worker actions only.  There is
 no route capable of accepting command lines, process launches, filesystem
@@ -7,6 +7,7 @@ paths, or input outside the fixed operation and pinned-window allowlists.
 
 from __future__ import annotations
 
+import hashlib
 import hmac
 import ipaddress
 import json
@@ -23,8 +24,10 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Final
 
+from autocomp import __version__
+
 from .models import ActionKind, ActionRequest, action_request_from_payload
-from .service import KVStudioWorker
+from .service import DesktopWorker
 
 DEFAULT_HOST: Final = "127.0.0.1"
 DEFAULT_MAX_BODY_BYTES: Final = 16 * 1024
@@ -32,6 +35,30 @@ DEFAULT_REQUEST_TIMEOUT_SECONDS: Final = 15.0
 MAX_AUDIT_TEXT_LENGTH: Final = 1024
 TOKEN_ENVIRONMENT_VARIABLE: Final = "AUTOCOMP_WORKER_TOKEN"
 API_VERSION: Final = "1"
+BUILD_ID_ENVIRONMENT_VARIABLE: Final = "AUTOCOMP_BUILD_ID"
+MAX_DESKTOP_SEQUENCE_OPERATIONS: Final = 8
+MAX_DESKTOP_TEXT_CHARACTERS: Final = 512
+MAX_DESKTOP_PAUSE_MILLISECONDS: Final = 1000
+MAX_DESKTOP_WHEEL_DELTA: Final = 12
+MAX_DESKTOP_FRAME_PIXELS: Final = 50_000_000
+MAX_DESKTOP_PNG_BYTES: Final = 64 * 1024 * 1024
+MAX_ENUMERATED_OWNED_WINDOWS: Final = 64
+
+
+def _source_build_id() -> str:
+    """Return a stable deployment fingerprint, overridable by the build system."""
+    configured = os.getenv(BUILD_ID_ENVIRONMENT_VARIABLE, "").strip()
+    if configured:
+        return configured[:128]
+    digest = hashlib.sha256()
+    package_root = Path(__file__).resolve().parents[1]
+    try:
+        for source in sorted(package_root.rglob("*.py")):
+            digest.update(source.relative_to(package_root).as_posix().encode("utf-8"))
+            digest.update(source.read_bytes())
+    except OSError:
+        return f"autocomp-{__version__}"
+    return f"sha256:{digest.hexdigest()[:16]}"
 
 
 class WorkerHttpServer(ThreadingHTTPServer):
@@ -41,7 +68,7 @@ class WorkerHttpServer(ThreadingHTTPServer):
 
     def __init__(
         self,
-        worker: KVStudioWorker,
+        worker: DesktopWorker,
         token: str | None = None,
         host: str = DEFAULT_HOST,
         port: int = 0,
@@ -50,6 +77,7 @@ class WorkerHttpServer(ThreadingHTTPServer):
         max_body_bytes: int = DEFAULT_MAX_BODY_BYTES,
         request_timeout_seconds: float = DEFAULT_REQUEST_TIMEOUT_SECONDS,
         audit_log_path: str | os.PathLike[str] | None = None,
+        build_id: str | None = None,
     ) -> None:
         bind_address = _validate_bind_host(host, allow_remote=allow_remote)
         if max_body_bytes < 1:
@@ -70,6 +98,9 @@ class WorkerHttpServer(ThreadingHTTPServer):
         ):
             raise ValueError("Bearer token must contain 32-512 printable non-whitespace characters")
         self.worker = worker
+        self.build_id = build_id or _source_build_id()
+        self.boot_id = uuid.uuid4().hex
+        self.started_at = datetime.now(UTC).isoformat()
         self._token = resolved_token
         self.max_body_bytes = max_body_bytes
         self.request_timeout_seconds = request_timeout_seconds
@@ -236,6 +267,9 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                         "service": "autocomp-worker",
                         "api_version": API_VERSION,
                         "mode": "offline",
+                        "build_id": self.server.build_id,
+                        "boot_id": self.server.boot_id,
+                        "started_at": self.server.started_at,
                     },
                 )
                 return
@@ -283,18 +317,20 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
             self._method_not_allowed()
 
         def _capabilities(self) -> dict[str, object]:
-            supported_names = (
-                "STATUS",
-                "INVENTORY",
-                "EXPAND_TREE_ITEM",
-                "INVENTORY_PROJECT_TREE",
-                "ACTIVATE_TREE_ITEM",
-                "PROBE_TREE_ITEM_RENAME",
-                "RENAME_TREE_ITEM",
-                "INSPECT_TREE_ITEM_MENU",
-                "VISUAL_SNAPSHOT",
-                "VISUAL_INPUT",
-            )
+            supported_names: tuple[str, ...] = ()
+            if self.server.worker.application_adapter_available:
+                supported_names = (
+                    "STATUS",
+                    "INVENTORY",
+                    "EXPAND_TREE_ITEM",
+                    "INVENTORY_PROJECT_TREE",
+                    "ACTIVATE_TREE_ITEM",
+                    "PROBE_TREE_ITEM_RENAME",
+                    "RENAME_TREE_ITEM",
+                    "INSPECT_TREE_ITEM_MENU",
+                    "VISUAL_SNAPSHOT",
+                    "VISUAL_INPUT",
+                )
             if self.server.worker.desktop_available:
                 supported_names += (
                     "DESKTOP_WINDOWS",
@@ -327,6 +363,9 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                 "service": "autocomp-worker",
                 "api_version": API_VERSION,
                 "mode": "offline",
+                "build_id": self.server.build_id,
+                "boot_id": self.server.boot_id,
+                "started_at": self.server.started_at,
                 "authentication": "bearer",
                 "actions": actions,
                 "mutating_actions": mutating,
@@ -339,6 +378,17 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                 "process_launch": False,
                 "constrained_desktop_input": self.server.worker.desktop_available,
                 "plc_operations": False,
+                "operation_limits": {
+                    "request_body_bytes": self.server.max_body_bytes,
+                    "request_timeout_seconds": self.server.request_timeout_seconds,
+                    "desktop_sequence_operations": MAX_DESKTOP_SEQUENCE_OPERATIONS,
+                    "desktop_text_characters": MAX_DESKTOP_TEXT_CHARACTERS,
+                    "desktop_pause_milliseconds": MAX_DESKTOP_PAUSE_MILLISECONDS,
+                    "desktop_wheel_delta": MAX_DESKTOP_WHEEL_DELTA,
+                    "desktop_frame_pixels": MAX_DESKTOP_FRAME_PIXELS,
+                    "desktop_png_bytes": MAX_DESKTOP_PNG_BYTES,
+                    "enumerated_owned_windows": MAX_ENUMERATED_OWNED_WINDOWS,
+                },
             }
 
         def _worker_status(self) -> None:

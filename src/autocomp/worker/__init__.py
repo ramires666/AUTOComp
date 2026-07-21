@@ -15,13 +15,14 @@ from .models import (
     WindowState,
     action_request_from_payload,
 )
-from .service import KVStudioWorker
+from .service import DesktopWorker, KVStudioWorker
 
 __all__ = [
     "ActionRequest",
     "ActionResult",
     "ControlSnapshot",
     "KVStudioWorker",
+    "DesktopWorker",
     "MenuItemSnapshot",
     "ProjectTreeInventory",
     "ProjectTreeNodeSnapshot",

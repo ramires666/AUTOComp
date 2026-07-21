@@ -464,8 +464,6 @@ def action_request_from_payload(payload: object) -> ActionRequest:
         expected_title = _payload_text(
             payload.get("expected_title"), "expected_title", maximum=512
         )
-        if not expected_title:
-            raise ValueError("expected_title must not be empty")
     if kind is ActionKind.DESKTOP_INPUT:
         try:
             desktop_operation = DesktopInputOperation(payload.get("operation"))

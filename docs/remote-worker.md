@@ -1,294 +1,115 @@
-# Remote KV STUDIO worker
+# Universal Windows visual worker
 
-This setup provides structured AUTOComp/KV STUDIO operations plus bounded
-eyes-and-hands primitives for one exactly pinned top-level window on the
-dedicated Windows computer. Inputs are limited to allowlisted clicks, wheel,
-fixed keys, and bounded Unicode text inside that window. It provides no remote
-shell, arbitrary file access, PLC access, or unrestricted desktop input.
+The worker is deliberately only eyes and hands. It enumerates visible Windows
+windows and owned popups, captures one exact HWND, and performs a small fixed
+set of mouse, wheel, keyboard, and Unicode-text operations. It does not know
+KV STUDIO, Schneider, project trees, translation rules, shell commands, files,
+or PLC protocols. All reasoning stays in `universal-vision-agent.py` and the
+versioned VLM prompt.
 
-The worker can listen directly on a trusted LAN/VMware interface or remain on
-loopback behind an SSH tunnel. The bearer token remains in an ignored `.env`
-file and is never placed in a URL or command-line argument.
+## Start it on the dedicated Windows computer
 
-## Simple LAN or VMware setup
-
-For a trusted local network, VMware host-only network, or NAT network with no
-port forwarding, SSH is optional. Start the worker directly on the KV/VM
-computer:
+Open the disposable offline project copy, leave the desktop unlocked, and run:
 
 ```powershell
 cd C:\projects\AUTOComp
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\start-worker.ps1 `
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-worker.ps1 `
   -ListenAddress 0.0.0.0 `
   -AllowRemote
 ```
 
-Put the VM/remote-computer address and the same worker token in the controller's
-ignored `.env.remote` file:
+`-ExecutionPolicy Bypass` applies only to this PowerShell process and avoids
+changing machine policy. Run the worker in the same logged-in interactive
+session as the target application. The application may be behind another
+window because the worker first tries native HWND capture, but it must not be
+minimized and the Windows session must remain unlocked.
+
+The ignored `.env` on this machine must contain a random worker token of at
+least 32 characters. `install-worker.ps1` creates one when needed. The default
+worker exposes only the four generic desktop actions; the old KV-specific
+accelerator is optional and disabled unless `-EnableKVStudioAdapter` is passed.
+
+## Controller configuration
+
+On the computer running the VLM controller, keep these values in ignored local
+files, never in Git:
 
 ```dotenv
+# .env.remote
 AUTOCOMP_WORKER_ENDPOINT=http://192.168.56.101:8765
-AUTOCOMP_WORKER_TOKEN=the-same-random-token-from-the-KV-computer
+AUTOCOMP_WORKER_TOKEN=the-same-random-token-from-the-worker-computer
+
+# .env
+AUTOCOMP_LLM_ENDPOINT=http://127.0.0.1:8080/v1
+AUTOCOMP_LLM_MODEL=auto
+AUTOCOMP_LLM_API_KEY=
 ```
 
-Then connect directly:
+Direct HTTP is intended only for a trusted isolated LAN or VMware host-only
+network. Do not expose port 8765 with router forwarding or a public interface.
+
+Check the exact deployed build and available primitives:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\invoke-worker.ps1 `
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\invoke-worker.ps1 `
   -Health -AllowLanHttp -EnvFile .env.remote
+
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\invoke-worker.ps1 `
+  -Capabilities -AllowLanHttp -EnvFile .env.remote
 ```
 
-Use `-AllowLanHttp` on every controller command in this direct mode. The bearer
-token remains mandatory, but OpenSSH keys and tunnel setup below are unnecessary.
-Use the guest's host-only/NAT IP; do not configure router port forwarding.
+Both responses include `build_id`, `boot_id`, and `started_at`. The mission
+runner refuses an old worker that does not advertise the universal API.
 
-## Optional SSH tunnel setup
-
-### One-time setup on the KV computer
-
-Open an elevated PowerShell window through RDP. Determine the controlling
-computer's fixed LAN/VPN address, then preview the changes:
+## Run or resume the current translation
 
 ```powershell
-cd C:\projects\AUTOComp
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\configure-worker-ssh.ps1 `
-  -ClientAddress 192.168.1.20 `
-  -Checkpoint remote-worker-setup
+python .\scripts\universal-vision-agent.py `
+  --mission-file .\missions\kvstudio-program-tree-en.json `
+  --state-file .\.autocomp\kv-program-tree-vision-state.json `
+  --apply
 ```
 
-If the displayed address and operations are correct, repeat with `-Apply`:
+Every turn follows the same application-independent loop:
+
+1. enumerate current windows and popups;
+2. capture a fresh pinned-window PNG;
+3. ask the configured vision model for one strict JSON decision;
+4. validate coordinates, operation shape, and approved typed text;
+5. durably record intent before input;
+6. execute through the dumb worker and verify on a new frame.
+
+Menus, scrolling, dialogs, and confirmation always get a new frame. The only
+allowed multi-operation response is an already-visible field replacement:
+click, optional Ctrl+A, then exact approved text. Original Chinese, approved
+English, future Russian, prompt hashes, worker builds, actions, outcomes, and
+all evidence frames remain in resumable mission state.
+
+For another Windows editor, create a new mission/context JSON and tune the same
+prompt. Do not add another application-specific worker or controller script.
+
+## Update the remote copy
+
+After a code pull, stop and restart the worker so its `build_id` changes:
 
 ```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\configure-worker-ssh.ps1 `
-  -ClientAddress 192.168.1.20 `
-  -Checkpoint remote-worker-setup `
-  -ReplaceBroadRule `
-  -Apply
+Ctrl+C
+git pull
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-worker.ps1 `
+  -ListenAddress 0.0.0.0 `
+  -AllowRemote
 ```
 
-This installs Windows OpenSSH Server when necessary, starts `sshd`, explicitly
-replaces the default broad OpenSSH firewall rule, and creates an inbound rule
-restricted to that one controller address. Omitting `-ReplaceBroadRule` makes
-the script stop instead of silently changing existing SSH access. It does not
-expose ports 8765 or 8080.
+## Fast troubleshooting
 
-Install AUTOComp from a normal, non-elevated PowerShell window:
-
-```powershell
-cd C:\projects\AUTOComp
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\install-worker.ps1
-```
-
-The installer discovers Python 3.11 or newer, including Python 3.14 without the
-legacy `py` launcher. It creates `.venv`, copies local configuration templates,
-and generates a random worker token if the token is empty.
-
-### Tunnel-only SSH identity
-
-Generate a dedicated key on the controlling computer. Do not reuse a general
-administration key:
-
-```powershell
-ssh-keygen.exe -t ed25519 -f "$env:USERPROFILE\.ssh\autocomp-worker" -C autocomp-worker
-```
-
-Transfer only `autocomp-worker.pub` to the KV computer through the existing RDP
-session. Preview and then install it there:
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\install-worker-tunnel-key.ps1 `
-  -PublicKeyFile .\autocomp-worker.pub `
-  -Checkpoint remote-worker-key
-
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\install-worker-tunnel-key.ps1 `
-  -PublicKeyFile .\autocomp-worker.pub `
-  -Checkpoint remote-worker-key `
-  -Apply
-```
-
-If the logged-in KV account belongs to the local Administrators group, run the
-second script elevated and add `-AdministratorAccount`. Windows OpenSSH reads
-administrator keys from `%ProgramData%\ssh\administrators_authorized_keys`.
-
-The installed key has OpenSSH restrictions that permit port forwarding only to
-`127.0.0.1:8765`. It cannot start a shell or remote command, allocate a terminal,
-or forward an authentication agent. Keep ordinary RDP/administrator credentials
-outside AUTOComp.
-
-### Start the worker on the KV computer
-
-Log into the same interactive Windows account that runs KV STUDIO. Open only the
-throwaway project copy, keep the PLC disconnected/offline, and start:
-
-```powershell
-cd C:\projects\AUTOComp
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\start-worker.ps1
-```
-
-Leave that PowerShell window open. The worker is intentionally not a Windows
-service because Windows UI Automation must run in the same interactive session
-as KV STUDIO. A minimized KV STUDIO window is normally sufficient for UIA-only
-inventory. Screenshot/VLM fallback requires a visible, unlocked desktop.
-
-`config.local.json` defaults to `safety.apply_enabled: false`. Keep that default
-for health, status, ordinary inventory, and all dry-runs. Immediately before a
-reviewed full expansion, probe, or rename on the project copy, set it to `true`
-and restart the worker. `-Apply` plus a checkpoint is still required on every
-such request. Return it to `false` and restart after the mutation batch. Never
-enable it while a production/sole project or an online PLC session is open.
-
-## Connect from the controlling computer
-
-Put the same `AUTOCOMP_WORKER_TOKEN` in a local ignored `.env.remote` file. Also
-set the tunnel endpoint:
-
-```dotenv
-AUTOCOMP_WORKER_ENDPOINT=http://127.0.0.1:8765
-AUTOCOMP_WORKER_TOKEN=the-same-random-token-from-the-KV-computer
-```
-
-Never paste the token into chat, Git, a URL, or a PowerShell command. Open the
-tunnel in one PowerShell window:
-
-```powershell
-cd W:\_python\AUTOComp
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\connect-worker.ps1 `
-  -RemoteHost 192.168.1.50 `
-  -RemoteUser thunder `
-  -IdentityFile "$env:USERPROFILE\.ssh\autocomp-worker"
-```
-
-Keep the tunnel window open. In another PowerShell window, verify the authenticated
-worker and inspect its explicit capabilities:
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\invoke-worker.ps1 `
-  -Health -EnvFile .env.remote
-
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\invoke-worker.ps1 `
-  -Capabilities -EnvFile .env.remote
-
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\invoke-worker.ps1 `
-  -Status -EnvFile .env.remote
-```
-
-Capture the ordinary read-only UI inventory without overwriting an old report:
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\invoke-worker.ps1 `
-  -Inventory -EnvFile .env.remote `
-  -Output reports\remote-ui.json
-```
-
-Capture only currently visible tree nodes without expanding anything:
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\invoke-worker.ps1 `
-  -InventoryProjectTree -EnvFile .env.remote `
-  -Output reports\remote-tree-visible.json
-```
-
-A complete inventory temporarily changes expansion state and therefore requires
-both an explicit apply switch and checkpoint. The worker restores the original
-state before returning:
-
-```powershell
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\invoke-worker.ps1 `
-  -InventoryProjectTree -ExpandAll -Apply `
-  -Checkpoint 01-remote-full-tree `
-  -EnvFile .env.remote `
-  -Output reports\remote-tree-full.json
-```
-
-## Name-limit probe and rename-one safety gate
-
-The `invoke-worker.ps1` client has no arbitrary payload option. A tree rename
-requires the exact integer locator, full expected path, exact current source
-text, target text, and named checkpoint. First submit a probe without `-Apply`;
-this only validates the request structure and stale-node guards:
-
-```powershell
-$path = @("项目", "程序", "每次扫描执行型模块", "旧名称")
-$locator = @(0, 3, 1, 7)
-
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\invoke-worker.ps1 `
-  -ProbeTreeItemRename `
-  -Locator $locator `
-  -ExpectedPath $path `
-  -ExpectedSource "旧名称" `
-  -Target "Reviewed English Name" `
-  -Checkpoint 01-rename-probe `
-  -EnvFile .env.remote
-```
-
-Only after that response identifies the expected node should the probe be
-repeated with `-Apply`. An apply probe temporarily enters the candidate name,
-verifies what KV STUDIO accepted, and immediately restores and verifies the
-original. This is the required first test for English name-length limits.
-
-After a successful probe and manual review, use `-RenameTreeItem` with the same
-guard fields. Run it once without `-Apply`, then repeat it with `-Apply` to keep
-the new name. The worker refuses stale paths/sources and records the checkpoint,
-before/after values, and rollback result. Translation batches must still be
-followed by project save, compile/check diagnostics, and mnemonic comparison.
-
-## Bounded visual controllers
-
-Run these only against the reviewed offline project copy with the desktop
-visible and unlocked. `visual-translate.py` reads the reviewed
-`reports\03-approved-ui-rename-manifest.json` and defaults to one item:
-
-```powershell
-.\.venv\Scripts\python.exe scripts\visual-translate.py `
-  --worker-env .env.remote --llm-env .env --limit 1 --apply
-```
-
-For a calibrated deterministic bookmark batch, prepare an items file such as
-`reports\03-bookmark-batch.json`:
-
-```json
-[
-  {"record_id": "alarm", "tree_y": 320, "source": "/*报警*/", "target": "/*Alarm*/"}
-]
-```
-
-All item and command coordinates are relative to the captured full KV STUDIO
-window. Calibrate them again after any window-size, resolution, scaling, tree
-layout, or editor-layout change:
-
-```powershell
-.\.venv\Scripts\python.exe scripts\fast-bookmark-batch.py `
-  --items-json reports\03-bookmark-batch.json `
-  --tree-x $treeX --editor-x $editorX `
-  --commit-x $commitX --commit-y $commitY `
-  --scan-left $scanLeft --scan-right $scanRight `
-  --scan-top $scanTop --scan-bottom $scanBottom `
-  --worker-env .env.remote --apply
-```
-
-Both controllers pin the window handle, process ID, and exact title and create a
-durable JSONL action log. The fast controller stops on a failed worker action or
-ambiguous selected-row detection; its result is `applied`, not independently
-verified. Check one screenshot per batch/page before continuing.
-
-## Troubleshooting
-
-- `running scripts is disabled`: use the shown `powershell.exe -ExecutionPolicy
-  Bypass -File ...` form. It changes policy only for that process.
-- SSH cannot connect: verify `sshd` is running and `ClientAddress` is the actual
-  controller LAN/VPN address. Use RDP to correct the restricted firewall rule.
-- Tunnel opens but health returns 401: the local and remote worker tokens differ.
-- Status reports no KV STUDIO window: start KV STUDIO in the same logged-in
-  account/session as the worker and open the project copy.
-- UIA inventory works but screenshots are black: restore the physical/console
-  desktop; do not depend on a disconnected or locked RDP display for vision.
-
-## Rollback of remote access setup
-
-Run rollback through RDP so an SSH mistake cannot lock you out. Disable the
-`AUTOComp-SSHD-Restricted` firewall rule. Re-enable
-`OpenSSH-Server-In-TCP` only if you intentionally accept its former broad source
-scope. Remove only the `autocomp-worker-<checkpoint>` line from the applicable
-`authorized_keys` file. Stop `sshd` and change its startup type to Manual if no
-other workflow uses SSH. Removing the Windows capability is optional and should
-not be combined with unrelated cleanup.
+- `running scripts is disabled`: use the exact `powershell.exe
+  -ExecutionPolicy Bypass -File ...` command above.
+- `PIL does not seem to be installed`: run `install-worker.ps1` again; the
+  Windows extra includes Pillow.
+- HTTP 401: `.env.remote` and the worker `.env` contain different tokens.
+- old-worker/build error: pull and restart the worker once.
+- black or stale frames: restore the target application and unlock/reconnect
+  the interactive Windows/RDP session.
+- a request returns 503 after closing a dialog: the input may have succeeded
+  while the HWND disappeared; the controller records the error and verifies
+  the new window list/frame before deciding what to do next.

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "objective": "Complete an authorized text replacement in a visible Windows application using only visual evidence.",
+  "context": "The application is offline and the task operates on a disposable project copy. Preserve original, English, and future Russian text in the durable mission state.",
+  "goals": [
+    {
+      "id": "replace-visible-label-001",
+      "objective": "Find the exact visible source label, edit only that label, and commit the approved English text.",
+      "context": "The source is user-authored text. Do not modify identifiers, program logic, operands, addresses, constants, or hardware settings.",
+      "success_criteria": [
+        "A fresh screenshot visibly proves that the approved English text is committed in the intended field.",
+        "No unexpected modal dialog or partial edit remains open."
+      ],
+      "allowed_text": [
+        {
+          "original": "原始文本",
+          "english": "Approved English Text",
+          "russian": null
+        }
+      ]
+    }
+  ]
+}

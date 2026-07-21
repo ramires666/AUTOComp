@@ -1,16 +1,17 @@
 # AUTOComp
 
-AUTOComp is a local-first automation tool for translating user-authored text in
-KV STUDIO projects while proving that PLC ladder logic has not changed.
+AUTOComp is a local-first visual Windows agent for translating user-authored
+text in PLC editor projects while proving that PLC logic has not changed.
 
 The initial target is Chinese KV STUDIO 11.62. The workflow first completes and
 verifies translation in that version, then opens a copy in US/Global 11.62 for a
 second compatibility check and final cleanup.
 
-The repository is currently an integration-ready MVP. Inventory, translation,
-offline verification, guarded tree renames, and bounded pinned-window visual
-input are implemented. Mutations remain behind the global apply gate, an
-explicit per-run apply flag, and named checkpoints.
+The primary path is application-agnostic: a versioned VLM prompt observes fresh
+window frames, returns strict JSON actions, verifies the next frame, and resumes
+from durable mission state. KV STUDIO and Schneider differ only by mission data
+and prompt tuning, not worker code. Mutations remain behind the global apply
+gate, an explicit per-run apply flag, and named checkpoints.
 
 ## Safety model
 
@@ -92,11 +93,11 @@ The current Qwen 3.6 server can be started from PowerShell with:
 Do not add the server-wide `--json-schema-file` option for Qwen3.6. Current
 `llama.cpp` builds can fail before generation with an empty grammar stack when
 that global grammar is combined with the Qwen3.6 chat template. AUTOComp sends
-the strict translation schema through the Chat Completions `response_format`
-field for every translation request and validates the returned JSON again
+the strict translation or visual-action schema through the Chat Completions
+`response_format` field for every request and validates the returned JSON again
 locally. If another compatible backend rejects request-level
 `response_format`, AUTOComp retries without it but still enforces the response
-shape and protected-token round trip before accepting any proposal.
+shape, action bounds, text allowlist, and protected-token round trip.
 
 Current `llama.cpp` builds prefer `--reasoning off`; the older
 `--chat-template-kwargs '{"enable_thinking":false}'` form is deprecated and can
@@ -187,16 +188,15 @@ Equivalent deployment helpers are provided in `scripts\install-worker.ps1` and
 the remote worker with `start-worker.ps1 -ListenAddress 0.0.0.0 -AllowRemote`
 and use `-AllowLanHttp` for controller calls. SSH is an optional alternative;
 both modes are described in [the remote worker guide](docs/remote-worker.md).
-The worker exposes health, capabilities, status, inventory, full-tree inventory,
-guarded tree operations, and bounded input to one exactly pinned top-level
-window. It has no shell, arbitrary file-access, or PLC mode. The visual and
-calibrated bookmark controllers are documented in the
-[remote worker guide](docs/remote-worker.md#bounded-visual-controllers).
+The default worker is application-agnostic and exposes build-identifiable
+health/capabilities, current window metadata, pinned screenshots, and atomic
+input sequences. It has no shell, arbitrary file access, process launch, or PLC
+mode. The optional legacy KV adapter is enabled only with
+`start-worker.ps1 -EnableKVStudioAdapter`.
 
-### Fast bookmark translation (current KV project)
+### Universal visual missions
 
-After pulling the current code, restart the remote worker once so it exposes the
-new batch actions:
+After pulling code, start the worker once:
 
 ```powershell
 # on the KV STUDIO machine
@@ -205,25 +205,30 @@ git pull
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-worker.ps1 -ListenAddress 0.0.0.0 -AllowRemote
 ```
 
-With KV STUDIO open on the copied offline project, run one real pilot from the
-controller computer. This path uses the approved pending list and the remote
-worker only; it does not call an LLM and needs no coordinates:
+Run any natural-language visual mission from the controller computer:
 
 ```powershell
-python .\scripts\fast-bookmark-batch.py --apply --limit 1
+python .\scripts\universal-vision-agent.py `
+  --mission "Open the visible application settings and verify the current language" `
+  --apply
 ```
 
-If the pilot is correct, continue the remaining entries:
+For a resumable reviewed translation batch, use a mission JSON. The current 31
+program-tree labels are preserved as Chinese/English/future-Russian records in:
 
 ```powershell
-python .\scripts\fast-bookmark-batch.py --apply
+python .\scripts\universal-vision-agent.py `
+  --mission-file .\missions\kvstudio-program-tree-en.json `
+  --state-file .\.autocomp\kv-program-tree-vision-state.json `
+  --apply
 ```
 
-Defaults are `.autocomp\pending-bookmarks.json`, `.env.remote`, and the KV
-STUDIO window. Progress is saved after every applied row, so the full command
-automatically skips the pilot and resumes after interruptions. Override defaults
-only when needed with `--items-json`, `--worker-env`, `--progress-file`, or
-`--window-title-contains`.
+Each turn re-enumerates windows and modals, stores the fresh PNG and SHA-256,
+asks the configured OpenAI-compatible VLM for one strict decision, durably logs
+intent before mutation, and verifies on the next frame. Re-run the same command
+to resume. The versioned prompt is
+`prompts\universal-windows-agent.md`; its hash and the remote worker build ID are
+stored in mission state.
 
 Hash an untouched project copy:
 

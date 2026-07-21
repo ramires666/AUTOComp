@@ -154,3 +154,14 @@ def test_worker_serve_requires_explicit_audit_destination() -> None:
     assert args.host == "127.0.0.1"
     assert args.audit_log.endswith("worker-audit.jsonl")
     assert args.allow_remote is False
+    assert args.enable_kv_studio_adapter is False
+
+    kv_accelerated = parser.parse_args(
+        [
+            "worker-serve",
+            "--audit-log",
+            ".autocomp/worker-audit.jsonl",
+            "--enable-kv-studio-adapter",
+        ]
+    )
+    assert kv_accelerated.enable_kv_studio_adapter is True

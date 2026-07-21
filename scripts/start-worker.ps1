@@ -5,6 +5,7 @@ param(
     [ValidatePattern('^(?:\d{1,3}\.){3}\d{1,3}$|^::1$|^::$')]
     [string]$ListenAddress = "127.0.0.1",
     [switch]$AllowRemote,
+    [switch]$EnableKVStudioAdapter,
     [string]$Config = "",
     [string]$EnvFile = "",
     [string]$AuditLog = ""
@@ -59,6 +60,9 @@ $workerArguments = @(
 if ($AllowRemote) {
     $workerArguments += "--allow-remote"
 }
+if ($EnableKVStudioAdapter) {
+    $workerArguments += "--enable-kv-studio-adapter"
+}
 if (-not [string]::IsNullOrWhiteSpace($EnvFile)) {
     if (-not (Test-Path -LiteralPath $EnvFile)) {
         throw "Specified environment file does not exist: $EnvFile"
@@ -66,8 +70,10 @@ if (-not [string]::IsNullOrWhiteSpace($EnvFile)) {
     $workerArguments += @("--env-file", $EnvFile)
 }
 
-Write-Host "Starting AUTOComp worker in this logged-in Windows session."
-Write-Host "KV STUDIO may be minimized for UI Automation inventory; visual fallback requires it to be visible."
+Write-Host "Starting AUTOComp universal visual worker in this logged-in Windows session."
+if ($EnableKVStudioAdapter) {
+    Write-Host "KV STUDIO deterministic acceleration is enabled; visual control still requires visible windows."
+}
 if ($AllowRemote) {
     Write-Host "LAN/VM worker enabled at http://${ListenAddress}:$Port (bearer token required)."
 }
