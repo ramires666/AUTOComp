@@ -13,11 +13,13 @@ from .models import DesktopFrame, DesktopInputOperation, DesktopWindow
 _MAX_FRAME_PIXELS = 50_000_000
 _MAX_PNG_BYTES = 64 * 1024 * 1024
 _MAX_TEXT_LENGTH = 4096
+_MAX_DIALOG_WINDOWS = 64
+_DIALOG_CLASSES = frozenset({"#32770", "Window"})
 _CLIPBOARD_LOCK = threading.Lock()
 
 
 class UniversalDesktopAdapter:
-    """Operate only on an explicitly selected top-level HWND.
+    """Operate only on an explicitly selected top-level HWND or owned dialog.
 
     This surface cannot launch processes, execute shell commands, or communicate
     with PLCs. Every snapshot and input revalidates HWND, PID, and exact title.
@@ -25,11 +27,33 @@ class UniversalDesktopAdapter:
 
     def enumerate_windows(self) -> tuple[DesktopWindow, ...]:
         windows: list[DesktopWindow] = []
+        seen_handles: set[int] = set()
         for candidate in self._desktop().windows(top_level_only=True, visible_only=True):
             try:
                 if not candidate.is_visible():
                     continue
-                windows.append(self._window_snapshot(candidate))
+                snapshot = self._window_snapshot(candidate)
+                if not self._has_sane_bounds(candidate):
+                    continue
+                windows.append(snapshot)
+                seen_handles.add(snapshot.handle)
+            except Exception:
+                continue
+        # Native modal dialogs can be omitted by pywinauto's top-level list.
+        # Include only bounded, visible dialog windows -- never arbitrary child
+        # controls -- so this remains an application-agnostic eyes/hands surface.
+        dialog_count = 0
+        for candidate in self._desktop().windows(top_level_only=False, visible_only=True):
+            if dialog_count >= _MAX_DIALOG_WINDOWS:
+                break
+            try:
+                handle = int(getattr(candidate, "handle", 0) or 0)
+                if handle in seen_handles or not self._is_owned_dialog(candidate):
+                    continue
+                snapshot = self._window_snapshot(candidate)
+                windows.append(snapshot)
+                seen_handles.add(handle)
+                dialog_count += 1
             except Exception:
                 continue
         return tuple(windows)
@@ -123,7 +147,25 @@ class UniversalDesktopAdapter:
         current = self._select_window(handle, expected_pid, expected_title)
         if self._bounds(current) != bounds:
             raise RuntimeError("selected window bounds changed before input")
-        if self._foreground_window_handle() != handle:
+        foreground = self._foreground_window_handle()
+        allowed_foreground = {handle}
+        wrapper_owner = window.top_level_parent()
+        wrapper_owner_handle = int(getattr(wrapper_owner, "handle", 0) or 0)
+        if (
+            wrapper_owner_handle
+            and int(wrapper_owner.process_id()) == expected_pid
+        ):
+            allowed_foreground.add(wrapper_owner_handle)
+        # Some native modal dialogs are themselves reported as top-level by
+        # pywinauto, while SetFocus/GetForegroundWindow resolves to their main
+        # owner.  Read the actual Win32 owner so pinned dialog input still works.
+        native_owner_handle = self._native_owner_handle(handle)
+        if (
+            native_owner_handle
+            and self._window_process_id(native_owner_handle) == expected_pid
+        ):
+            allowed_foreground.add(native_owner_handle)
+        if foreground not in allowed_foreground:
             raise RuntimeError("selected window did not receive foreground focus")
 
         if selected_operation is DesktopInputOperation.CLICK:
@@ -162,17 +204,45 @@ class UniversalDesktopAdapter:
         try:
             window = self._desktop().window(handle=handle).wrapper_object()
         except Exception as exc:
-            raise RuntimeError("selected top-level window no longer exists") from exc
+            raise RuntimeError("selected window no longer exists") from exc
         actual_handle = int(getattr(window, "handle", 0) or 0)
         if actual_handle != handle:
             raise RuntimeError("selected window handle changed")
-        if int(getattr(window.top_level_parent(), "handle", 0) or 0) != handle:
-            raise RuntimeError("selected handle is not a top-level window")
+        owner = window.top_level_parent()
+        owner_handle = int(getattr(owner, "handle", 0) or 0)
+        is_top_level = owner_handle == handle
+        if not is_top_level and not self._is_owned_dialog(window, owner=owner):
+            raise RuntimeError("selected handle is not a top-level window or owned dialog")
         if int(window.process_id()) != expected_pid or window.window_text() != expected_title:
             raise RuntimeError("selected window identity precondition failed")
         if not window.is_visible():
             raise RuntimeError("selected window is not visible")
         return window
+
+    @classmethod
+    def _is_owned_dialog(cls, window, *, owner=None) -> bool:  # type: ignore[no-untyped-def]
+        """Return true only for a visible, bounded native dialog owned by its app."""
+        if not window.is_visible() or str(window.class_name()) not in _DIALOG_CLASSES:
+            return False
+        if not cls._has_sane_bounds(window):
+            return False
+        owner = owner if owner is not None else window.top_level_parent()
+        owner_handle = int(getattr(owner, "handle", 0) or 0)
+        return (
+            owner_handle != int(getattr(window, "handle", 0) or 0)
+            and int(owner.process_id()) == int(window.process_id())
+            and bool(owner.is_visible())
+        )
+
+    @classmethod
+    def _has_sane_bounds(cls, window) -> bool:  # type: ignore[no-untyped-def]
+        try:
+            left, top, right, bottom = cls._bounds(window)
+        except Exception:
+            return False
+        width = right - left
+        height = bottom - top
+        return width > 0 and height > 0 and width * height <= _MAX_FRAME_PIXELS
 
     @staticmethod
     def _window_snapshot(window) -> DesktopWindow:  # type: ignore[no-untyped-def]
@@ -254,6 +324,20 @@ class UniversalDesktopAdapter:
         import ctypes
 
         return int(ctypes.windll.user32.GetForegroundWindow() or 0)
+
+    @staticmethod
+    def _native_owner_handle(handle: int) -> int:
+        import ctypes
+
+        return int(ctypes.windll.user32.GetWindow(handle, 4) or 0)  # GW_OWNER
+
+    @staticmethod
+    def _window_process_id(handle: int) -> int:
+        import ctypes
+
+        process_id = ctypes.c_ulong()
+        ctypes.windll.user32.GetWindowThreadProcessId(handle, ctypes.byref(process_id))
+        return int(process_id.value)
 
     @staticmethod
     def _desktop():  # type: ignore[no-untyped-def]

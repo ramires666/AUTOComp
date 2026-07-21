@@ -13,6 +13,7 @@ MODULE = runpy.run_path(
 find_band = MODULE["_find_unique_comment_band"]
 load_items = MODULE["_items"]
 edit_operations = MODULE["_edit_operations"]
+focused_edit_operations = MODULE["_focused_edit_operations"]
 completed_ids = MODULE["_completed_ids"]
 save_completed = MODULE["_save_completed"]
 
@@ -67,6 +68,20 @@ def test_items_and_edit_coordinates(tmp_path: Path) -> None:
     )
     assert operations[0] == {"operation": "double", "x": 510, "y": 240, "pause_ms": 180}
     assert operations[-1]["y"] == 261
+    focused = focused_edit_operations(
+        {
+            "width": 1000,
+            "height": 700,
+            "window_bounds": [100, 50, 1200, 800],
+            "client_bounds": [110, 90, 1190, 780],
+        },
+        "/*Alarm*/",
+    )
+    assert [step["operation"] for step in focused] == [
+        "key_ctrl_a",
+        "type_text",
+        "click",
+    ]
 
 
 def test_progress_round_trip_is_bound_to_items_file(tmp_path: Path) -> None:

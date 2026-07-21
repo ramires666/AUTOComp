@@ -29,7 +29,8 @@ Thumbs.db
 # Runtime data can contain project text, screenshots, and local endpoints.
 .autocomp/
 checkpoints/
-reports/
+reports/*
+!reports/04-full-tree-bilingual-catalog.json
 screenshots/
 *.local.json
 *.log

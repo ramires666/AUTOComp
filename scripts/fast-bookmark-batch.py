@@ -21,8 +21,10 @@ from typing import Any
 from PIL import Image
 
 _SELECTED_COMMENT_RGB = (159, 207, 240)
+_ACTIVE_BORDER_RGB = (183, 243, 147)
 _DEFAULT_ITEMS = ".autocomp/pending-bookmarks.json"
 _DEFAULT_PROGRESS = ".autocomp/fast-bookmark-progress.json"
+_DEFAULT_DEFERRED = ".autocomp/deferred-bookmarks.json"
 
 
 def _find_unique_comment_band(image: Image.Image) -> tuple[int, tuple[int, int]]:
@@ -32,14 +34,11 @@ def _find_unique_comment_band(image: Image.Image) -> tuple[int, tuple[int, int]]
     minimum_run = max(80, rgb.width // 3)
     matching_rows: list[int] = []
     for y in range(rgb.height):
-        longest = current = 0
+        matching = 0
         for x in range(rgb.width):
             if pixels[x, y] == _SELECTED_COMMENT_RGB:
-                current += 1
-                longest = max(longest, current)
-            else:
-                current = 0
-        if longest >= minimum_run:
+                matching += 1
+        if matching >= minimum_run:
             matching_rows.append(y)
     bands: list[tuple[int, int]] = []
     for y in matching_rows:
@@ -48,8 +47,27 @@ def _find_unique_comment_band(image: Image.Image) -> tuple[int, tuple[int, int]]
         else:
             bands.append((y, y))
     bands = [band for band in bands if band[1] - band[0] + 1 >= 3]
+    if len(bands) > 1:
+        active: list[tuple[int, int]] = []
+        border_run = max(80, rgb.width // 3)
+        for band in bands:
+            top_rows = range(max(0, band[0] - 2), band[0])
+            bottom_rows = range(band[1] + 1, min(rgb.height, band[1] + 3))
+            has_top = any(
+                sum(pixels[x, y] == _ACTIVE_BORDER_RGB for x in range(rgb.width))
+                >= border_run
+                for y in top_rows
+            )
+            has_bottom = any(
+                sum(pixels[x, y] == _ACTIVE_BORDER_RGB for x in range(rgb.width))
+                >= border_run
+                for y in bottom_rows
+            )
+            if has_top and has_bottom:
+                active.append(band)
+        bands = active
     if len(bands) != 1:
-        raise ValueError(f"expected one long selected-comment band, found {len(bands)}")
+        raise ValueError(f"expected one active selected-comment band, found {len(bands)}")
     band = bands[0]
     return (band[0] + band[1]) // 2, band
 
@@ -132,6 +150,23 @@ def _save_completed(path: Path, items_path: Path, completed: set[str]) -> None:
     os.replace(temporary, path)
 
 
+def _id_set(path: Path) -> set[str]:
+    if not path.exists():
+        return set()
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, list) or any(not isinstance(value, str) for value in payload):
+        raise ValueError(f"invalid record-id list: {path}")
+    return set(payload)
+
+
+def _save_id_set(path: Path, values: set[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(sorted(values), ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
 def _full_window_point(snapshot: dict[str, Any], client_x: int, client_y: int) -> tuple[int, int]:
     """Convert client-PNG coordinates into worker pinned-window coordinates."""
     window = snapshot["window_bounds"]
@@ -170,6 +205,58 @@ def _edit_operations(
     ]
 
 
+def _focused_edit_operations(snapshot: dict[str, Any], target: str) -> list[dict[str, Any]]:
+    """Replace text when KV already opened its comment editor during activation."""
+    width, height = int(snapshot["width"]), int(snapshot["height"])
+    commit = _full_window_point(snapshot, width - 30, height - 30)
+    return [
+        {"operation": "key_ctrl_a", "pause_ms": 80},
+        {"operation": "type_text", "text": target, "pause_ms": 180},
+        {"operation": "click", "x": commit[0], "y": commit[1]},
+    ]
+
+
+def _apply_focused_visual_edit(
+    worker: Any,
+    settings: Any,
+    snapshot: dict[str, Any],
+    target: str,
+    checkpoint: str,
+) -> dict[str, Any]:
+    """Use KV's proven client-relative input while its comment editor has focus."""
+    width, height = int(snapshot["width"]), int(snapshot["height"])
+    actions = (
+        {"operation": "key_ctrl_a"},
+        {"operation": "type_text", "text": target},
+        {"operation": "click", "x": width - 30, "y": height - 30},
+    )
+    result: dict[str, Any] = {}
+    for step, action in enumerate(actions, 1):
+        result = worker(
+            settings,
+            {
+                "action": "visual_input",
+                "checkpoint": f"{checkpoint}_{step}",
+                **action,
+                "apply": True,
+            },
+        )
+        if result.get("performed") is not True:
+            return result
+        time.sleep(0.08)
+    return result
+
+
+def _wait_for_editing_frame(worker: Any, settings: Any) -> dict[str, Any] | None:
+    for _ in range(10):
+        refreshed = worker(settings, {"action": "visual_snapshot"})
+        frame = refreshed.get("visual_snapshot")
+        if isinstance(frame, dict) and "注释编辑中" in str(frame.get("window_title", "")):
+            return frame
+        time.sleep(0.2)
+    return None
+
+
 def _write_event(log: Any, event: dict[str, Any]) -> None:
     log.write(json.dumps(event, ensure_ascii=False) + "\n")
     log.flush()
@@ -184,6 +271,7 @@ def main() -> int:
     parser.add_argument("--items-json", default=_DEFAULT_ITEMS)
     parser.add_argument("--worker-env", default=".env.remote")
     parser.add_argument("--progress-file", default=_DEFAULT_PROGRESS)
+    parser.add_argument("--deferred-file", default=_DEFAULT_DEFERRED)
     parser.add_argument("--window-title-contains", default="KV STUDIO - [")
     parser.add_argument("--limit", type=int)
     parser.add_argument("--apply", action="store_true")
@@ -200,7 +288,7 @@ def main() -> int:
     if not endpoint:
         raise SystemExit(f"worker endpoint missing in {args.worker_env}")
     settings = visual["Settings"](endpoint, values.get("AUTOCOMP_WORKER_TOKEN", ""), "", "", "")
-    window = visual["_select_window"](settings, args.window_title_contains)
+    visual["_select_window"](settings, args.window_title_contains)
     worker = visual["_worker"]
     path = Path(args.items_json)
     if not path.is_absolute():
@@ -210,7 +298,15 @@ def main() -> int:
     if not progress_path.is_absolute():
         progress_path = project / progress_path
     completed = _completed_ids(progress_path, path)
-    items = [item for item in _items(path) if item["record_id"] not in completed]
+    deferred_path = Path(args.deferred_file)
+    if not deferred_path.is_absolute():
+        deferred_path = project / deferred_path
+    deferred = _id_set(deferred_path)
+    items = [
+        item
+        for item in _items(path)
+        if item["record_id"] not in completed and item["record_id"] not in deferred
+    ]
     if args.limit:
         items = items[: args.limit]
     if not items:
@@ -231,15 +327,37 @@ def main() -> int:
                 "apply": True,
             }
             try:
-                result = worker(settings, activate)
-                if result.get("performed") is not True:
-                    raise RuntimeError(result.get("message", "activation was not performed"))
-                frame = result.get("visual_snapshot")
+                current = worker(settings, {"action": "visual_snapshot"})
+                frame = current.get("visual_snapshot")
+                already_editing = isinstance(frame, dict) and "注释编辑中" in str(
+                    frame.get("window_title", "")
+                )
+                activation_error: Exception | None = None
+                if not already_editing:
+                    try:
+                        result = worker(settings, activate)
+                    except RuntimeError as exc:
+                        # KV may finish the double-click but make the old UIA wrapper
+                        # throw while the editor window is changing modes.
+                        activation_error = exc
+                        result = {}
+                    if result.get("performed") is True:
+                        frame = result.get("visual_snapshot")
+                    else:
+                        frame = _wait_for_editing_frame(worker, settings)
+                editing = isinstance(frame, dict) and "注释编辑中" in str(
+                    frame.get("window_title", "")
+                )
+                if activation_error is not None and not editing:
+                    raise activation_error
                 try:
                     if not isinstance(frame, dict):
                         raise ValueError("activation did not return a snapshot")
-                    image = Image.open(BytesIO(base64.b64decode(frame["png_base64"])))
-                    selected_y, band = _find_unique_comment_band(image)
+                    if editing:
+                        band = (-1, -1)
+                    else:
+                        image = Image.open(BytesIO(base64.b64decode(frame["png_base64"])))
+                        selected_y, band = _find_unique_comment_band(image)
                 except (KeyError, TypeError, ValueError):
                     # KV STUDIO occasionally paints the newly opened ladder one beat late.
                     time.sleep(0.25)
@@ -249,22 +367,46 @@ def main() -> int:
                         raise RuntimeError("follow-up snapshot was unavailable") from None
                     image = Image.open(BytesIO(base64.b64decode(frame["png_base64"])))
                     selected_y, band = _find_unique_comment_band(image)
-                operations = _edit_operations(frame, selected_y, band, item["target"])
-                sequence = worker(
+                if not editing:
+                    opened = worker(
+                        settings,
+                        {
+                            "action": "visual_input",
+                            "checkpoint": checkpoint + "_open",
+                            "operation": "double_click",
+                            "x": int(frame["width"]) // 2,
+                            "y": selected_y,
+                            "apply": True,
+                        },
+                    )
+                    if opened.get("performed") is not True:
+                        raise RuntimeError("selected comment did not open")
+                    frame = _wait_for_editing_frame(worker, settings)
+                    if frame is None:
+                        raise RuntimeError("comment editor did not receive focus")
+                sequence = _apply_focused_visual_edit(
+                    worker,
                     settings,
-                    {
-                        "action": "desktop_input_sequence",
-                        "window_handle": int(window["handle"]),
-                        "expected_pid": int(window["process_id"]),
-                        "expected_title": str(window["title"]),
-                        "checkpoint": checkpoint + "_edit",
-                        "operations": operations,
-                        "apply": True,
-                    },
+                    frame,
+                    item["target"],
+                    checkpoint + "_edit",
                 )
                 if sequence.get("performed") is not True:
                     raise RuntimeError(sequence.get("message", "edit sequence was not performed"))
             except Exception as exc:
+                if isinstance(exc, ValueError) and "selected-comment band" in str(exc):
+                    deferred.add(item["record_id"])
+                    _save_id_set(deferred_path, deferred)
+                    _write_event(
+                        log,
+                        {
+                            "index": index,
+                            "record_id": item["record_id"],
+                            "status": "deferred_no_comment_band",
+                            "error": str(exc),
+                        },
+                    )
+                    continue
                 _write_event(
                     log,
                     {

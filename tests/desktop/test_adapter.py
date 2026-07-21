@@ -31,6 +31,8 @@ class _Window:
         self.visible = True
         self.enabled = True
         self.minimized = False
+        self.class_name_value = "Window"
+        self.owner: _Window = self
         self.calls: list[tuple[object, ...]] = []
 
     def window_text(self) -> str:
@@ -52,7 +54,10 @@ class _Window:
         return self.minimized
 
     def top_level_parent(self) -> _Window:
-        return self
+        return self.owner
+
+    def class_name(self) -> str:
+        return self.class_name_value
 
     def set_focus(self) -> None:
         self.calls.append(("focus",))
@@ -82,8 +87,15 @@ class _Desktop:
     def __init__(self, *windows: _Window) -> None:
         self.windows_by_handle = {window.handle: window for window in windows}
 
-    def windows(self, **_: object) -> list[_Window]:
-        return list(self.windows_by_handle.values())
+    def windows(self, *, top_level_only: bool = False, **_: object) -> list[_Window]:
+        windows = list(self.windows_by_handle.values())
+        if top_level_only:
+            return [
+                window
+                for window in windows
+                if window.top_level_parent().handle == window.handle
+            ]
+        return windows
 
     def window(self, *, handle: int) -> _Specification:
         return _Specification(self.windows_by_handle[handle])
@@ -92,6 +104,8 @@ class _Desktop:
 class _Adapter(UniversalDesktopAdapter):
     def __init__(self, *windows: _Window) -> None:
         self.desktop = _Desktop(*windows)
+        self.foreground_handle = next(iter(self.desktop.windows_by_handle))
+        self.native_owners: dict[int, int] = {}
 
     def _desktop(self) -> _Desktop:
         return self.desktop
@@ -100,7 +114,13 @@ class _Adapter(UniversalDesktopAdapter):
         return Image.new("RGB", (bounds[2] - bounds[0], bounds[3] - bounds[1]), "white")
 
     def _foreground_window_handle(self) -> int:
-        return next(iter(self.desktop.windows_by_handle))
+        return self.foreground_handle
+
+    def _native_owner_handle(self, handle: int) -> int:
+        return self.native_owners.get(handle, 0)
+
+    def _window_process_id(self, handle: int) -> int:
+        return self.desktop.windows_by_handle[handle].pid
 
 
 def test_enumerates_visible_top_level_windows_without_product_allowlist() -> None:
@@ -115,6 +135,57 @@ def test_enumerates_visible_top_level_windows_without_product_allowlist() -> Non
         (202, "EcoStruxure"),
     ]
     assert windows[1].bounds == (-500, 0, 0, 400)
+
+
+def test_enumerates_and_accepts_visible_owned_native_dialog() -> None:
+    main = _Window(101, "KV STUDIO", 11, (10, 20, 800, 600))
+    dialog = _Window(102, "Program Properties", 11, (100, 100, 500, 400))
+    dialog.owner = main
+    dialog.class_name_value = "#32770"
+    adapter = _Adapter(main, dialog)
+
+    windows = adapter.enumerate_windows()
+    assert [(item.handle, item.title) for item in windows] == [
+        (101, "KV STUDIO"),
+        (102, "Program Properties"),
+    ]
+
+    adapter.input(
+        handle=102,
+        expected_pid=11,
+        expected_title="Program Properties",
+        operation="key_enter",
+    )
+    assert dialog.calls[-1] == ("type_keys", "{ENTER}", False)
+
+
+def test_accepts_native_owner_as_foreground_for_top_level_modal() -> None:
+    main = _Window(101, "KV STUDIO", 11, (10, 20, 800, 600))
+    dialog = _Window(102, "Program Properties", 11, (100, 100, 500, 400))
+    dialog.class_name_value = "#32770"
+    adapter = _Adapter(main, dialog)
+    adapter.foreground_handle = main.handle
+    adapter.native_owners[dialog.handle] = main.handle
+
+    adapter.input(
+        handle=dialog.handle,
+        expected_pid=dialog.pid,
+        expected_title=dialog.title,
+        operation="key_enter",
+    )
+
+    assert dialog.calls[-1] == ("type_keys", "{ENTER}", False)
+
+
+def test_rejects_non_dialog_child_window() -> None:
+    main = _Window(101, "KV STUDIO", 11, (10, 20, 800, 600))
+    child = _Window(102, "Edit", 11, (100, 100, 500, 140))
+    child.owner = main
+    child.class_name_value = "Edit"
+    adapter = _Adapter(main, child)
+
+    with pytest.raises(RuntimeError, match="owned dialog"):
+        adapter.snapshot(handle=102, expected_pid=11, expected_title="Edit")
 
 
 def test_snapshot_requires_exact_handle_pid_title_and_returns_png_hash() -> None:
