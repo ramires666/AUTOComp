@@ -254,6 +254,7 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                 "INVENTORY_PROJECT_TREE",
                 "PROBE_TREE_ITEM_RENAME",
                 "RENAME_TREE_ITEM",
+                "INSPECT_TREE_ITEM_MENU",
             )
             actions = [
                 member.value
@@ -267,6 +268,7 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                     "INVENTORY_PROJECT_TREE",
                     "PROBE_TREE_ITEM_RENAME",
                     "RENAME_TREE_ITEM",
+                    "INSPECT_TREE_ITEM_MENU",
                 )
                 if (member := getattr(ActionKind, name, None)) is not None
             ]

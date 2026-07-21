@@ -15,6 +15,7 @@ class ActionKind(StrEnum):
     INVENTORY_PROJECT_TREE = "inventory_project_tree"
     RENAME_TREE_ITEM = "rename_tree_item"
     PROBE_TREE_ITEM_RENAME = "probe_tree_item_rename"
+    INSPECT_TREE_ITEM_MENU = "inspect_tree_item_menu"
 
 
 @dataclass(frozen=True, slots=True)
@@ -65,6 +66,36 @@ class TreeItemRenameResult:
     rollback_attempted: bool = False
     rollback_succeeded: bool = False
     error: str = ""
+
+
+@dataclass(frozen=True, slots=True)
+class MenuItemSnapshot:
+    """One visible item from the exact tree node's transient context menu."""
+
+    text: str
+    automation_id: str = ""
+    class_name: str = ""
+    control_type: str = "MenuItem"
+    native_handle: int = 0
+    runtime_id: tuple[int, ...] = ()
+    enabled: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class TreeItemMenuInspection:
+    """Bounded snapshot of a context menu opened for one pinned tree item."""
+
+    window_title: str
+    process_id: int
+    locator: tuple[int, ...]
+    path: tuple[str, ...]
+    source: str
+    menu_native_handle: int = 0
+    menu_automation_id: str = ""
+    menu_class_name: str = ""
+    items: tuple[MenuItemSnapshot, ...] = ()
+    complete: bool = False
+    warnings: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -132,6 +163,7 @@ class ActionResult:
     rollback_attempted: bool = False
     rollback_succeeded: bool = False
     window_state: WindowState | None = None
+    tree_item_menu_inspection: TreeItemMenuInspection | None = None
 
 
 def action_request_from_payload(payload: object) -> ActionRequest:
@@ -198,6 +230,24 @@ def action_request_from_payload(payload: object) -> ActionRequest:
                 "apply",
             },
         ),
+        ActionKind.INSPECT_TREE_ITEM_MENU: (
+            {
+                "action",
+                "checkpoint",
+                "locator",
+                "expected_path",
+                "expected_source",
+                "apply",
+            },
+            {
+                "action",
+                "checkpoint",
+                "locator",
+                "expected_path",
+                "expected_source",
+                "apply",
+            },
+        ),
     }
     allowed, required = schemas[kind]
     keys = set(payload)
@@ -208,7 +258,12 @@ def action_request_from_payload(payload: object) -> ActionRequest:
     target_path = _payload_text_tuple(payload.get("target_path", []), "target_path")
     locator = (
         _payload_locator(payload.get("locator"))
-        if kind in {ActionKind.RENAME_TREE_ITEM, ActionKind.PROBE_TREE_ITEM_RENAME}
+        if kind
+        in {
+            ActionKind.RENAME_TREE_ITEM,
+            ActionKind.PROBE_TREE_ITEM_RENAME,
+            ActionKind.INSPECT_TREE_ITEM_MENU,
+        }
         else ()
     )
     expected_path = _payload_text_tuple(payload.get("expected_path", []), "expected_path")

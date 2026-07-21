@@ -9,8 +9,10 @@ from typing import Protocol
 
 from .models import (
     ControlSnapshot,
+    MenuItemSnapshot,
     ProjectTreeInventory,
     ProjectTreeNodeSnapshot,
+    TreeItemMenuInspection,
     TreeItemRenameResult,
     WindowSnapshot,
     WindowState,
@@ -54,6 +56,15 @@ class KVStudioAdapter(Protocol):
     ) -> TreeItemRenameResult:
         """Rename exactly one pinned tree item and roll back on failed verification."""
 
+    def inspect_tree_item_menu(
+        self,
+        *,
+        locator: tuple[int, ...],
+        expected_path: tuple[str, ...],
+        expected_source: str,
+    ) -> TreeItemMenuInspection:
+        """Open, snapshot, and close the context menu for one pinned tree item."""
+
 
 class FakeKVStudioAdapter:
     """Deterministic adapter for tests; it has no OS or network side effects."""
@@ -67,6 +78,7 @@ class FakeKVStudioAdapter:
         self.window_state = WindowState("KV STUDIO", 0, False, True, True, True)
         self.tree_items: dict[tuple[int, ...], tuple[str, ...]] = {}
         self.rename_calls: list[dict[str, object]] = []
+        self.menu_inspection_calls: list[dict[str, object]] = []
         self.rename_failure_after_write = False
 
     def discover(self) -> tuple[WindowSnapshot, ...]:
@@ -118,6 +130,35 @@ class FakeKVStudioAdapter:
                 error="post-rename verification failed",
             )
         return TreeItemRenameResult(True, expected_source, target)
+
+    def inspect_tree_item_menu(
+        self,
+        *,
+        locator: tuple[int, ...],
+        expected_path: tuple[str, ...],
+        expected_source: str,
+    ) -> TreeItemMenuInspection:
+        self.menu_inspection_calls.append(
+            {
+                "locator": locator,
+                "expected_path": expected_path,
+                "expected_source": expected_source,
+            }
+        )
+        actual_path = self.tree_items.get(locator)
+        complete = actual_path == expected_path and expected_path[-1] == expected_source
+        return TreeItemMenuInspection(
+            "KV STUDIO",
+            0,
+            locator,
+            expected_path,
+            expected_source,
+            items=(MenuItemSnapshot("重命名", automation_id="rename", enabled=True),)
+            if complete
+            else (),
+            complete=complete,
+            warnings=() if complete else ("source precondition failed",),
+        )
 
 
 class PywinautoKVStudioAdapter:
@@ -395,6 +436,129 @@ class PywinautoKVStudioAdapter:
             )
         return result
 
+    def inspect_tree_item_menu(
+        self,
+        *,
+        locator: tuple[int, ...],
+        expected_path: tuple[str, ...],
+        expected_source: str,
+    ) -> TreeItemMenuInspection:
+        """Snapshot one exact node's context menu without invoking any command."""
+        window_title = ""
+        process_id = 0
+        menu_handle = 0
+        menu_automation_id = ""
+        menu_class_name = ""
+        items: tuple[MenuItemSnapshot, ...] = ()
+        warnings: list[str] = []
+        expanded: list[object] = []
+        menu = None
+        right_click_sent = False
+        menu_closed = False
+        source_verified = False
+        try:
+            window, tree = self._find_project_tree()
+            window_title = window.window_text()
+            process_id = int(window.process_id())
+            window_identity = (window_title, process_id)
+            self._restore_and_focus_editor(window)
+            native_tree = self._native_project_tree(window, tree)
+            item = self._resolve_tree_item_for_edit(
+                tree,
+                locator,
+                expected_path,
+                expanded=expanded,
+            )
+            if item.window_text().strip() != expected_source:
+                raise RuntimeError("source precondition failed")
+
+            baseline = {
+                self._menu_identity(candidate)
+                for candidate in self._visible_same_process_menus(process_id)
+            }
+            native_tree.set_focus()
+            item.select()
+            if item.window_text().strip() != expected_source:
+                raise RuntimeError("tree-item identity changed before context click")
+            item.click_input(button="right")
+            right_click_sent = True
+
+            deadline = time.monotonic() + 2.0
+            while menu is None:
+                candidates = tuple(
+                    candidate
+                    for candidate in self._visible_same_process_menus(process_id)
+                    if self._menu_identity(candidate) not in baseline
+                )
+                if len(candidates) == 1:
+                    menu = candidates[0]
+                    break
+                if len(candidates) > 1:
+                    raise RuntimeError("multiple new KV STUDIO context menus were found")
+                if time.monotonic() >= deadline:
+                    raise RuntimeError("KV STUDIO tree-item context menu was not found")
+                time.sleep(0.05)
+
+            info = menu.element_info
+            menu_handle = int(getattr(info, "handle", 0) or 0)
+            menu_automation_id = str(getattr(info, "automation_id", "") or "")
+            menu_class_name = str(getattr(info, "class_name", "") or "")
+            items = self._snapshot_menu_items(menu, process_id=process_id)
+            self._send_tree_rename_key(menu, "{ESC}")
+            close_deadline = time.monotonic() + 1.0
+            menu_identity = self._menu_identity(menu)
+            while any(
+                self._menu_identity(candidate) == menu_identity
+                for candidate in self._visible_same_process_menus(process_id)
+            ):
+                if time.monotonic() >= close_deadline:
+                    raise RuntimeError("KV STUDIO context menu did not close after Escape")
+                time.sleep(0.05)
+            menu_closed = True
+
+            current_window, current_tree = self._find_project_tree()
+            if (current_window.window_text(), int(current_window.process_id())) != window_identity:
+                raise RuntimeError("KV STUDIO window identity changed during menu inspection")
+            current = self._resolve_tree_item_by_index(
+                current_tree,
+                locator,
+                expanded=expanded,
+            )
+            source_verified = current.window_text().strip() == expected_source
+            if not source_verified:
+                raise RuntimeError("tree-item source changed during context-menu inspection")
+        except Exception as exc:
+            warnings.append(f"{type(exc).__name__}: {exc}")
+        finally:
+            if right_click_sent and not menu_closed:
+                try:
+                    target = menu if menu is not None else native_tree
+                    self._send_tree_rename_key(target, "{ESC}")
+                except Exception as exc:
+                    warnings.append(f"menu close failed: {type(exc).__name__}: {exc}")
+            for control in reversed(tuple(dict.fromkeys(expanded))):
+                try:
+                    self._collapse_and_verify(control)
+                except Exception as exc:
+                    warnings.append(
+                        f"expansion-state restoration failed: {type(exc).__name__}: {exc}"
+                    )
+
+        complete = menu_closed and source_verified and bool(items) and not warnings
+        return TreeItemMenuInspection(
+            window_title=window_title,
+            process_id=process_id,
+            locator=locator,
+            path=expected_path,
+            source=expected_source,
+            menu_native_handle=menu_handle,
+            menu_automation_id=menu_automation_id,
+            menu_class_name=menu_class_name,
+            items=items,
+            complete=complete,
+            warnings=tuple(warnings),
+        )
+
     def _find_project_tree(self):  # type: ignore[no-untyped-def]
         matches: list[tuple[object, object]] = []
         for window in self._allowed_windows():
@@ -444,6 +608,53 @@ class PywinautoKVStudioAdapter:
             if "SysTreeView32" in class_name and tree_pid in {0, window_pid}:
                 matches.append(candidate)
         return tuple(matches)
+
+    def _visible_same_process_menus(self, process_id: int) -> tuple[object, ...]:
+        menus: list[object] = []
+        for candidate in self._desktop().windows():
+            try:
+                info = candidate.element_info
+                if (
+                    str(getattr(info, "control_type", "")) == "Menu"
+                    and int(getattr(info, "process_id", 0) or 0) == process_id
+                    and candidate.is_visible()
+                    and candidate.is_enabled()
+                ):
+                    menus.append(candidate)
+            except Exception:
+                continue
+        return tuple(menus)
+
+    @staticmethod
+    def _menu_identity(menu) -> tuple[object, ...]:  # type: ignore[no-untyped-def]
+        info = menu.element_info
+        runtime_id = tuple(getattr(info, "runtime_id", ()) or ())
+        if runtime_id:
+            return ("runtime_id", *runtime_id)
+        return ("handle", int(getattr(info, "handle", 0) or 0))
+
+    @staticmethod
+    def _snapshot_menu_items(menu, *, process_id: int) -> tuple[MenuItemSnapshot, ...]:  # type: ignore[no-untyped-def]
+        snapshots: list[MenuItemSnapshot] = []
+        for candidate in menu.descendants(control_type="MenuItem")[:128]:
+            info = candidate.element_info
+            if int(getattr(info, "process_id", 0) or 0) != process_id:
+                continue
+            if not candidate.is_visible():
+                continue
+            runtime_id = tuple(int(part) for part in (getattr(info, "runtime_id", ()) or ()))
+            snapshots.append(
+                MenuItemSnapshot(
+                    text=candidate.window_text()[:512],
+                    automation_id=str(getattr(info, "automation_id", "") or "")[:256],
+                    class_name=str(getattr(info, "class_name", "") or "")[:256],
+                    control_type=str(getattr(info, "control_type", "") or "")[:64],
+                    native_handle=int(getattr(info, "handle", 0) or 0),
+                    runtime_id=runtime_id[:32],
+                    enabled=bool(candidate.is_enabled()),
+                )
+            )
+        return tuple(snapshots)
 
     @staticmethod
     def _is_minimized(window) -> bool:  # type: ignore[no-untyped-def]

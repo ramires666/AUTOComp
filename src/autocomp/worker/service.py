@@ -40,6 +40,8 @@ class KVStudioWorker:
             return self._rename_tree_item(request, probe=False)
         if request.kind is ActionKind.PROBE_TREE_ITEM_RENAME:
             return self._rename_tree_item(request, probe=True)
+        if request.kind is ActionKind.INSPECT_TREE_ITEM_MENU:
+            return self._inspect_tree_item_menu(request)
         raise ValueError(f"Unsupported UI action: {request.kind!r}")
 
     def _expand_tree_item(self, request: ActionRequest) -> ActionResult:
@@ -174,6 +176,39 @@ class KVStudioWorker:
             rollback_succeeded=restored,
         )
 
+    def _inspect_tree_item_menu(self, request: ActionRequest) -> ActionResult:
+        self._validate_tree_item_precondition(request)
+        if not request.apply:
+            return ActionResult(
+                kind=request.kind,
+                performed=False,
+                message="Dry-run: context-menu inspection was validated but not performed.",
+                audit={"mode": "dry-run", "operation": "inspect_tree_item_menu"},
+            )
+        self._require_apply(request)
+        inspection = self._adapter.inspect_tree_item_menu(
+            locator=request.locator,
+            expected_path=request.expected_path,
+            expected_source=request.expected_source,
+        )
+        return ActionResult(
+            kind=request.kind,
+            performed=inspection.complete,
+            message=(
+                "Tree-item context menu inspected and closed."
+                if inspection.complete
+                else "Tree-item context menu inspection was incomplete."
+            ),
+            audit={
+                "mode": "apply",
+                "checkpoint": request.checkpoint,
+                "operation": "inspect_tree_item_menu",
+                "complete": str(inspection.complete).lower(),
+                "item_count": str(len(inspection.items)),
+            },
+            tree_item_menu_inspection=inspection,
+        )
+
     def _require_apply(self, request: ActionRequest) -> None:
         if not self._apply_enabled:
             raise ValueError("apply mode is disabled by worker safety configuration")
@@ -185,18 +220,8 @@ class KVStudioWorker:
 
     @staticmethod
     def _validate_rename_request(request: ActionRequest) -> None:
-        if not request.locator or len(request.locator) != len(request.expected_path):
-            raise ValueError("locator and expected_path must have equal non-zero depth")
-        if any(index < 0 for index in request.locator):
-            raise ValueError("locator indices must be non-negative")
-        if not request.expected_path or any(not part.strip() for part in request.expected_path):
-            raise ValueError("expected_path must contain non-empty parts")
-        if request.expected_path[-1] != request.expected_source:
-            raise ValueError("expected_path leaf must exactly equal expected_source")
-        for field_name, value in (
-            ("expected_source", request.expected_source),
-            ("target", request.target),
-        ):
+        KVStudioWorker._validate_tree_item_precondition(request)
+        for field_name, value in (("target", request.target),):
             if not value or value != value.strip() or len(value) > 512:
                 raise ValueError(f"{field_name} must be non-empty, trimmed, and at most 512 chars")
             if any(ord(character) < 32 or ord(character) == 127 for character in value):
@@ -205,3 +230,19 @@ class KVStudioWorker:
             raise ValueError("target must differ from expected_source")
         if any("\u3400" <= character <= "\u9fff" for character in request.target):
             raise ValueError("target must not contain CJK ideographs")
+
+    @staticmethod
+    def _validate_tree_item_precondition(request: ActionRequest) -> None:
+        if not request.locator or len(request.locator) != len(request.expected_path):
+            raise ValueError("locator and expected_path must have equal non-zero depth")
+        if any(index < 0 for index in request.locator):
+            raise ValueError("locator indices must be non-negative")
+        if not request.expected_path or any(not part.strip() for part in request.expected_path):
+            raise ValueError("expected_path must contain non-empty parts")
+        if request.expected_path[-1] != request.expected_source:
+            raise ValueError("expected_path leaf must exactly equal expected_source")
+        for field_name, value in (("expected_source", request.expected_source),):
+            if not value or value != value.strip() or len(value) > 512:
+                raise ValueError(f"{field_name} must be non-empty, trimmed, and at most 512 chars")
+            if any(ord(character) < 32 or ord(character) == 127 for character in value):
+                raise ValueError(f"{field_name} contains control characters")

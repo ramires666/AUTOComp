@@ -21,19 +21,25 @@ param(
     [Parameter(Mandatory = $true, ParameterSetName = "ProbeRename")]
     [switch]$ProbeTreeItemRename,
 
+    [Parameter(Mandatory = $true, ParameterSetName = "InspectMenu")]
+    [switch]$InspectTreeItemMenu,
+
     [Parameter(Mandatory = $true, ParameterSetName = "Rename")]
     [Parameter(Mandatory = $true, ParameterSetName = "ProbeRename")]
+    [Parameter(Mandatory = $true, ParameterSetName = "InspectMenu")]
     [ValidateCount(1, 64)]
     [ValidateRange(0, 2147483647)]
     [int[]]$Locator,
 
     [Parameter(Mandatory = $true, ParameterSetName = "Rename")]
     [Parameter(Mandatory = $true, ParameterSetName = "ProbeRename")]
+    [Parameter(Mandatory = $true, ParameterSetName = "InspectMenu")]
     [ValidateCount(1, 64)]
     [string[]]$ExpectedPath,
 
     [Parameter(Mandatory = $true, ParameterSetName = "Rename")]
     [Parameter(Mandatory = $true, ParameterSetName = "ProbeRename")]
+    [Parameter(Mandatory = $true, ParameterSetName = "InspectMenu")]
     [string]$ExpectedSource,
 
     [Parameter(Mandatory = $true, ParameterSetName = "Rename")]
@@ -43,12 +49,14 @@ param(
     [Parameter(ParameterSetName = "TreeInventory")]
     [Parameter(Mandatory = $true, ParameterSetName = "Rename")]
     [Parameter(Mandatory = $true, ParameterSetName = "ProbeRename")]
+    [Parameter(Mandatory = $true, ParameterSetName = "InspectMenu")]
     [ValidatePattern('^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$')]
     [string]$Checkpoint,
 
     [Parameter(ParameterSetName = "TreeInventory")]
     [Parameter(ParameterSetName = "Rename")]
     [Parameter(ParameterSetName = "ProbeRename")]
+    [Parameter(ParameterSetName = "InspectMenu")]
     [switch]$Apply,
 
     [Parameter(ParameterSetName = "TreeInventory")]
@@ -188,6 +196,30 @@ else {
         }
         if (-not [string]::IsNullOrWhiteSpace($Checkpoint)) {
             $payload.checkpoint = $Checkpoint
+        }
+    }
+    elseif ($PSCmdlet.ParameterSetName -eq "InspectMenu") {
+        $invalidExpectedPath = @(
+            $ExpectedPath | Where-Object { [string]::IsNullOrWhiteSpace($_) }
+        ).Count -gt 0
+        if (-not $Locator -or
+            $ExpectedPath.Count -ne $Locator.Count -or
+            $invalidExpectedPath -or
+            [string]::IsNullOrWhiteSpace($ExpectedSource) -or
+            [string]::IsNullOrWhiteSpace($Checkpoint) -or
+            -not $Apply) {
+            throw "InspectMenu requires exact node identity, -Apply, and -Checkpoint."
+        }
+        if ($ExpectedPath[-1] -cne $ExpectedSource) {
+            throw "The last ExpectedPath element must exactly equal ExpectedSource."
+        }
+        $payload = [ordered]@{
+            action = "inspect_tree_item_menu"
+            locator = $Locator
+            expected_path = $ExpectedPath
+            expected_source = $ExpectedSource
+            checkpoint = $Checkpoint
+            apply = $true
         }
     }
     else {
