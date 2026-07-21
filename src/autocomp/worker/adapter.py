@@ -288,16 +288,20 @@ class PywinautoKVStudioAdapter:
         import base64
         from io import BytesIO
 
+        from PIL import ImageGrab
+
         window, _ = self._find_project_tree()
         if self._is_minimized(window) or not window.is_visible():
             raise RuntimeError("KV STUDIO must be visible and not minimized for a snapshot")
         window_bounds, client_bounds = self._native_window_bounds(window)
-        image = window.capture_as_image()
-        left = client_bounds[0] - window_bounds[0]
-        top = client_bounds[1] - window_bounds[1]
-        right = left + client_bounds[2] - client_bounds[0]
-        bottom = top + client_bounds[3] - client_bounds[1]
-        client_image = image.crop((left, top, right, bottom))
+        # Grab the exact on-screen client rectangle. This is more reliable for
+        # the WinForms/Win32 mixture used by Chinese KV STUDIO than UIA's
+        # capture_as_image implementation.
+        client_image = ImageGrab.grab(
+            bbox=client_bounds,
+            include_layered_windows=True,
+            all_screens=True,
+        )
         stream = BytesIO()
         client_image.save(stream, format="PNG")
         return VisualSnapshot(
