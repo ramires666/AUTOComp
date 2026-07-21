@@ -106,6 +106,7 @@ class _Adapter(UniversalDesktopAdapter):
         self.desktop = _Desktop(*windows)
         self.foreground_handle = next(iter(self.desktop.windows_by_handle))
         self.native_owners: dict[int, int] = {}
+        self.sent_keys: list[str] = []
 
     def _desktop(self) -> _Desktop:
         return self.desktop
@@ -121,6 +122,9 @@ class _Adapter(UniversalDesktopAdapter):
 
     def _window_process_id(self, handle: int) -> int:
         return self.desktop.windows_by_handle[handle].pid
+
+    def _send_keys(self, keys: str) -> None:
+        self.sent_keys.append(keys)
 
 
 def test_enumerates_visible_top_level_windows_without_product_allowlist() -> None:
@@ -176,6 +180,26 @@ def test_accepts_native_owner_as_foreground_for_top_level_modal() -> None:
 
     assert dialog.calls[-1] == ("type_keys", "{ENTER}", False)
     assert ("focus",) not in dialog.calls
+
+
+def test_atomic_sequence_keeps_keyboard_on_clicked_child() -> None:
+    main = _Window(101, "Any App", 11, (0, 0, 800, 600))
+    dialog = _Window(102, "Properties", 11, (100, 100, 500, 400))
+    dialog.owner = main
+    adapter = _Adapter(main, dialog)
+
+    completed = adapter.input_sequence(
+        handle=dialog.handle,
+        expected_pid=dialog.pid,
+        expected_title=dialog.title,
+        operations=(
+            {"operation": "click", "x": 100, "y": 150},
+            {"operation": "key_ctrl_a"},
+        ),
+    )
+
+    assert completed == 2
+    assert adapter.sent_keys == ["^a"]
 
 
 def test_rejects_non_dialog_child_window() -> None:

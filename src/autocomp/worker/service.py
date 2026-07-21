@@ -179,6 +179,49 @@ class KVStudioWorker:
             )
         self._require_apply(request)
         completed_count = 0
+        atomic_sequence = getattr(desktop, "input_sequence", None)
+        if callable(atomic_sequence):
+            completed_count = atomic_sequence(
+                handle=request.window_handle,
+                expected_pid=request.expected_pid,
+                expected_title=request.expected_title,
+                operations=tuple(
+                    {
+                        "operation": step.operation.value,
+                        "x": step.x,
+                        "y": step.y,
+                        "delta": step.delta,
+                        "text": step.text,
+                        "pause_ms": step.pause_ms,
+                    }
+                    for step in request.desktop_operations
+                ),
+            )
+            if completed_count != len(request.desktop_operations):
+                return ActionResult(
+                    kind=request.kind,
+                    performed=False,
+                    message="Pinned desktop input sequence stopped after an unperformed step.",
+                    audit={
+                        "mode": "apply",
+                        "checkpoint": request.checkpoint,
+                        "operation": "desktop_input_sequence",
+                        "operation_count": str(len(request.desktop_operations)),
+                        "completed_count": str(completed_count),
+                    },
+                )
+            return ActionResult(
+                kind=request.kind,
+                performed=True,
+                message="Pinned desktop input sequence performed.",
+                audit={
+                    "mode": "apply",
+                    "checkpoint": request.checkpoint,
+                    "operation": "desktop_input_sequence",
+                    "operation_count": str(len(request.desktop_operations)),
+                    "completed_count": str(completed_count),
+                },
+            )
         for index, step in enumerate(request.desktop_operations):
             performed = desktop.input(
                 handle=request.window_handle,

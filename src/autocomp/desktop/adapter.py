@@ -7,6 +7,7 @@ import hashlib
 import threading
 import time
 from io import BytesIO
+from typing import Any
 
 from .models import DesktopFrame, DesktopInputOperation, DesktopWindow
 
@@ -107,6 +108,7 @@ class UniversalDesktopAdapter:
         y: int | None = None,
         delta: int | None = None,
         text: str = "",
+        _preserve_child_focus: bool = False,
     ) -> bool:
         try:
             selected_operation = DesktopInputOperation(operation)
@@ -150,7 +152,10 @@ class UniversalDesktopAdapter:
         # control (KV STUDIO jumps back to Program Name). Preserve the current
         # child focus when either the pinned HWND or its same-process owner is
         # already foreground.
-        if self._foreground_window_handle() not in allowed_foreground:
+        if (
+            not _preserve_child_focus
+            and self._foreground_window_handle() not in allowed_foreground
+        ):
             window.set_focus()
         current = self._select_window(handle, expected_pid, expected_title)
         if self._bounds(current) != bounds:
@@ -175,7 +180,9 @@ class UniversalDesktopAdapter:
                 raise ValueError("wheel delta must be a non-zero integer from -12 to 12")
             window.wheel_mouse_input(wheel_dist=delta, coords=coordinates)
         elif selected_operation is DesktopInputOperation.TYPE_TEXT:
-            self._paste_unicode(window, text)
+            self._paste_unicode(
+                window, text, preserve_child_focus=_preserve_child_focus
+            )
         else:
             key = {
                 DesktopInputOperation.KEY_ENTER: "{ENTER}",
@@ -185,9 +192,41 @@ class UniversalDesktopAdapter:
                 DesktopInputOperation.TAB: "{TAB}",
                 DesktopInputOperation.SHIFT_TAB: "+{TAB}",
             }[selected_operation]
-            window.type_keys(key, set_foreground=False)
+            if _preserve_child_focus:
+                self._send_keys(key)
+            else:
+                window.type_keys(key, set_foreground=False)
         self._select_window(handle, expected_pid, expected_title)
         return True
+
+    def input_sequence(
+        self,
+        *,
+        handle: int,
+        expected_pid: int,
+        expected_title: str,
+        operations: tuple[dict[str, Any], ...],
+    ) -> int:
+        """Run one pinned sequence without redirecting keys from a clicked child."""
+        completed = 0
+        for index, step in enumerate(operations):
+            if not self.input(
+                handle=handle,
+                expected_pid=expected_pid,
+                expected_title=expected_title,
+                operation=str(step["operation"]),
+                x=step.get("x"),
+                y=step.get("y"),
+                delta=step.get("delta"),
+                text=str(step.get("text", "")),
+                _preserve_child_focus=index > 0,
+            ):
+                break
+            completed += 1
+            pause_ms = int(step.get("pause_ms", 0) or 0)
+            if index + 1 < len(operations) and pause_ms:
+                time.sleep(pause_ms / 1000)
+        return completed
 
     def _select_window(self, handle: int, expected_pid: int, expected_title: str):  # type: ignore[no-untyped-def]
         if handle <= 0 or expected_pid <= 0:
@@ -261,8 +300,9 @@ class UniversalDesktopAdapter:
 
         return ImageGrab.grab(bbox=bounds, all_screens=True)
 
-    @staticmethod
-    def _paste_unicode(window, text: str) -> None:  # type: ignore[no-untyped-def]
+    def _paste_unicode(
+        self, window, text: str, *, preserve_child_focus: bool = False
+    ) -> None:  # type: ignore[no-untyped-def]
         if (
             not text
             or len(text) > _MAX_TEXT_LENGTH
@@ -286,7 +326,10 @@ class UniversalDesktopAdapter:
             finally:
                 win32clipboard.CloseClipboard()
             try:
-                window.type_keys("^v", set_foreground=False)
+                if preserve_child_focus:
+                    self._send_keys("^v")
+                else:
+                    window.type_keys("^v", set_foreground=False)
                 time.sleep(0.05)
             finally:
                 UniversalDesktopAdapter._open_clipboard(win32clipboard)
@@ -298,6 +341,12 @@ class UniversalDesktopAdapter:
                         win32clipboard.SetClipboardText(previous, win32clipboard.CF_UNICODETEXT)
                 finally:
                     win32clipboard.CloseClipboard()
+
+    @staticmethod
+    def _send_keys(keys: str) -> None:
+        from pywinauto.keyboard import send_keys
+
+        send_keys(keys)
 
     @staticmethod
     def _open_clipboard(win32clipboard) -> None:  # type: ignore[no-untyped-def]
