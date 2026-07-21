@@ -175,6 +175,7 @@ def test_accepts_native_owner_as_foreground_for_top_level_modal() -> None:
     )
 
     assert dialog.calls[-1] == ("type_keys", "{ENTER}", False)
+    assert ("focus",) not in dialog.calls
 
 
 def test_rejects_non_dialog_child_window() -> None:

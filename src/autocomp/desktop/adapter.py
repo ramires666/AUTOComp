@@ -143,28 +143,19 @@ class UniversalDesktopAdapter:
             raise ValueError("delta is valid only for wheel input")
         if selected_operation is not DesktopInputOperation.TYPE_TEXT and text:
             raise ValueError("text is valid only for type_text input")
-        window.set_focus()
+        allowed_foreground = self._allowed_foreground_handles(
+            window, handle=handle, expected_pid=expected_pid
+        )
+        # Re-focusing a modal dialog before every key resets its active child
+        # control (KV STUDIO jumps back to Program Name). Preserve the current
+        # child focus when either the pinned HWND or its same-process owner is
+        # already foreground.
+        if self._foreground_window_handle() not in allowed_foreground:
+            window.set_focus()
         current = self._select_window(handle, expected_pid, expected_title)
         if self._bounds(current) != bounds:
             raise RuntimeError("selected window bounds changed before input")
         foreground = self._foreground_window_handle()
-        allowed_foreground = {handle}
-        wrapper_owner = window.top_level_parent()
-        wrapper_owner_handle = int(getattr(wrapper_owner, "handle", 0) or 0)
-        if (
-            wrapper_owner_handle
-            and int(wrapper_owner.process_id()) == expected_pid
-        ):
-            allowed_foreground.add(wrapper_owner_handle)
-        # Some native modal dialogs are themselves reported as top-level by
-        # pywinauto, while SetFocus/GetForegroundWindow resolves to their main
-        # owner.  Read the actual Win32 owner so pinned dialog input still works.
-        native_owner_handle = self._native_owner_handle(handle)
-        if (
-            native_owner_handle
-            and self._window_process_id(native_owner_handle) == expected_pid
-        ):
-            allowed_foreground.add(native_owner_handle)
         if foreground not in allowed_foreground:
             raise RuntimeError("selected window did not receive foreground focus")
 
@@ -330,6 +321,22 @@ class UniversalDesktopAdapter:
         import ctypes
 
         return int(ctypes.windll.user32.GetWindow(handle, 4) or 0)  # GW_OWNER
+
+    def _allowed_foreground_handles(
+        self, window, *, handle: int, expected_pid: int
+    ) -> set[int]:  # type: ignore[no-untyped-def]
+        allowed = {handle}
+        wrapper_owner = window.top_level_parent()
+        wrapper_owner_handle = int(getattr(wrapper_owner, "handle", 0) or 0)
+        if wrapper_owner_handle and int(wrapper_owner.process_id()) == expected_pid:
+            allowed.add(wrapper_owner_handle)
+        native_owner_handle = self._native_owner_handle(handle)
+        if (
+            native_owner_handle
+            and self._window_process_id(native_owner_handle) == expected_pid
+        ):
+            allowed.add(native_owner_handle)
+        return allowed
 
     @staticmethod
     def _window_process_id(handle: int) -> int:

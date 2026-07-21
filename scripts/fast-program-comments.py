@@ -112,15 +112,20 @@ def _selected_tree_row(snapshot: dict[str, Any]) -> tuple[int, int]:
 
     image = Image.open(BytesIO(b64decode(snapshot["png_base64"]))).convert("RGB")
     limit = min(520, max(80, image.width // 3))
-    candidates: list[int] = []
+    blue_candidates: list[int] = []
+    white_candidates: list[int] = []
     for y in range(80, image.height - 10):
         blue = white = 0
         for x in range(0, limit):
             r, g, b = image.getpixel((x, y))
             blue += b > 150 and b > r * 1.25 and b > g * 1.1
             white += r > 225 and g > 225 and b > 225
-        if blue >= 40 or white >= 80:
-            candidates.append(y)
+        # Ignore full-width scroll/status bars; a selected tree row ends at its text.
+        if 40 <= blue < limit - 20:
+            blue_candidates.append(y)
+        elif 80 <= white < limit - 20 and y >= 100:
+            white_candidates.append(y)
+    candidates = blue_candidates or white_candidates
     if not candidates:
         raise ValueError("selected program tree row was not visible in activation screenshot")
     # Consecutive highlighted scanlines are one row; last band is normally the active one.
@@ -281,6 +286,11 @@ def main() -> int:
             raise RuntimeError(f"activation yielded no visible tree row: {item['source']}")
         row_x, row_y = _point(snapshot, *_selected_tree_row(snapshot))
         menu_dy = 57 if row_y + 390 < int(snapshot["height"]) else -333
+        print(
+            f"[{index}/{len(items)}] open {item['source']!r} "
+            f"at row=({row_x},{row_y}), menu_dy={menu_dy}",
+            flush=True,
+        )
         worker(
             settings,
             {
