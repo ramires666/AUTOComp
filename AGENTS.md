@@ -33,6 +33,8 @@ Build a local-first automation tool that inventories and translates user-owned t
 ## Translation and validation rules
 
 - Translate user-authored Chinese text to technical English with hierarchy and nearby ladder context.
+- Domain context is mandatory in every translation request: this PLC controls an automated precious-metal acceptance kiosk with a robotic arm, coarse and fine weighing, an induction furnace for melting gold and other precious metals, and an X-ray fluorescence (XRF) analyzer for composition analysis and valuation. Use concise industrial-automation terminology appropriate to that equipment.
+- Interpret station and process terms in that domain: `测金` is XRF assay/testing unless local program context clearly identifies another spectrometer, `石墨盘` is a graphite crucible/tray according to local context, `熔炼`/`融金`/`熔金` are induction/gold melting, and tray-position terms describe robot-arm material handling.
 - Maintain a project glossary and translation memory so repeated terms stay consistent.
 - Do not translate PLC mnemonics, device addresses, numeric constants, hardware model names, or reserved tokens.
 - Flag behavior-affecting string literals for review unless they are positively classified as operator-facing text.

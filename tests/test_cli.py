@@ -5,7 +5,7 @@ import json
 import pytest
 
 from autocomp.cli import CliError, _emit, _load_inventory, main
-from autocomp.translation.models import RiskLevel
+from autocomp.translation.models import InventoryRecord, RiskLevel, TextKind
 
 
 def test_doctor_reports_safe_defaults(capsys) -> None:
@@ -108,3 +108,21 @@ def test_extract_mnemonic_command_writes_inventory(tmp_path) -> None:
     inventory = json.loads(output.read_text(encoding="utf-8"))
     assert inventory[0]["source_text"] == "寿命设置"
     assert inventory[0]["location"] == "PartsLife.txt:1"
+
+
+def test_extract_project_tree_command_writes_inventory(tmp_path, monkeypatch) -> None:
+    source = tmp_path / "tree.json"
+    output = tmp_path / "inventory.json"
+    source.write_text('{"source":true}', encoding="utf-8")
+    captured: dict[str, object] = {}
+
+    def fake_extract(payload: object, *, source_name: str):
+        captured.update(payload=payload, source_name=source_name)
+        return [InventoryRecord("tree:1", "报警", TextKind.COMMENT)]
+
+    monkeypatch.setattr("autocomp.cli.extract_project_tree_inventory", fake_extract)
+
+    assert main(["extract-project-tree", str(source), "--output", str(output)]) == 0
+    inventory = json.loads(output.read_text(encoding="utf-8"))
+    assert captured == {"payload": {"source": True}, "source_name": "tree.json"}
+    assert inventory[0]["source_text"] == "报警"

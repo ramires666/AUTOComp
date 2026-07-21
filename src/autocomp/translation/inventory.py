@@ -8,7 +8,7 @@ from collections.abc import Iterable
 from .models import InventoryRecord, RiskLevel, TextKind
 
 _CJK_RE = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
-_PATH_RE = re.compile(r"(?:[A-Za-z]:\\|/|\\\\)")
+_PATH_RE = re.compile(r"(?:[A-Za-z]:\\|\\\\|(?<![*/])/(?![*/]))")
 _PROTOCOL_RE = re.compile(r"\b(?:https?|ftp|mqtt|modbus|tcp|udp)\b", re.I)
 
 

@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import math
+import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any
@@ -16,26 +18,31 @@ _TRANSLATION_PROPERTIES: dict[str, Any] = {
     "notes": {"type": "string"},
     "confidence": {"type": ["number", "null"]},
 }
+_BATCH_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "items": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "record_id": {"type": "string", "minLength": 1},
+                    **_TRANSLATION_PROPERTIES,
+                },
+                "required": ["record_id", "translation", "notes", "confidence"],
+                "additionalProperties": False,
+            },
+        }
+    },
+    "required": ["items"],
+    "additionalProperties": False,
+}
 _BATCH_RESPONSE_FORMAT = {
     "type": "json_schema",
-    "schema": {
-        "type": "object",
-        "properties": {
-            "items": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "record_id": {"type": "string", "minLength": 1},
-                        **_TRANSLATION_PROPERTIES,
-                    },
-                    "required": ["record_id", "translation", "notes", "confidence"],
-                    "additionalProperties": False,
-                },
-            }
-        },
-        "required": ["items"],
-        "additionalProperties": False,
+    "json_schema": {
+        "name": "autocomp_translation_batch",
+        "strict": True,
+        "schema": _BATCH_SCHEMA,
     },
 }
 
@@ -90,7 +97,8 @@ class OpenAICompatibleProvider(TranslationProvider):
             "Translate only user-authored Chinese text into concise technical English. "
             "When a glossary source term occurs anywhere in an input, use its target term "
             "verbatim in that translation. Do not leave any CJK characters in results. "
-            "Keep every [[PLC_TOKEN_N]] placeholder exactly unchanged. Return JSON only with "
+            "Keep every [[PLC_TOKEN_N]] placeholder exactly unchanged, exactly once, and in "
+            "the same ascending order as the input. Return JSON only with "
             "an 'items' array. Each item must have exactly one input record_id plus non-empty "
             "translation, optional string notes, and numeric or null confidence."
         )
@@ -143,7 +151,10 @@ class OpenAICompatibleProvider(TranslationProvider):
                 self._effective_model = model
                 self._candidate_models = [model, *[item for item in candidates if item != model]]
                 return result
-        raise RuntimeError("no responding chat model was found at the LLM endpoint") from last_error
+        detail = f": {last_error}" if last_error is not None else ""
+        raise RuntimeError(
+            "no responding chat model was found at the LLM endpoint" + detail
+        ) from last_error
 
     @property
     def _auto_model(self) -> bool:
@@ -201,7 +212,16 @@ class OpenAICompatibleProvider(TranslationProvider):
             with urlopen(request, timeout=self._config.timeout_seconds) as response:
                 raw = response.read(2 * 1024 * 1024 + 1)
         except HTTPError as exc:
-            raise _HttpRequestError(exc.code) from exc
+            message = ""
+            try:
+                error_raw = exc.read(64 * 1024)
+                error_payload = json.loads(error_raw.decode("utf-8"))
+                candidate = error_payload.get("error", {}).get("message", "")
+                if isinstance(candidate, str):
+                    message = candidate.strip()[:1000]
+            except (AttributeError, UnicodeDecodeError, json.JSONDecodeError):
+                pass
+            raise _HttpRequestError(exc.code, message) from exc
         if len(raw) > 2 * 1024 * 1024:
             raise ValueError("LLM response is too large")
         try:
@@ -211,8 +231,9 @@ class OpenAICompatibleProvider(TranslationProvider):
 
 
 class _HttpRequestError(RuntimeError):
-    def __init__(self, status: int) -> None:
-        super().__init__(f"LLM endpoint returned HTTP {status}")
+    def __init__(self, status: int, message: str = "") -> None:
+        detail = f": {message}" if message else ""
+        super().__init__(f"LLM endpoint returned HTTP {status}{detail}")
         self.status = status
 
 
@@ -271,16 +292,31 @@ def _parse_completion(payload: Any) -> ProviderTranslation:
         raise ValueError("provider response does not contain a valid JSON translation") from exc
     if not isinstance(translation, str) or not translation.strip():
         raise ValueError("provider translation must be a non-empty string")
-    notes = parsed.get("notes", "")
-    confidence = parsed.get("confidence")
-    if not isinstance(notes, str) or (
-        confidence is not None and not isinstance(confidence, (int, float))
+    notes_value = parsed.get("notes", "")
+    notes = "" if notes_value is None else notes_value
+    if not isinstance(notes, str):
+        raise ValueError("provider response notes must be a string or null")
+    confidence_value = parsed.get("confidence")
+    if isinstance(confidence_value, str):
+        stripped = confidence_value.strip()
+        if stripped.casefold() in {"", "null", "none"}:
+            confidence_value = None
+        elif re.fullmatch(r"(?:0|1)(?:\.\d+)?", stripped):
+            confidence_value = float(stripped)
+        else:
+            raise ValueError("provider response confidence string is invalid")
+    if isinstance(confidence_value, bool) or (
+        confidence_value is not None and not isinstance(confidence_value, (int, float))
     ):
-        raise ValueError("provider response fields have invalid types")
+        raise ValueError("provider response confidence must be numeric or null")
+    if confidence_value is not None and (
+        not math.isfinite(float(confidence_value)) or not 0 <= float(confidence_value) <= 1
+    ):
+        raise ValueError("provider response confidence must be between 0 and 1")
     return ProviderTranslation(
         translation=translation,
         notes=notes,
-        confidence=float(confidence) if confidence is not None else None,
+        confidence=float(confidence_value) if confidence_value is not None else None,
     )
 
 
@@ -303,7 +339,10 @@ def _parse_batch_completion(payload: Any, expected_ids: set[str]) -> dict[str, P
         if record_id in results:
             raise ValueError("provider batch contains duplicate record_id")
         # Reuse the single-item schema validator rather than accepting a weaker batch schema.
-        results[record_id] = _parse_completion({"choices": [{"message": {"content": item}}]})
+        try:
+            results[record_id] = _parse_completion({"choices": [{"message": {"content": item}}]})
+        except ValueError as exc:
+            raise ValueError(f"invalid provider batch item {record_id}: {exc}") from exc
     if set(results) != expected_ids:
         raise ValueError("provider batch record IDs do not exactly match the request")
     return results
@@ -311,6 +350,10 @@ def _parse_batch_completion(payload: Any, expected_ids: set[str]) -> dict[str, P
 
 def _strip_fences(value: str) -> str:
     value = value.strip()
+    if value.startswith("<think>"):
+        end = value.find("</think>")
+        if end >= 0:
+            value = value[end + len("</think>") :].strip()
     if value.startswith("```") and value.endswith("```"):
         return value.split("\n", 1)[1].rsplit("```", 1)[0].strip()
     return value

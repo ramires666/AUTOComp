@@ -14,7 +14,7 @@ from typing import Any
 
 from . import __version__
 from .config import ConfigError, load_config
-from .extraction import extract_mnemonic_inventory
+from .extraction import extract_mnemonic_inventory, extract_project_tree_inventory
 from .translation.client import OpenAICompatibleConfig, OpenAICompatibleProvider
 from .translation.inventory import with_assessed_risk
 from .translation.manifest import TranslationManifest
@@ -168,6 +168,8 @@ def _cmd_doctor(args: argparse.Namespace) -> int:
         "llm_model": config.llm.model,
         "llm_api_key_configured": config.llm.api_key is not None,
         "worker_token_configured": config.worker_token is not None,
+        "translation_target_language": config.translation.target_language,
+        "translation_context_configured": bool(config.translation.project_context.strip()),
     }
     if args.probe_ui:
         adapter = PywinautoKVStudioAdapter(config.kv_studio.window_title_pattern)
@@ -261,6 +263,16 @@ def _cmd_extract_mnemonic(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_extract_project_tree(args: argparse.Namespace) -> int:
+    path = Path(args.inventory)
+    records = extract_project_tree_inventory(
+        _read_json(path),
+        source_name=args.source_name or path.name,
+    )
+    _emit([record.to_dict() for record in records], args.output)
+    return 0
+
+
 def _cmd_translate(args: argparse.Namespace) -> int:
     config = load_config(args.config, args.env_file)
     glossary = Glossary(_load_string_map(args.glossary, "glossary"))
@@ -280,8 +292,20 @@ def _cmd_translate(args: argparse.Namespace) -> int:
         memory=memory,
         batch_size=config.safety.batch_size,
     )
+    records = _load_inventory(args.inventory)
+    project_context = config.translation.project_context.strip()
+    if project_context:
+        records = [
+            replace(
+                record,
+                context=(
+                    f"Project/domain context: {project_context}\nItem context: {record.context}"
+                ),
+            )
+            for record in records
+        ]
     manifest = TranslationManifest(checkpoint=args.checkpoint, dry_run=True)
-    for decision in service.propose_batch(_load_inventory(args.inventory)):
+    for decision in service.propose_batch(records):
         manifest.add(decision)
     _emit(manifest.to_dict(), args.output)
     if args.memory_output:
@@ -378,6 +402,15 @@ def _parser() -> argparse.ArgumentParser:
     extraction.add_argument("--source-name")
     extraction.add_argument("--output", required=True)
     extraction.set_defaults(handler=_cmd_extract_mnemonic)
+
+    tree_extraction = subparsers.add_parser(
+        "extract-project-tree",
+        help="extract program names and bookmark headings from a complete tree report",
+    )
+    tree_extraction.add_argument("inventory")
+    tree_extraction.add_argument("--source-name")
+    tree_extraction.add_argument("--output", required=True)
+    tree_extraction.set_defaults(handler=_cmd_extract_project_tree)
 
     translate = subparsers.add_parser(
         "translate", help="create a dry-run translation manifest from JSON inventory"

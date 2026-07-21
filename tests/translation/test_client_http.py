@@ -71,11 +71,12 @@ class _ModelHandler(BaseHTTPRequestHandler):
 
 
 def test_server_schema_matches_client_batch_schema() -> None:
-    schema_path = (
-        Path(__file__).parents[2] / "schemas" / "autocomp-translation-batch.schema.json"
-    )
+    schema_path = Path(__file__).parents[2] / "schemas" / "autocomp-translation-batch.schema.json"
 
-    assert json.loads(schema_path.read_text(encoding="utf-8")) == _BATCH_RESPONSE_FORMAT["schema"]
+    assert (
+        json.loads(schema_path.read_text(encoding="utf-8"))
+        == _BATCH_RESPONSE_FORMAT["json_schema"]["schema"]
+    )
 
 
 def test_cli_translation_uses_one_strict_batch_request(tmp_path) -> None:

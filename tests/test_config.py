@@ -25,6 +25,26 @@ def test_safe_defaults_are_dry_run() -> None:
     assert config.safety.apply_enabled is False
     assert config.safety.forbid_online_operations is True
     assert config.kv_studio.expected_version == "11.62"
+    assert config.translation.target_language == "English"
+
+
+def test_translation_project_context_is_loaded_and_validated(tmp_path) -> None:
+    path = tmp_path / "context.json"
+    path.write_text(
+        json.dumps(
+            {
+                "translation": {
+                    "target_language": "English",
+                    "project_context": "Robotic gold-assay kiosk with an induction furnace.",
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    config = load_config(path)
+
+    assert "gold-assay kiosk" in config.translation.project_context
 
 
 def test_rejects_enabling_online_operations(tmp_path) -> None:

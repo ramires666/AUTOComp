@@ -77,8 +77,6 @@ list and retries automatically. Set an exact model ID only to pin one model.
 The current Qwen 3.6 server can be started from PowerShell with:
 
 ```powershell
-$autoCompSchema = "W:\_python\AUTOComp\schemas\autocomp-translation-batch.schema.json"
-
 & "W:\LAMA\llama\llama-server.exe" `
   -m "W:\LAMA\models\lmstudio-community\Qwen3.6-35B-A3B\Qwen3.6-35B-A3B-UD-Q3_K_XL.gguf" `
   --mmproj "W:\LAMA\models\unsloth\Qwen3.6-35B-A3B-MTP-GGUF\mmproj-F32.gguf" `
@@ -87,21 +85,22 @@ $autoCompSchema = "W:\_python\AUTOComp\schemas\autocomp-translation-batch.schema
   --ctx-size 32000 `
   -ngl 99 `
   --parallel 1 `
-  --chat-template-kwargs '{"enable_thinking":false}' `
-  --json-schema-file $autoCompSchema
+  --reasoning off `
+  --reasoning-format none
 ```
 
-`--json-schema-file` installs the response grammar when `llama-server` starts.
-Every generation on this dedicated server is therefore constrained to an
-object with an `items` array containing `record_id`, `translation`, `notes`,
-and `confidence`. Use this server instance for AUTOComp batch translation, not
-for unrestricted chat.
+Do not add the server-wide `--json-schema-file` option for Qwen3.6. Current
+`llama.cpp` builds can fail before generation with an empty grammar stack when
+that global grammar is combined with the Qwen3.6 chat template. AUTOComp sends
+the strict translation schema through the Chat Completions `response_format`
+field for every translation request and validates the returned JSON again
+locally. If another compatible backend rejects request-level
+`response_format`, AUTOComp retries without it but still enforces the response
+shape and protected-token round trip before accepting any proposal.
 
-AUTOComp additionally sends the same schema through the Chat Completions
-`response_format` field. This keeps schema enforcement when another compatible
-server is used without the startup flag. If a backend rejects request-level
-`response_format`, AUTOComp retries without it and still validates the returned
-JSON strictly.
+Current `llama.cpp` builds prefer `--reasoning off`; the older
+`--chat-template-kwargs '{"enable_thinking":false}'` form is deprecated and can
+leave thinking enabled, which disables grammar enforcement for Qwen3.6.
 
 When AUTOComp runs on another Windows computer, replace `127.0.0.1` in `.env`
 with the GPU computer's LAN/VPN address. Because `--host 0.0.0.0` exposes the
@@ -139,6 +138,40 @@ click, type, edit project content, or perform PLC operations. Treat exit code
 `1`, `complete: false`, or `restoration_complete: false` as an incomplete run.
 See [the project-tree inventory guide](docs/project-tree-inventory.md) for the
 Windows pilot requirements and report fields.
+
+Extract only project-owned program names and bookmark headings from the
+completed tree report. Localized KV STUDIO UI nodes such as `程序`, `局部标号`,
+and `书签` are recognized structurally and excluded:
+
+```powershell
+autocomp extract-project-tree `
+  W:\_python\01-full-tree-inventory.json `
+  --output reports\02-tree-translation-inventory.json
+```
+
+For this project, keep the domain description in the local
+`translation.project_context` setting. It identifies the machine as an
+automated precious-metal acceptance kiosk with robotic tray handling, coarse
+and fine weighing, induction melting, and an X-ray fluorescence (XRF) analyzer.
+The context is prepended to every model request. In particular, use `XRF assay`,
+`XRF assay station`, and `XRF analyzer` for `测金`, `测金位`, and `测金仪`.
+
+Create the reviewed dry-run proposal without opening or editing KV STUDIO:
+
+```powershell
+autocomp translate reports\02-tree-translation-inventory.json `
+  --config config.local.json `
+  --env-file .env `
+  --glossary reports\02-translation-glossary-reviewed.json `
+  --checkpoint 02-tree-translation-reviewed-xrf `
+  --output reports\02-tree-translation-manifest.json `
+  --memory-output reports\02-tree-translation-memory.json
+```
+
+The translation command rejects missing, reordered, or joined PLC tokens. For
+example, `Port0`, `MQTT:4G`, dates, arrows, station numbers, and device addresses
+must survive exactly. This output is a proposal for review, not authorization
+for the UI worker to rename project nodes.
 
 Run the authenticated worker on loopback. Use an SSH/VPN tunnel from the GPU
 computer rather than exposing this plain HTTP endpoint directly to the LAN:

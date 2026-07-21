@@ -98,10 +98,28 @@ class SafetyConfig:
 
 
 @dataclass(frozen=True, slots=True)
+class TranslationConfig:
+    target_language: str = "English"
+    project_context: str = ""
+
+    def validate(self) -> None:
+        if not self.target_language.strip() or len(self.target_language) > 100:
+            raise ConfigError("translation.target_language must contain 1-100 characters")
+        if len(self.project_context) > 20_000:
+            raise ConfigError("translation.project_context must not exceed 20000 characters")
+        if any(
+            ord(character) < 32 and character not in {"\r", "\n", "\t"}
+            for character in self.project_context
+        ):
+            raise ConfigError("translation.project_context contains a control character")
+
+
+@dataclass(frozen=True, slots=True)
 class RuntimeConfig:
     llm: LlmConfig = field(default_factory=LlmConfig)
     kv_studio: KvStudioConfig = field(default_factory=KvStudioConfig)
     safety: SafetyConfig = field(default_factory=SafetyConfig)
+    translation: TranslationConfig = field(default_factory=TranslationConfig)
     _secrets: _SecretValues = field(
         default_factory=lambda: _SecretValues(None, None),
         repr=False,
@@ -112,6 +130,7 @@ class RuntimeConfig:
         self.llm.validate()
         self.kv_studio.validate()
         self.safety.validate()
+        self.translation.validate()
 
     @property
     def worker_token(self) -> str | None:
@@ -127,7 +146,7 @@ def _section(data: dict[str, Any], key: str) -> dict[str, Any]:
 
 def _parse_env_value(raw: str, *, line_number: int) -> str:
     value = raw.strip()
-    if value[:1] in {"\"", "'"}:
+    if value[:1] in {'"', "'"}:
         quote = value[0]
         if len(value) < 2 or value[-1] != quote:
             raise ConfigError(f"invalid quoted value in .env at line {line_number}")
@@ -155,8 +174,7 @@ def _load_env_file(
         raise ConfigError(f"cannot load environment file {path}: {exc}") from exc
 
     if any(
-        (ord(character) < 32 and character not in {"\r", "\n"})
-        or 127 <= ord(character) <= 159
+        (ord(character) < 32 and character not in {"\r", "\n"}) or 127 <= ord(character) <= 159
         for character in text
     ):
         raise ConfigError("environment file contains an unsupported control character")
@@ -211,10 +229,7 @@ def load_config(
     llm_data = dict(_section(raw, "llm"))
     if "api_key" in llm_data or "_api_key" in llm_data:
         raise ConfigError("llm API keys must be stored in .env, not JSON")
-    if (
-        "api_key_env" in llm_data
-        and llm_data.pop("api_key_env") != DEFAULT_LLM_API_KEY_ENV
-    ):
+    if "api_key_env" in llm_data and llm_data.pop("api_key_env") != DEFAULT_LLM_API_KEY_ENV:
         raise ConfigError(f"llm.api_key_env may only be {DEFAULT_LLM_API_KEY_ENV}")
 
     resolved_env_path = None
@@ -237,9 +252,7 @@ def load_config(
         if resolved_env_path is not None
         else {}
     )
-    process_environment = {
-        name: os.environ[name] for name in allowed_names if name in os.environ
-    }
+    process_environment = {name: os.environ[name] for name in allowed_names if name in os.environ}
     environment = {**file_environment, **process_environment}
 
     if LLM_ENDPOINT_ENV in environment:
@@ -257,6 +270,7 @@ def load_config(
             llm=LlmConfig(**llm_data, _secrets=secrets),
             kv_studio=KvStudioConfig(**_section(raw, "kv_studio")),
             safety=SafetyConfig(**_section(raw, "safety")),
+            translation=TranslationConfig(**_section(raw, "translation")),
             _secrets=secrets,
         )
     except TypeError as exc:
