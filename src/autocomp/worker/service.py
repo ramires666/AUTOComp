@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import time
 from typing import Protocol
 
 from autocomp.desktop import DesktopFrame, DesktopWindow
@@ -78,6 +79,8 @@ class KVStudioWorker:
             return self._expand_tree_item(request)
         if request.kind is ActionKind.INVENTORY_PROJECT_TREE:
             return self._inventory_project_tree(request)
+        if request.kind is ActionKind.ACTIVATE_TREE_ITEM:
+            return self._activate_tree_item(request)
         if request.kind is ActionKind.RENAME_TREE_ITEM:
             return self._rename_tree_item(request, probe=False)
         if request.kind is ActionKind.PROBE_TREE_ITEM_RENAME:
@@ -118,6 +121,8 @@ class KVStudioWorker:
             )
         if request.kind is ActionKind.DESKTOP_INPUT:
             return self._desktop_input(request)
+        if request.kind is ActionKind.DESKTOP_INPUT_SEQUENCE:
+            return self._desktop_input_sequence(request)
         raise ValueError(f"Unsupported UI action: {request.kind!r}")
 
     def _desktop_input(self, request: ActionRequest) -> ActionResult:
@@ -154,6 +159,63 @@ class KVStudioWorker:
                 "mode": "apply",
                 "checkpoint": request.checkpoint,
                 "operation": request.desktop_operation.value,
+            },
+        )
+
+    def _desktop_input_sequence(self, request: ActionRequest) -> ActionResult:
+        desktop = self._require_desktop_adapter()
+        if not 1 <= len(request.desktop_operations) <= 8:
+            raise ValueError("desktop input sequence requires 1 to 8 operations")
+        if not request.apply:
+            return ActionResult(
+                kind=request.kind,
+                performed=False,
+                message="Dry-run: desktop input sequence was validated but not performed.",
+                audit={
+                    "mode": "dry-run",
+                    "operation": "desktop_input_sequence",
+                    "operation_count": str(len(request.desktop_operations)),
+                },
+            )
+        self._require_apply(request)
+        completed_count = 0
+        for index, step in enumerate(request.desktop_operations):
+            performed = desktop.input(
+                handle=request.window_handle,
+                expected_pid=request.expected_pid,
+                expected_title=request.expected_title,
+                operation=step.operation.value,
+                x=step.x,
+                y=step.y,
+                delta=step.delta,
+                text=step.text,
+            )
+            if not performed:
+                return ActionResult(
+                    kind=request.kind,
+                    performed=False,
+                    message="Pinned desktop input sequence stopped after an unperformed step.",
+                    audit={
+                        "mode": "apply",
+                        "checkpoint": request.checkpoint,
+                        "operation": "desktop_input_sequence",
+                        "operation_count": str(len(request.desktop_operations)),
+                        "completed_count": str(completed_count),
+                    },
+                )
+            completed_count += 1
+            if index + 1 < len(request.desktop_operations) and step.pause_ms:
+                time.sleep(step.pause_ms / 1000)
+        return ActionResult(
+            kind=request.kind,
+            performed=True,
+            message="Pinned desktop input sequence performed.",
+            audit={
+                "mode": "apply",
+                "checkpoint": request.checkpoint,
+                "operation": "desktop_input_sequence",
+                "operation_count": str(len(request.desktop_operations)),
+                "completed_count": str(completed_count),
             },
         )
 
@@ -292,6 +354,52 @@ class KVStudioWorker:
             after=reverse.after,
             rollback_attempted=True,
             rollback_succeeded=restored,
+        )
+
+    def _activate_tree_item(self, request: ActionRequest) -> ActionResult:
+        self._validate_tree_item_precondition(request)
+        if not request.apply:
+            return ActionResult(
+                kind=request.kind,
+                performed=False,
+                message="Dry-run: tree-item activation was validated but not performed.",
+                audit={"mode": "dry-run", "operation": "activate_tree_item"},
+                before=request.expected_source,
+                after=request.expected_source,
+            )
+        self._require_apply(request)
+        performed = self._adapter.activate_tree_item(
+            locator=request.locator,
+            expected_path=request.expected_path,
+            expected_source=request.expected_source,
+        )
+        audit = {
+            "mode": "apply",
+            "checkpoint": request.checkpoint,
+            "operation": "activate_tree_item",
+        }
+        visual_snapshot = None
+        if performed:
+            try:
+                visual_snapshot = self._adapter.visual_snapshot()
+            except Exception:
+                # Activation has already happened. Preserve that successful outcome
+                # so callers do not retry a double-click solely because capture failed.
+                audit["snapshot"] = "unavailable"
+        if not performed:
+            message = "Tree item was not activated: source precondition failed."
+        elif visual_snapshot is None:
+            message = "Exact tree item activated; follow-up snapshot was unavailable."
+        else:
+            message = "Exact tree item activated."
+        return ActionResult(
+            kind=request.kind,
+            performed=performed,
+            message=message,
+            audit=audit,
+            before=request.expected_source,
+            after=request.expected_source,
+            visual_snapshot=visual_snapshot,
         )
 
     def _inspect_tree_item_menu(self, request: ActionRequest) -> ActionResult:

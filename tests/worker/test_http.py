@@ -130,6 +130,8 @@ def test_capabilities_explicitly_exclude_shell_input_and_plc(server) -> None:
     assert payload["arbitrary_input"] is False
     assert payload["plc_operations"] is False
     assert "inventory" in payload["actions"]
+    assert "activate_tree_item" in payload["actions"]
+    assert "activate_tree_item" in payload["mutating_actions"]
     assert "rename_tree_item" in payload["actions"]
     assert "desktop_input" not in payload["actions"]
     assert payload["constrained_desktop_input"] is False
@@ -198,6 +200,28 @@ def test_http_exposes_desktop_actions_only_when_adapter_is_wired(tmp_path: Path)
             body=input_body,
             headers={"Content-Type": "application/json"},
         )
+        sequence_secret = "sequence-secret-not-for-audit"
+        sequence_body = json.dumps(
+            {
+                "action": "desktop_input_sequence",
+                "window_handle": 101,
+                "expected_pid": 202,
+                "expected_title": "Calculator",
+                "checkpoint": "desktop_sequence_01",
+                "operations": [
+                    {"operation": "type_text", "text": sequence_secret, "pause_ms": 0},
+                    {"operation": "key_enter", "pause_ms": 0},
+                ],
+                "apply": True,
+            }
+        ).encode()
+        sequence_status, sequence_response, _ = request(
+            instance,
+            "POST",
+            "/v1/action",
+            body=sequence_body,
+            headers={"Content-Type": "application/json"},
+        )
     finally:
         instance.shutdown()
         instance.server_close()
@@ -209,14 +233,25 @@ def test_http_exposes_desktop_actions_only_when_adapter_is_wired(tmp_path: Path)
     assert "desktop_windows" in capabilities["actions"]
     assert "desktop_snapshot" in capabilities["actions"]
     assert "desktop_input" in capabilities["mutating_actions"]
+    assert "desktop_input_sequence" in capabilities["mutating_actions"]
     assert windows_status == 200
     assert json.loads(windows_body)["desktop_windows"][0]["handle"] == 101
     assert input_status == 200
     assert json.loads(input_response)["performed"] is True
-    assert desktop.input_calls == 1
+    assert sequence_status == 200
+    assert json.loads(sequence_response)["performed"] is True
+    assert desktop.input_calls == 3
     audit_text = instance.audit_log_path.read_text(encoding="utf-8")
     assert secret_text not in audit_text
+    assert sequence_secret not in audit_text
     assert f'"text_length":{len(secret_text)}' in audit_text
+    records = [json.loads(line) for line in audit_text.splitlines()]
+    sequence_records = [
+        record for record in records if record["action"] == "desktop_input_sequence"
+    ]
+    assert [record["phase"] for record in sequence_records] == ["intent", "outcome"]
+    assert sequence_records[0]["operation_count"] == 2
+    assert sequence_records[0]["operations"][0]["text_length"] == len(sequence_secret)
 
 
 def test_inventory_post_is_executed_and_durably_audited(server) -> None:

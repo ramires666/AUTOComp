@@ -48,6 +48,15 @@ class KVStudioAdapter(Protocol):
     ) -> ProjectTreeInventory:
         """Inventory the native project tree with optional reversible expansion."""
 
+    def activate_tree_item(
+        self,
+        *,
+        locator: tuple[int, ...],
+        expected_path: tuple[str, ...],
+        expected_source: str,
+    ) -> bool:
+        """Open exactly one pinned project-tree item without editing its text."""
+
     def rename_tree_item(
         self,
         *,
@@ -93,6 +102,7 @@ class FakeKVStudioAdapter:
         )
         self.window_state = WindowState("KV STUDIO", 0, False, True, True, True)
         self.tree_items: dict[tuple[int, ...], tuple[str, ...]] = {}
+        self.activation_calls: list[dict[str, object]] = []
         self.rename_calls: list[dict[str, object]] = []
         self.menu_inspection_calls: list[dict[str, object]] = []
         self.visual_input_calls: list[dict[str, object]] = []
@@ -113,6 +123,27 @@ class FakeKVStudioAdapter:
     ) -> ProjectTreeInventory:
         del expand_all, restore_state
         return self.project_tree_inventory
+
+    def activate_tree_item(
+        self,
+        *,
+        locator: tuple[int, ...],
+        expected_path: tuple[str, ...],
+        expected_source: str,
+    ) -> bool:
+        self.activation_calls.append(
+            {
+                "locator": locator,
+                "expected_path": expected_path,
+                "expected_source": expected_source,
+            }
+        )
+        actual_path = self.tree_items.get(locator)
+        return bool(
+            actual_path == expected_path
+            and actual_path
+            and actual_path[-1] == expected_source
+        )
 
     def rename_tree_item(
         self,
@@ -532,6 +563,43 @@ class PywinautoKVStudioAdapter:
             warnings=tuple(warnings),
             roots=roots,
         )
+
+    def activate_tree_item(
+        self,
+        *,
+        locator: tuple[int, ...],
+        expected_path: tuple[str, ...],
+        expected_source: str,
+    ) -> bool:
+        """Open one exact tree item after rechecking its full indexed identity."""
+        window, tree = self._find_project_tree()
+        window_identity = (window.window_text(), int(window.process_id()))
+        self._restore_and_focus_editor(window)
+        item = self._resolve_tree_item_for_edit(
+            tree,
+            locator,
+            expected_path,
+            expanded=[],
+        )
+        if item.window_text().strip() != expected_source:
+            raise RuntimeError("source precondition failed")
+        item.ensure_visible()
+        current_window, current_tree = self._find_project_tree()
+        if (current_window.window_text(), int(current_window.process_id())) != window_identity:
+            raise RuntimeError("KV STUDIO window identity changed before tree activation")
+        item = self._resolve_tree_item_for_edit(
+            current_tree,
+            locator,
+            expected_path,
+            expanded=[],
+        )
+        if item.window_text().strip() != expected_source:
+            raise RuntimeError("tree-item identity changed before activation")
+        item.select()
+        if item.window_text().strip() != expected_source:
+            raise RuntimeError("tree-item identity changed after selection")
+        item.double_click_input(button="left")
+        return True
 
     def rename_tree_item(
         self,

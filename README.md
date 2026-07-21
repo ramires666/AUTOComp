@@ -193,6 +193,38 @@ window. It has no shell, arbitrary file-access, or PLC mode. The visual and
 calibrated bookmark controllers are documented in the
 [remote worker guide](docs/remote-worker.md#bounded-visual-controllers).
 
+### Fast bookmark translation (current KV project)
+
+After pulling the current code, restart the remote worker once so it exposes the
+new batch actions:
+
+```powershell
+# on the KV STUDIO machine
+Ctrl+C
+git pull
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-worker.ps1 -ListenAddress 0.0.0.0 -AllowRemote
+```
+
+With KV STUDIO open on the copied offline project, run one real pilot from the
+controller computer. This path uses the approved pending list and the remote
+worker only; it does not call an LLM and needs no coordinates:
+
+```powershell
+python .\scripts\fast-bookmark-batch.py --apply --limit 1
+```
+
+If the pilot is correct, continue the remaining entries:
+
+```powershell
+python .\scripts\fast-bookmark-batch.py --apply
+```
+
+Defaults are `.autocomp\pending-bookmarks.json`, `.env.remote`, and the KV
+STUDIO window. Progress is saved after every applied row, so the full command
+automatically skips the pilot and resumes after interruptions. Override defaults
+only when needed with `--items-json`, `--worker-env`, `--progress-file`, or
+`--window-title-contains`.
+
 Hash an untouched project copy:
 
 ```powershell

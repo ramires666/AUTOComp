@@ -1,4 +1,10 @@
-"""Fast deterministic bookmark-comment editing for one calibrated KV STUDIO view."""
+"""Fast no-LLM bookmark translator for the current offline KV STUDIO copy.
+
+The worker resolves the exact tree locator.  The controller only finds the
+already-selected comment row in the returned client screenshot, then sends the
+four edit inputs as one pinned request.  It deliberately stops on the first
+unexpected response so the controller can re-inventory before continuing.
+"""
 
 from __future__ import annotations
 
@@ -15,27 +21,19 @@ from typing import Any
 from PIL import Image
 
 _SELECTED_COMMENT_RGB = (159, 207, 240)
+_DEFAULT_ITEMS = ".autocomp/pending-bookmarks.json"
+_DEFAULT_PROGRESS = ".autocomp/fast-bookmark-progress.json"
 
 
-def _find_unique_comment_band(
-    image: Image.Image,
-    *,
-    left: int,
-    right: int,
-    top: int,
-    bottom: int,
-) -> tuple[int, tuple[int, int]]:
-    """Return the center and inclusive Y bounds of one long exact-color band."""
+def _find_unique_comment_band(image: Image.Image) -> tuple[int, tuple[int, int]]:
+    """Find the one long selected-comment band in a client-area PNG."""
     rgb = image.convert("RGB")
-    if not (0 <= left < right <= rgb.width and 0 <= top < bottom <= rgb.height):
-        raise ValueError("scan bounds are outside the full-window screenshot")
-    width = right - left
-    minimum_run = max(32, width // 2)
     pixels = rgb.load()
+    minimum_run = max(80, rgb.width // 3)
     matching_rows: list[int] = []
-    for y in range(top, bottom):
+    for y in range(rgb.height):
         longest = current = 0
-        for x in range(left, right):
+        for x in range(rgb.width):
             if pixels[x, y] == _SELECTED_COMMENT_RGB:
                 current += 1
                 longest = max(longest, current)
@@ -43,7 +41,6 @@ def _find_unique_comment_band(
                 current = 0
         if longest >= minimum_run:
             matching_rows.append(y)
-
     bands: list[tuple[int, int]] = []
     for y in matching_rows:
         if bands and y == bands[-1][1] + 1:
@@ -61,48 +58,116 @@ def _items(path: Path) -> list[dict[str, Any]]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     raw_items = payload.get("items") if isinstance(payload, dict) else payload
     if not isinstance(raw_items, list) or not raw_items:
-        raise ValueError("items JSON must be a non-empty list or an object with an items list")
-    items: list[dict[str, Any]] = []
-    seen_ids: set[str] = set()
-    seen_rows: set[int] = set()
+        raise ValueError("items JSON must contain a non-empty items list")
+    result: list[dict[str, Any]] = []
+    seen: set[str] = set()
     for raw in raw_items:
         if not isinstance(raw, dict):
             raise ValueError("every batch item must be an object")
         record_id = raw.get("record_id")
-        tree_y = raw.get("tree_y")
-        source = raw.get("source", raw.get("source_text"))
-        target = raw.get("target", raw.get("target_text"))
-        if not isinstance(record_id, str) or not record_id or len(record_id) > 128:
-            raise ValueError("every item requires a bounded record_id")
+        locator = raw.get("locator")
+        expected_path = raw.get("expected_path")
+        source = raw.get("expected_source")
+        target = raw.get("target")
+        if not isinstance(record_id, str) or not record_id or record_id in seen:
+            raise ValueError("every item requires a unique record_id")
         if (
-            not isinstance(tree_y, int)
-            or isinstance(tree_y, bool)
-            or not 0 <= tree_y <= 100_000
+            not isinstance(locator, list)
+            or not locator
+            or any(
+                not isinstance(value, int) or isinstance(value, bool) or value < 0
+                for value in locator
+            )
         ):
-            raise ValueError(f"{record_id}: tree_y must be an integer from 0 to 100000")
-        for field_name, value in (("source", source), ("target", target)):
-            if (
-                not isinstance(value, str)
-                or not value
-                or len(value) > 512
-                or any(ord(character) < 32 or ord(character) == 127 for character in value)
-            ):
-                raise ValueError(
-                    f"{record_id}: {field_name} must be 1-512 printable characters"
-                )
-        if record_id in seen_ids or tree_y in seen_rows:
-            raise ValueError("record_id and tree_y must be unique within a batch")
-        seen_ids.add(record_id)
-        seen_rows.add(tree_y)
-        items.append(
+            raise ValueError(
+                f"{record_id}: locator must be a non-empty list of non-negative integers"
+            )
+        if not isinstance(expected_path, list) or not expected_path or any(
+            not isinstance(value, str) or not value for value in expected_path
+        ):
+            raise ValueError(f"{record_id}: expected_path must be a text list")
+        for name, value in (("expected_source", source), ("target", target)):
+            if not isinstance(value, str) or not value or len(value) > 512:
+                raise ValueError(f"{record_id}: {name} must be 1-512 characters")
+        seen.add(record_id)
+        result.append(
             {
                 "record_id": record_id,
-                "tree_y": tree_y,
-                "source": source,
+                "locator": locator,
+                "expected_path": expected_path,
+                "expected_source": source,
                 "target": target,
             }
         )
-    return items
+    return result
+
+
+def _completed_ids(path: Path, items_path: Path) -> set[str]:
+    if not path.exists():
+        return set()
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict) or payload.get("items_path") != str(items_path):
+        raise ValueError(f"progress file belongs to another items list: {path}")
+    completed = payload.get("completed_record_ids")
+    if not isinstance(completed, list) or any(not isinstance(value, str) for value in completed):
+        raise ValueError(f"invalid progress file: {path}")
+    return set(completed)
+
+
+def _save_completed(path: Path, items_path: Path, completed: set[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(
+        json.dumps(
+            {
+                "items_path": str(items_path),
+                "completed_record_ids": sorted(completed),
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    os.replace(temporary, path)
+
+
+def _full_window_point(snapshot: dict[str, Any], client_x: int, client_y: int) -> tuple[int, int]:
+    """Convert client-PNG coordinates into worker pinned-window coordinates."""
+    window = snapshot["window_bounds"]
+    client = snapshot["client_bounds"]
+    if not (
+        isinstance(window, (list, tuple))
+        and isinstance(client, (list, tuple))
+        and len(window) == len(client) == 4
+    ):
+        raise ValueError("visual snapshot has invalid bounds")
+    x = client_x + int(client[0]) - int(window[0])
+    y = client_y + int(client[1]) - int(window[1])
+    if x < 0 or y < 0:
+        raise ValueError("client bounds are outside the containing window")
+    return x, y
+
+
+def _edit_operations(
+    snapshot: dict[str, Any], band_y: int, band: tuple[int, int], target: str
+) -> list[dict[str, Any]]:
+    width, height = int(snapshot["width"]), int(snapshot["height"])
+    if width < 40 or height < 30:
+        raise ValueError("visual snapshot is too small")
+    # A point near the middle of a selected ladder comment reliably enters its text cell.
+    edit_x = width // 2
+    commit_y = band[1] + 16 if band[1] + 16 < height else band[0] - 16
+    if not 0 <= commit_y < height:
+        raise ValueError("no safe point outside selected comment band")
+    edit = _full_window_point(snapshot, edit_x, band_y)
+    commit = _full_window_point(snapshot, edit_x, commit_y)
+    return [
+        {"operation": "double", "x": edit[0], "y": edit[1], "pause_ms": 180},
+        {"operation": "key_ctrl_a", "pause_ms": 80},
+        {"operation": "type_text", "text": target, "pause_ms": 180},
+        {"operation": "click", "x": commit[0], "y": commit[1]},
+    ]
 
 
 def _write_event(log: Any, event: dict[str, Any]) -> None:
@@ -114,186 +179,117 @@ def _write_event(log: Any, event: dict[str, Any]) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Apply a calibrated no-VLM bookmark-comment batch",
-        epilog=(
-            'items JSON: [{"record_id":"...","tree_y":320,'
-            '"source":"/*报警*/","target":"/*Alarm*/"}]'
-        ),
+        description="Apply pending bookmark translations without an LLM"
     )
-    parser.add_argument("--items-json", required=True)
-    parser.add_argument("--tree-x", required=True, type=int)
-    parser.add_argument("--editor-x", required=True, type=int)
-    parser.add_argument("--commit-x", required=True, type=int)
-    parser.add_argument("--commit-y", required=True, type=int)
-    parser.add_argument("--scan-left", required=True, type=int)
-    parser.add_argument("--scan-right", required=True, type=int)
-    parser.add_argument("--scan-top", required=True, type=int)
-    parser.add_argument("--scan-bottom", required=True, type=int)
+    parser.add_argument("--items-json", default=_DEFAULT_ITEMS)
     parser.add_argument("--worker-env", default=".env.remote")
+    parser.add_argument("--progress-file", default=_DEFAULT_PROGRESS)
     parser.add_argument("--window-title-contains", default="KV STUDIO - [")
+    parser.add_argument("--limit", type=int)
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
     if not args.apply:
         raise SystemExit("fast bookmark batch requires explicit --apply")
-    coordinates = (
-        args.tree_x,
-        args.editor_x,
-        args.commit_x,
-        args.commit_y,
-        args.scan_left,
-        args.scan_right,
-        args.scan_top,
-        args.scan_bottom,
-    )
-    if any(value < 0 or value > 100_000 for value in coordinates):
-        raise SystemExit("all coordinates must be between 0 and 100000")
+    if args.limit is not None and args.limit <= 0:
+        raise SystemExit("--limit must be positive")
 
     project = Path(__file__).resolve().parent.parent
     visual = runpy.run_path(str(Path(__file__).with_name("visual-translate.py")))
-    values = {
-        **visual["_dotenv"](project / args.worker_env),
-        **{name: value for name, value in os.environ.items() if value},
-    }
-    worker_endpoint = values.get("AUTOCOMP_WORKER_ENDPOINT", "").rstrip("/")
-    worker_token = values.get("AUTOCOMP_WORKER_TOKEN", "")
-    if not worker_endpoint or not worker_token:
-        raise SystemExit(f"worker endpoint/token missing in {args.worker_env}")
-    settings = visual["Settings"](
-        worker_endpoint=worker_endpoint,
-        worker_token=worker_token,
-        llm_endpoint="",
-        llm_key="",
-        llm_model="",
-    )
+    values = {**visual["_dotenv"](project / args.worker_env), **os.environ}
+    endpoint = values.get("AUTOCOMP_WORKER_ENDPOINT", "").rstrip("/")
+    if not endpoint:
+        raise SystemExit(f"worker endpoint missing in {args.worker_env}")
+    settings = visual["Settings"](endpoint, values.get("AUTOCOMP_WORKER_TOKEN", ""), "", "", "")
     window = visual["_select_window"](settings, args.window_title_contains)
-    perform = visual["_perform"]
-    snapshot = visual["_snapshot"]
-    items = _items(Path(args.items_json).resolve())
+    worker = visual["_worker"]
+    path = Path(args.items_json)
+    if not path.is_absolute():
+        path = project / path
+    path = path.resolve()
+    progress_path = Path(args.progress_file)
+    if not progress_path.is_absolute():
+        progress_path = project / progress_path
+    completed = _completed_ids(progress_path, path)
+    items = [item for item in _items(path) if item["record_id"] not in completed]
+    if args.limit:
+        items = items[: args.limit]
+    if not items:
+        print("Nothing pending; progress already contains every item.", flush=True)
+        return 0
     log_path = project / ".autocomp" / f"fast-bookmark-run-{int(time.time())}.jsonl"
     log_path.parent.mkdir(parents=True, exist_ok=True)
 
     with log_path.open("x", encoding="utf-8") as log:
-        for item_index, item in enumerate(items, 1):
-            tree_action = {
-                "action": "double_click",
-                "x": args.tree_x,
-                "y": item["tree_y"],
+        for index, item in enumerate(items, 1):
+            checkpoint = f"fast_bookmark_{index:03d}"
+            activate = {
+                "action": "activate_tree_item",
+                "checkpoint": checkpoint + "_activate",
+                "locator": item["locator"],
+                "expected_path": [*item["expected_path"], item["expected_source"]],
+                "expected_source": item["expected_source"],
+                "apply": True,
             }
             try:
-                tree_result = perform(
+                result = worker(settings, activate)
+                if result.get("performed") is not True:
+                    raise RuntimeError(result.get("message", "activation was not performed"))
+                frame = result.get("visual_snapshot")
+                try:
+                    if not isinstance(frame, dict):
+                        raise ValueError("activation did not return a snapshot")
+                    image = Image.open(BytesIO(base64.b64decode(frame["png_base64"])))
+                    selected_y, band = _find_unique_comment_band(image)
+                except (KeyError, TypeError, ValueError):
+                    # KV STUDIO occasionally paints the newly opened ladder one beat late.
+                    time.sleep(0.25)
+                    refreshed = worker(settings, {"action": "visual_snapshot"})
+                    frame = refreshed.get("visual_snapshot")
+                    if not isinstance(frame, dict):
+                        raise RuntimeError("follow-up snapshot was unavailable") from None
+                    image = Image.open(BytesIO(base64.b64decode(frame["png_base64"])))
+                    selected_y, band = _find_unique_comment_band(image)
+                operations = _edit_operations(frame, selected_y, band, item["target"])
+                sequence = worker(
                     settings,
-                    window,
-                    tree_action,
-                    f"fast_bookmark_{item_index:03d}_01",
+                    {
+                        "action": "desktop_input_sequence",
+                        "window_handle": int(window["handle"]),
+                        "expected_pid": int(window["process_id"]),
+                        "expected_title": str(window["title"]),
+                        "checkpoint": checkpoint + "_edit",
+                        "operations": operations,
+                        "apply": True,
+                    },
                 )
-            except Exception as exc:
-                tree_result = {
-                    "performed": False,
-                    "message": f"{type(exc).__name__}: {exc}",
-                }
-            tree_event = {
-                "item_index": item_index,
-                "record_id": item["record_id"],
-                "source": item["source"],
-                "target": item["target"],
-                "tree_y": item["tree_y"],
-                "operation": "tree_double",
-                "checkpoint": f"fast_bookmark_{item_index:03d}_01",
-                "performed": tree_result.get("performed"),
-                "message": tree_result.get("message"),
-                "request_id": tree_result.get("request_id"),
-            }
-            _write_event(log, tree_event)
-            if tree_result.get("performed") is not True:
-                print(f"Stopped at {item['record_id']}; see {log_path}", flush=True)
-                return 2
-            time.sleep(0.45)
-
-            try:
-                frame = snapshot(settings, window)
-                image = Image.open(BytesIO(base64.b64decode(frame["png_base64"])))
-                detected_y, band = _find_unique_comment_band(
-                    image,
-                    left=args.scan_left,
-                    right=args.scan_right,
-                    top=args.scan_top,
-                    bottom=args.scan_bottom,
-                )
-                if not args.scan_left <= args.editor_x < args.scan_right:
-                    raise ValueError("editor_x must be inside the scan x-range")
-                if args.commit_y <= band[1]:
-                    raise ValueError("commit click must be below the detected edit band")
+                if sequence.get("performed") is not True:
+                    raise RuntimeError(sequence.get("message", "edit sequence was not performed"))
             except Exception as exc:
                 _write_event(
                     log,
                     {
-                        "item_index": item_index,
+                        "index": index,
                         "record_id": item["record_id"],
-                        "operation": "detect_editor_row",
-                        "performed": False,
-                        "message": f"{type(exc).__name__}: {exc}",
+                        "status": "failed",
+                        "error": f"{type(exc).__name__}: {exc}",
                     },
                 )
-                print(f"Stopped at {item['record_id']}; see {log_path}", flush=True)
+                print(f"Stopped at {item['record_id']}; log: {log_path}", flush=True)
                 return 2
             _write_event(
                 log,
                 {
-                    "item_index": item_index,
+                    "index": index,
                     "record_id": item["record_id"],
-                    "operation": "detect_editor_row",
-                    "performed": True,
-                    "detected_y": detected_y,
+                    "status": "applied",
+                    "locator": item["locator"],
+                    "source": item["expected_source"],
+                    "target": item["target"],
                     "band": list(band),
-                    "frame_sha256": frame.get("png_sha256"),
                 },
             )
-
-            actions = (
-                (
-                    "editor_double",
-                    {"action": "double_click", "x": args.editor_x, "y": detected_y},
-                ),
-                ("select_all", {"action": "key_ctrl_a"}),
-                ("type_target", {"action": "type_text", "text": item["target"]}),
-                ("commit_click", {"action": "click", "x": args.commit_x, "y": args.commit_y}),
-            )
-            for step, (name, action) in enumerate(actions, 2):
-                checkpoint = f"fast_bookmark_{item_index:03d}_{step:02d}"
-                try:
-                    result = perform(settings, window, action, checkpoint)
-                except Exception as exc:
-                    result = {
-                        "performed": False,
-                        "message": f"{type(exc).__name__}: {exc}",
-                    }
-                event = {
-                    "item_index": item_index,
-                    "record_id": item["record_id"],
-                    "tree_y": item["tree_y"],
-                    "step": step,
-                    "operation": name,
-                    "checkpoint": checkpoint,
-                    "performed": result.get("performed"),
-                    "message": result.get("message"),
-                    "request_id": result.get("request_id"),
-                }
-                _write_event(log, event)
-                if result.get("performed") is not True:
-                    print(f"Stopped at {item['record_id']}; see {log_path}", flush=True)
-                    return 2
-                time.sleep(0.18)
-            _write_event(
-                log,
-                {
-                    "item_index": item_index,
-                    "record_id": item["record_id"],
-                    "operation": "item_applied",
-                    "applied": True,
-                    "detected_y": detected_y,
-                    "frame_sha256": frame.get("png_sha256"),
-                },
-            )
+            completed.add(item["record_id"])
+            _save_completed(progress_path, path, completed)
 
     print(f"Applied {len(items)} bookmark(s); log: {log_path}", flush=True)
     return 0

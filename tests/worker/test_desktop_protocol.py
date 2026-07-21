@@ -90,6 +90,24 @@ def _desktop_input_payload(**updates: object) -> dict[str, object]:
     return payload
 
 
+def _desktop_input_sequence_payload(**updates: object) -> dict[str, object]:
+    payload: dict[str, object] = {
+        "action": "desktop_input_sequence",
+        "window_handle": 101,
+        "expected_pid": 202,
+        "expected_title": "Calculator",
+        "checkpoint": "desktop_sequence_01",
+        "operations": [
+            {"operation": "click", "x": 20, "y": 30, "pause_ms": 0},
+            {"operation": "type_text", "text": "XRF Assay Station"},
+            {"operation": "key_enter"},
+        ],
+        "apply": True,
+    }
+    payload.update(updates)
+    return payload
+
+
 def test_desktop_window_and_snapshot_payloads_are_exact_and_typed() -> None:
     windows = action_request_from_payload({"action": "desktop_windows"})
     snapshot = action_request_from_payload(
@@ -163,6 +181,45 @@ def test_desktop_input_rejects_arbitrary_keys_and_unsafe_parameters() -> None:
         )
 
 
+def test_desktop_input_sequence_is_typed_bounded_and_exact() -> None:
+    request = action_request_from_payload(_desktop_input_sequence_payload())
+
+    assert request.kind is ActionKind.DESKTOP_INPUT_SEQUENCE
+    assert [step.operation for step in request.desktop_operations] == [
+        DesktopInputOperation.CLICK,
+        DesktopInputOperation.TYPE_TEXT,
+        DesktopInputOperation.KEY_ENTER,
+    ]
+    assert [step.pause_ms for step in request.desktop_operations] == [0, 120, 120]
+
+    with pytest.raises(ValueError, match="1 to 8"):
+        action_request_from_payload(_desktop_input_sequence_payload(operations=[]))
+    with pytest.raises(ValueError, match="1 to 8"):
+        action_request_from_payload(
+            _desktop_input_sequence_payload(
+                operations=[{"operation": "key_enter"}] * 9,
+            )
+        )
+    with pytest.raises(ValueError, match="pause_ms"):
+        action_request_from_payload(
+            _desktop_input_sequence_payload(
+                operations=[{"operation": "key_enter", "pause_ms": 1001}],
+            )
+        )
+    with pytest.raises(ValueError, match="unsupported desktop input"):
+        action_request_from_payload(
+            _desktop_input_sequence_payload(
+                operations=[{"operation": "key_delete"}],
+            )
+        )
+    with pytest.raises(ValueError, match="missing or unexpected"):
+        action_request_from_payload(
+            _desktop_input_sequence_payload(
+                operations=[{"operation": "key_enter", "command": "whoami"}],
+            )
+        )
+
+
 def test_desktop_read_actions_return_structured_adapter_results() -> None:
     desktop = DesktopStub()
     worker = KVStudioWorker(FakeKVStudioAdapter(), desktop_adapter=desktop)
@@ -229,3 +286,45 @@ def test_desktop_input_passes_only_pinned_identity_and_allowlisted_operation() -
             "text": "XRF Assay Station",
         }
     ]
+
+
+def test_desktop_input_sequence_runs_in_order_under_one_apply_gate() -> None:
+    desktop = DesktopStub()
+    request = action_request_from_payload(_desktop_input_sequence_payload())
+    with pytest.raises(ValueError, match="disabled"):
+        KVStudioWorker(FakeKVStudioAdapter(), desktop_adapter=desktop).execute(request)
+    assert desktop.input_calls == []
+    worker = KVStudioWorker(
+        FakeKVStudioAdapter(),
+        apply_enabled=True,
+        desktop_adapter=desktop,
+    )
+
+    result = worker.execute(request)
+
+    assert result.performed is True
+    assert result.audit == {
+        "mode": "apply",
+        "checkpoint": "desktop_sequence_01",
+        "operation": "desktop_input_sequence",
+        "operation_count": "3",
+        "completed_count": "3",
+    }
+    assert [call["operation"] for call in desktop.input_calls] == [
+        "click",
+        "type_text",
+        "key_enter",
+    ]
+    assert all(call["handle"] == 101 for call in desktop.input_calls)
+
+
+def test_desktop_input_sequence_dry_run_performs_no_steps() -> None:
+    desktop = DesktopStub()
+    request = action_request_from_payload(
+        _desktop_input_sequence_payload(apply=False, checkpoint="")
+    )
+
+    result = KVStudioWorker(FakeKVStudioAdapter(), desktop_adapter=desktop).execute(request)
+
+    assert result.performed is False
+    assert desktop.input_calls == []

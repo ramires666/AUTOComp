@@ -181,6 +181,24 @@ def _audit_request(request: ActionRequest, *, request_id: str, phase: str) -> di
     )
     if operation is not None:
         record["operation"] = _bounded_text(getattr(operation, "value", operation))
+    desktop_operations = getattr(request, "desktop_operations", ())
+    if desktop_operations:
+        record["operation"] = "desktop_input_sequence"
+        record["operation_count"] = len(desktop_operations)
+        operation_records: list[dict[str, object]] = []
+        for step in desktop_operations:
+            step_record: dict[str, object] = {
+                "operation": _bounded_text(step.operation.value),
+                "pause_ms": step.pause_ms,
+            }
+            for field_name in ("x", "y", "delta"):
+                value = getattr(step, field_name)
+                if value is not None:
+                    step_record[field_name] = value
+            if step.text:
+                step_record["text_length"] = len(step.text)
+            operation_records.append(step_record)
+        record["operations"] = operation_records
     text_value = getattr(request, "text", "")
     if text_value:
         # Audit the fact and size of typing without persisting possible secrets.
@@ -270,6 +288,7 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                 "INVENTORY",
                 "EXPAND_TREE_ITEM",
                 "INVENTORY_PROJECT_TREE",
+                "ACTIVATE_TREE_ITEM",
                 "PROBE_TREE_ITEM_RENAME",
                 "RENAME_TREE_ITEM",
                 "INSPECT_TREE_ITEM_MENU",
@@ -281,6 +300,7 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                     "DESKTOP_WINDOWS",
                     "DESKTOP_SNAPSHOT",
                     "DESKTOP_INPUT",
+                    "DESKTOP_INPUT_SEQUENCE",
                 )
             actions = [
                 member.value
@@ -292,11 +312,13 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                 for name in (
                     "EXPAND_TREE_ITEM",
                     "INVENTORY_PROJECT_TREE",
+                    "ACTIVATE_TREE_ITEM",
                     "PROBE_TREE_ITEM_RENAME",
                     "RENAME_TREE_ITEM",
                     "INSPECT_TREE_ITEM_MENU",
                     "VISUAL_INPUT",
                     "DESKTOP_INPUT",
+                    "DESKTOP_INPUT_SEQUENCE",
                 )
                 if (member := getattr(ActionKind, name, None)) is not None
                 and member.value in actions

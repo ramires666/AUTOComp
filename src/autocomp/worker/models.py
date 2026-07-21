@@ -15,6 +15,7 @@ class ActionKind(StrEnum):
     EXPAND_TREE_ITEM = "expand_tree_item"
     STATUS = "status"
     INVENTORY_PROJECT_TREE = "inventory_project_tree"
+    ACTIVATE_TREE_ITEM = "activate_tree_item"
     RENAME_TREE_ITEM = "rename_tree_item"
     PROBE_TREE_ITEM_RENAME = "probe_tree_item_rename"
     INSPECT_TREE_ITEM_MENU = "inspect_tree_item_menu"
@@ -23,6 +24,7 @@ class ActionKind(StrEnum):
     DESKTOP_WINDOWS = "desktop_windows"
     DESKTOP_SNAPSHOT = "desktop_snapshot"
     DESKTOP_INPUT = "desktop_input"
+    DESKTOP_INPUT_SEQUENCE = "desktop_input_sequence"
 
 
 class VisualInputOperation(StrEnum):
@@ -165,6 +167,18 @@ class ProjectTreeInventory:
 
 
 @dataclass(frozen=True, slots=True)
+class DesktopInputStep:
+    """One strictly bounded operation in an atomic worker request."""
+
+    operation: DesktopInputOperation
+    x: int | None = None
+    y: int | None = None
+    delta: int | None = None
+    text: str = ""
+    pause_ms: int = 120
+
+
+@dataclass(frozen=True, slots=True)
 class ActionRequest:
     """A request that cannot encode shell commands, keys, or arbitrary clicks."""
 
@@ -187,6 +201,7 @@ class ActionRequest:
     expected_pid: int = 0
     expected_title: str = ""
     desktop_operation: DesktopInputOperation | None = None
+    desktop_operations: tuple[DesktopInputStep, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -233,6 +248,24 @@ def action_request_from_payload(payload: object) -> ActionRequest:
         ActionKind.INVENTORY_PROJECT_TREE: (
             {"action", "checkpoint", "expand_all", "restore_state", "apply"},
             {"action", "expand_all", "restore_state", "apply"},
+        ),
+        ActionKind.ACTIVATE_TREE_ITEM: (
+            {
+                "action",
+                "checkpoint",
+                "locator",
+                "expected_path",
+                "expected_source",
+                "apply",
+            },
+            {
+                "action",
+                "checkpoint",
+                "locator",
+                "expected_path",
+                "expected_source",
+                "apply",
+            },
         ),
         ActionKind.RENAME_TREE_ITEM: (
             {
@@ -326,6 +359,26 @@ def action_request_from_payload(payload: object) -> ActionRequest:
                 "apply",
             },
         ),
+        ActionKind.DESKTOP_INPUT_SEQUENCE: (
+            {
+                "action",
+                "window_handle",
+                "expected_pid",
+                "expected_title",
+                "checkpoint",
+                "operations",
+                "apply",
+            },
+            {
+                "action",
+                "window_handle",
+                "expected_pid",
+                "expected_title",
+                "checkpoint",
+                "operations",
+                "apply",
+            },
+        ),
     }
     allowed, required = schemas[kind]
     keys = set(payload)
@@ -338,6 +391,7 @@ def action_request_from_payload(payload: object) -> ActionRequest:
         _payload_locator(payload.get("locator"))
         if kind
         in {
+            ActionKind.ACTIVATE_TREE_ITEM,
             ActionKind.RENAME_TREE_ITEM,
             ActionKind.PROBE_TREE_ITEM_RENAME,
             ActionKind.INSPECT_TREE_ITEM_MENU,
@@ -361,6 +415,7 @@ def action_request_from_payload(payload: object) -> ActionRequest:
     expected_pid = 0
     expected_title = ""
     desktop_operation: DesktopInputOperation | None = None
+    desktop_operations: tuple[DesktopInputStep, ...] = ()
     if kind is ActionKind.VISUAL_INPUT:
         try:
             operation = VisualInputOperation(payload.get("operation"))
@@ -389,7 +444,11 @@ def action_request_from_payload(payload: object) -> ActionRequest:
                 raise ValueError("text must not be empty")
         if set(payload) != required_fields:
             raise ValueError("visual input payload has missing or unexpected fields")
-    if kind in {ActionKind.DESKTOP_SNAPSHOT, ActionKind.DESKTOP_INPUT}:
+    if kind in {
+        ActionKind.DESKTOP_SNAPSHOT,
+        ActionKind.DESKTOP_INPUT,
+        ActionKind.DESKTOP_INPUT_SEQUENCE,
+    }:
         window_handle = _payload_integer(
             payload.get("window_handle"),
             "window_handle",
@@ -443,6 +502,14 @@ def action_request_from_payload(payload: object) -> ActionRequest:
                 raise ValueError("text must not be empty")
         if set(payload) != required_fields:
             raise ValueError("desktop input payload has missing or unexpected fields")
+    if kind is ActionKind.DESKTOP_INPUT_SEQUENCE:
+        raw_operations = payload.get("operations")
+        if not isinstance(raw_operations, list) or not 1 <= len(raw_operations) <= 8:
+            raise ValueError("operations must be an array containing 1 to 8 items")
+        desktop_operations = tuple(
+            _desktop_input_step_from_payload(item, index=index)
+            for index, item in enumerate(raw_operations)
+        )
     return ActionRequest(
         kind=kind,
         checkpoint=checkpoint,
@@ -463,6 +530,71 @@ def action_request_from_payload(payload: object) -> ActionRequest:
         expected_pid=expected_pid,
         expected_title=expected_title,
         desktop_operation=desktop_operation,
+        desktop_operations=desktop_operations,
+    )
+
+
+def _desktop_input_step_from_payload(payload: object, *, index: int) -> DesktopInputStep:
+    if not isinstance(payload, dict) or not all(isinstance(key, str) for key in payload):
+        raise ValueError(f"operations[{index}] must be an object with string keys")
+    try:
+        operation = DesktopInputOperation(payload.get("operation"))
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"operations[{index}] has an unsupported desktop input operation") from exc
+
+    required_fields = {"operation"}
+    if "pause_ms" in payload:
+        required_fields.add("pause_ms")
+        pause_ms = _payload_integer(
+            payload.get("pause_ms"),
+            f"operations[{index}].pause_ms",
+            minimum=0,
+            maximum=1000,
+        )
+    else:
+        pause_ms = 120
+    x: int | None = None
+    y: int | None = None
+    delta: int | None = None
+    text = ""
+    coordinate_operations = {
+        DesktopInputOperation.CLICK,
+        DesktopInputOperation.RIGHT,
+        DesktopInputOperation.DOUBLE,
+        DesktopInputOperation.WHEEL,
+    }
+    if operation in coordinate_operations:
+        required_fields |= {"x", "y"}
+        x = _payload_integer(
+            payload.get("x"), f"operations[{index}].x", minimum=0, maximum=100_000
+        )
+        y = _payload_integer(
+            payload.get("y"), f"operations[{index}].y", minimum=0, maximum=100_000
+        )
+    if operation is DesktopInputOperation.WHEEL:
+        required_fields.add("delta")
+        delta = _payload_integer(
+            payload.get("delta"),
+            f"operations[{index}].delta",
+            minimum=-12,
+            maximum=12,
+        )
+        if delta == 0:
+            raise ValueError(f"operations[{index}] wheel delta must not be zero")
+    if operation is DesktopInputOperation.TYPE_TEXT:
+        required_fields.add("text")
+        text = _payload_text(payload.get("text"), f"operations[{index}].text", maximum=512)
+        if not text:
+            raise ValueError(f"operations[{index}] text must not be empty")
+    if set(payload) != required_fields:
+        raise ValueError(f"operations[{index}] has missing or unexpected fields")
+    return DesktopInputStep(
+        operation=operation,
+        x=x,
+        y=y,
+        delta=delta,
+        text=text,
+        pause_ms=pause_ms,
     )
 
 
