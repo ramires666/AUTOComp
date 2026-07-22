@@ -109,6 +109,7 @@ class _Adapter(UniversalDesktopAdapter):
         self.focused_handle = self.foreground_handle
         self.native_owners: dict[int, int] = {}
         self.sent_keys: list[str] = []
+        self.clipboard_value = ""
 
     def _desktop(self) -> _Desktop:
         return self.desktop
@@ -130,6 +131,9 @@ class _Adapter(UniversalDesktopAdapter):
 
     def _send_keys(self, keys: str) -> None:
         self.sent_keys.append(keys)
+
+    def _unicode_clipboard_text(self) -> str:
+        return self.clipboard_value
 
 
 def test_enumerates_visible_top_level_windows_without_product_allowlist() -> None:
@@ -378,6 +382,10 @@ def test_double_click_and_wheel_use_supported_wrapper_methods() -> None:
         (DesktopInputOperation.KEY_ENTER, "{ENTER}"),
         (DesktopInputOperation.KEY_ESCAPE, "{ESC}"),
         (DesktopInputOperation.KEY_CTRL_A, "^a"),
+        (DesktopInputOperation.KEY_CTRL_C, "^c"),
+        (DesktopInputOperation.KEY_CTRL_D, "^d"),
+        (DesktopInputOperation.KEY_CTRL_HOME, "^{HOME}"),
+        (DesktopInputOperation.KEY_CTRL_SHIFT_END, "^+{END}"),
         (DesktopInputOperation.KEY_F2, "{F2}"),
         (DesktopInputOperation.TAB, "{TAB}"),
         (DesktopInputOperation.SHIFT_TAB, "+{TAB}"),
@@ -397,6 +405,45 @@ def test_keyboard_operations_are_a_fixed_enum(
     )
 
     assert window.calls[-1] == ("type_keys", encoded, False)
+
+
+def test_clipboard_text_requires_pinned_process_foreground_and_focus() -> None:
+    app = _Window(101, "Any App", 11, (0, 0, 100, 100))
+    other = _Window(202, "Other App", 22, (0, 0, 100, 100))
+    adapter = _Adapter(app, other)
+    adapter.clipboard_value = "中文 / XRF assay"
+
+    result = adapter.clipboard_text(
+        handle=101,
+        expected_pid=11,
+        expected_title="Any App",
+    )
+
+    assert result.text == adapter.clipboard_value
+    assert result.length == len(adapter.clipboard_value)
+    assert result.utf8_bytes == len(adapter.clipboard_value.encode("utf-8"))
+    assert len(result.sha256) == 64
+
+    adapter.focused_handle = other.handle
+    with pytest.raises(RuntimeError, match="foreground and keyboard focus"):
+        adapter.clipboard_text(
+            handle=101,
+            expected_pid=11,
+            expected_title="Any App",
+        )
+
+
+def test_clipboard_text_rejects_response_larger_than_eight_mibibytes() -> None:
+    window = _Window(101, "Any App", 11, (0, 0, 100, 100))
+    adapter = _Adapter(window)
+    adapter.clipboard_value = "x" * (8 * 1024 * 1024 + 1)
+
+    with pytest.raises(RuntimeError, match="response limit"):
+        adapter.clipboard_text(
+            handle=101,
+            expected_pid=11,
+            expected_title="Any App",
+        )
 
 
 def test_unknown_operation_and_stale_identity_fail_before_input() -> None:

@@ -5,7 +5,12 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import StrEnum
 
-from autocomp.desktop import DesktopFrame, DesktopInputOperation, DesktopWindow
+from autocomp.desktop import (
+    DesktopClipboardText,
+    DesktopFrame,
+    DesktopInputOperation,
+    DesktopWindow,
+)
 
 
 class ActionKind(StrEnum):
@@ -23,6 +28,7 @@ class ActionKind(StrEnum):
     VISUAL_INPUT = "visual_input"
     DESKTOP_WINDOWS = "desktop_windows"
     DESKTOP_SNAPSHOT = "desktop_snapshot"
+    DESKTOP_CLIPBOARD_TEXT = "desktop_clipboard_text"
     DESKTOP_INPUT = "desktop_input"
     DESKTOP_INPUT_SEQUENCE = "desktop_input_sequence"
 
@@ -223,6 +229,7 @@ class ActionResult:
     visual_snapshot: VisualSnapshot | None = None
     desktop_windows: tuple[DesktopWindow, ...] = ()
     desktop_snapshot: DesktopFrame | None = None
+    desktop_clipboard_text: DesktopClipboardText | None = None
 
 
 def action_request_from_payload(payload: object) -> ActionRequest:
@@ -332,6 +339,10 @@ def action_request_from_payload(payload: object) -> ActionRequest:
         ),
         ActionKind.DESKTOP_WINDOWS: ({"action"}, {"action"}),
         ActionKind.DESKTOP_SNAPSHOT: (
+            {"action", "window_handle", "expected_pid", "expected_title"},
+            {"action", "window_handle", "expected_pid", "expected_title"},
+        ),
+        ActionKind.DESKTOP_CLIPBOARD_TEXT: (
             {"action", "window_handle", "expected_pid", "expected_title"},
             {"action", "window_handle", "expected_pid", "expected_title"},
         ),
@@ -446,6 +457,7 @@ def action_request_from_payload(payload: object) -> ActionRequest:
             raise ValueError("visual input payload has missing or unexpected fields")
     if kind in {
         ActionKind.DESKTOP_SNAPSHOT,
+        ActionKind.DESKTOP_CLIPBOARD_TEXT,
         ActionKind.DESKTOP_INPUT,
         ActionKind.DESKTOP_INPUT_SEQUENCE,
     }:

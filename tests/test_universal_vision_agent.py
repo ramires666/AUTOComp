@@ -100,6 +100,32 @@ def test_atomic_input_payload_contains_only_worker_protocol_fields(
     }
 
 
+@pytest.mark.parametrize(
+    "operation",
+    ["key_ctrl_c", "key_ctrl_d", "key_ctrl_home", "key_ctrl_shift_end"],
+)
+def test_fixed_selection_and_copy_shortcuts_are_in_runner_schema(
+    agent: dict[str, Any], operation: str
+) -> None:
+    step = {
+        "operation": operation,
+        "x": None,
+        "y": None,
+        "delta": None,
+        "text": None,
+        "pause_ms": 100,
+    }
+
+    agent["_validate_decision"](
+        _decision(operations=[step]),
+        windows=[_window()],
+        frame={"width": 800, "height": 600},
+    )
+    assert operation in agent["DECISION_SCHEMA"]["properties"]["operations"]["items"][
+        "properties"
+    ]["operation"]["enum"]
+
+
 def test_state_preserves_mission_and_full_translation_text(
     agent: dict[str, Any], tmp_path: Path
 ) -> None:

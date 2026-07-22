@@ -25,6 +25,7 @@ from pathlib import Path
 from typing import Final
 
 from autocomp import __version__
+from autocomp.desktop import DesktopInputOperation
 
 from .models import ActionKind, ActionRequest, action_request_from_payload
 from .service import DesktopWorker
@@ -43,6 +44,7 @@ MAX_DESKTOP_WHEEL_DELTA: Final = 12
 MAX_DESKTOP_FRAME_PIXELS: Final = 50_000_000
 MAX_DESKTOP_PNG_BYTES: Final = 64 * 1024 * 1024
 MAX_ENUMERATED_OWNED_WINDOWS: Final = 64
+MAX_DESKTOP_CLIPBOARD_UTF8_BYTES: Final = 8 * 1024 * 1024
 
 
 def _source_build_id() -> str:
@@ -335,6 +337,7 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                 supported_names += (
                     "DESKTOP_WINDOWS",
                     "DESKTOP_SNAPSHOT",
+                    "DESKTOP_CLIPBOARD_TEXT",
                     "DESKTOP_INPUT",
                     "DESKTOP_INPUT_SEQUENCE",
                 )
@@ -377,6 +380,11 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                 "arbitrary_input": False,
                 "process_launch": False,
                 "constrained_desktop_input": self.server.worker.desktop_available,
+                "desktop_input_operations": (
+                    [operation.value for operation in DesktopInputOperation]
+                    if self.server.worker.desktop_available
+                    else []
+                ),
                 "plc_operations": False,
                 "operation_limits": {
                     "request_body_bytes": self.server.max_body_bytes,
@@ -388,6 +396,7 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                     "desktop_frame_pixels": MAX_DESKTOP_FRAME_PIXELS,
                     "desktop_png_bytes": MAX_DESKTOP_PNG_BYTES,
                     "enumerated_owned_windows": MAX_ENUMERATED_OWNED_WINDOWS,
+                    "desktop_clipboard_utf8_bytes": MAX_DESKTOP_CLIPBOARD_UTF8_BYTES,
                 },
             }
 

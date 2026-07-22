@@ -230,6 +230,43 @@ to resume. The versioned prompt is
 `prompts\universal-windows-agent.md`; its hash and the remote worker build ID are
 stored in mission state.
 
+### One-shot full KV STUDIO content capture
+
+Start the updated remote worker with the existing deterministic tree adapter in
+addition to the universal eyes/hands API:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start-worker.ps1 `
+  -ListenAddress 0.0.0.0 -AllowRemote -EnableKVStudioAdapter
+```
+
+Pilot one program, inspect the captured text, then resume the same checkpoint
+without `--limit` to capture all 48 programs. The controller only selects and
+copies UI content; it never types PLC logic.
+
+```powershell
+python .\scripts\extract-kvstudio-full-content.py `
+  --checkpoint 07-kv-full-content `
+  --limit 1 `
+  --apply
+
+python .\scripts\extract-kvstudio-full-content.py `
+  --checkpoint 07-kv-full-content `
+  --apply
+```
+
+Merge the resumable capture with the original/current/English/future-Russian
+tree catalog. The command exits non-zero unless all 48 program locators map
+exactly once.
+
+```powershell
+python -m autocomp.extraction.full_project `
+  .\reports\04-full-tree-bilingual-catalog.json `
+  .\.autocomp\kvstudio-full-content `
+  --slot current `
+  --output .\reports\07-full-project-bilingual.json
+```
+
 Hash an untouched project copy:
 
 ```powershell

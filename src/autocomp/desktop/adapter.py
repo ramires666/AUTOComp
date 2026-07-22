@@ -12,12 +12,13 @@ from contextlib import suppress
 from io import BytesIO
 from typing import Any
 
-from .models import DesktopFrame, DesktopInputOperation, DesktopWindow
+from .models import DesktopClipboardText, DesktopFrame, DesktopInputOperation, DesktopWindow
 
 _MAX_FRAME_PIXELS = 50_000_000
 _MAX_PNG_BYTES = 64 * 1024 * 1024
 _MAX_TEXT_LENGTH = 4096
 _MAX_DIALOG_WINDOWS = 64
+_MAX_CLIPBOARD_UTF8_BYTES = 8 * 1024 * 1024
 _CLIPBOARD_LOCK = threading.Lock()
 _DPI_LOCK = threading.Lock()
 _DPI_INITIALIZED = False
@@ -135,6 +136,31 @@ class UniversalDesktopAdapter:
             png_sha256=hashlib.sha256(png).hexdigest(),
         )
 
+    def clipboard_text(
+        self,
+        *,
+        handle: int,
+        expected_pid: int,
+        expected_title: str,
+    ) -> DesktopClipboardText:
+        """Read CF_UNICODETEXT only while foreground and focus belong to the pinned PID."""
+        window = self._select_window(handle, expected_pid, expected_title)
+        if window.is_minimized():
+            raise RuntimeError("selected window is minimized")
+        self._require_process_foreground_and_focus(expected_pid)
+        text = self._unicode_clipboard_text()
+        encoded = text.encode("utf-8")
+        if len(encoded) > _MAX_CLIPBOARD_UTF8_BYTES:
+            raise RuntimeError("Unicode clipboard text exceeds the response limit")
+        self._select_window(handle, expected_pid, expected_title)
+        self._require_process_foreground_and_focus(expected_pid)
+        return DesktopClipboardText(
+            text=text,
+            length=len(text),
+            utf8_bytes=len(encoded),
+            sha256=hashlib.sha256(encoded).hexdigest(),
+        )
+
     def input(
         self,
         *,
@@ -229,6 +255,10 @@ class UniversalDesktopAdapter:
                 DesktopInputOperation.KEY_ENTER: "{ENTER}",
                 DesktopInputOperation.KEY_ESCAPE: "{ESC}",
                 DesktopInputOperation.KEY_CTRL_A: "^a",
+                DesktopInputOperation.KEY_CTRL_C: "^c",
+                DesktopInputOperation.KEY_CTRL_D: "^d",
+                DesktopInputOperation.KEY_CTRL_HOME: "^{HOME}",
+                DesktopInputOperation.KEY_CTRL_SHIFT_END: "^+{END}",
                 DesktopInputOperation.KEY_F2: "{F2}",
                 DesktopInputOperation.TAB: "{TAB}",
                 DesktopInputOperation.SHIFT_TAB: "+{TAB}",
@@ -446,6 +476,23 @@ class UniversalDesktopAdapter:
                     win32clipboard.CloseClipboard()
 
     @staticmethod
+    def _unicode_clipboard_text() -> str:
+        import win32clipboard
+
+        UniversalDesktopAdapter._open_clipboard(win32clipboard)
+        try:
+            if not win32clipboard.IsClipboardFormatAvailable(
+                win32clipboard.CF_UNICODETEXT
+            ):
+                raise RuntimeError("clipboard does not contain CF_UNICODETEXT")
+            text = win32clipboard.GetClipboardData(win32clipboard.CF_UNICODETEXT)
+        finally:
+            win32clipboard.CloseClipboard()
+        if not isinstance(text, str):
+            raise RuntimeError("CF_UNICODETEXT clipboard data is not text")
+        return text
+
+    @staticmethod
     def _send_keys(keys: str) -> None:
         from pywinauto.keyboard import send_keys
 
@@ -465,6 +512,19 @@ class UniversalDesktopAdapter:
     @staticmethod
     def _foreground_window_handle() -> int:
         return int(ctypes.windll.user32.GetForegroundWindow() or 0)
+
+    def _require_process_foreground_and_focus(self, expected_pid: int) -> None:
+        foreground = self._foreground_window_handle()
+        focus = self._focused_window_handle()
+        if (
+            not foreground
+            or not focus
+            or self._window_process_id(foreground) != expected_pid
+            or self._window_process_id(focus) != expected_pid
+        ):
+            raise RuntimeError(
+                "foreground and keyboard focus must belong to the pinned process"
+            )
 
     @staticmethod
     def _focused_window_handle() -> int:

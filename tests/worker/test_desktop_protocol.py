@@ -5,7 +5,12 @@ from dataclasses import replace
 
 import pytest
 
-from autocomp.desktop import DesktopFrame, DesktopInputOperation, DesktopWindow
+from autocomp.desktop import (
+    DesktopClipboardText,
+    DesktopFrame,
+    DesktopInputOperation,
+    DesktopWindow,
+)
 from autocomp.worker.adapter import FakeKVStudioAdapter
 from autocomp.worker.models import ActionKind, ActionRequest, action_request_from_payload
 from autocomp.worker.service import KVStudioWorker
@@ -25,7 +30,14 @@ class DesktopStub:
             png_base64=base64.b64encode(png).decode("ascii"),
             png_sha256="a" * 64,
         )
+        self.clipboard = DesktopClipboardText(
+            text="XRF assay",
+            length=9,
+            utf8_bytes=9,
+            sha256="b" * 64,
+        )
         self.snapshot_calls: list[dict[str, object]] = []
+        self.clipboard_calls: list[dict[str, object]] = []
         self.input_calls: list[dict[str, object]] = []
 
     def enumerate_windows(self) -> tuple[DesktopWindow, ...]:
@@ -46,6 +58,22 @@ class DesktopStub:
             }
         )
         return self.frame
+
+    def clipboard_text(
+        self,
+        *,
+        handle: int,
+        expected_pid: int,
+        expected_title: str,
+    ) -> DesktopClipboardText:
+        self.clipboard_calls.append(
+            {
+                "handle": handle,
+                "expected_pid": expected_pid,
+                "expected_title": expected_title,
+            }
+        )
+        return self.clipboard
 
     def input(
         self,
@@ -118,9 +146,18 @@ def test_desktop_window_and_snapshot_payloads_are_exact_and_typed() -> None:
             "expected_title": "Calculator",
         }
     )
+    clipboard = action_request_from_payload(
+        {
+            "action": "desktop_clipboard_text",
+            "window_handle": 101,
+            "expected_pid": 202,
+            "expected_title": "Calculator",
+        }
+    )
 
     assert windows.kind is ActionKind.DESKTOP_WINDOWS
     assert snapshot.kind is ActionKind.DESKTOP_SNAPSHOT
+    assert clipboard.kind is ActionKind.DESKTOP_CLIPBOARD_TEXT
     assert snapshot.window_handle == 101
     assert snapshot.expected_pid == 202
     assert snapshot.expected_title == "Calculator"
@@ -147,6 +184,10 @@ def test_desktop_window_and_snapshot_payloads_are_exact_and_typed() -> None:
         ("key_enter", {}),
         ("key_escape", {}),
         ("key_ctrl_a", {}),
+        ("key_ctrl_c", {}),
+        ("key_ctrl_d", {}),
+        ("key_ctrl_home", {}),
+        ("key_ctrl_shift_end", {}),
         ("key_f2", {}),
         ("tab", {}),
         ("shift_tab", {}),
@@ -233,12 +274,25 @@ def test_desktop_read_actions_return_structured_adapter_results() -> None:
             expected_title="Calculator",
         )
     )
+    clipboard = worker.execute(
+        ActionRequest(
+            ActionKind.DESKTOP_CLIPBOARD_TEXT,
+            window_handle=101,
+            expected_pid=202,
+            expected_title="Calculator",
+        )
+    )
 
     assert worker.desktop_available is True
     assert windows.performed is False
     assert windows.desktop_windows == desktop.windows
     assert frame.desktop_snapshot == desktop.frame
+    assert clipboard.performed is False
+    assert clipboard.desktop_clipboard_text == desktop.clipboard
     assert desktop.snapshot_calls == [
+        {"handle": 101, "expected_pid": 202, "expected_title": "Calculator"}
+    ]
+    assert desktop.clipboard_calls == [
         {"handle": 101, "expected_pid": 202, "expected_title": "Calculator"}
     ]
 

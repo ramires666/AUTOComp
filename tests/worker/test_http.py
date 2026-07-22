@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from autocomp.desktop import DesktopFrame, DesktopWindow
+from autocomp.desktop import DesktopClipboardText, DesktopFrame, DesktopWindow
 from autocomp.worker.adapter import FakeKVStudioAdapter
 from autocomp.worker.http import WorkerHttpServer
 from autocomp.worker.models import ActionRequest, ActionResult, WindowSnapshot
@@ -44,6 +44,12 @@ class HttpDesktopStub:
             "cG5n",
             "a" * 64,
         )
+
+    def clipboard_text(
+        self, *, handle: int, expected_pid: int, expected_title: str
+    ) -> DesktopClipboardText:
+        del handle, expected_pid, expected_title
+        return DesktopClipboardText("XRF assay", 9, 9, "b" * 64)
 
     def input(
         self,
@@ -139,6 +145,7 @@ def test_capabilities_explicitly_exclude_shell_input_and_plc(server) -> None:
     assert "rename_tree_item" in payload["actions"]
     assert "desktop_input" not in payload["actions"]
     assert payload["constrained_desktop_input"] is False
+    assert payload["desktop_input_operations"] == []
     assert payload["post_action_audit"] == {"required": True, "configured": True}
     assert payload["build_id"] == server.build_id
     assert payload["boot_id"] == server.boot_id
@@ -153,6 +160,7 @@ def test_capabilities_explicitly_exclude_shell_input_and_plc(server) -> None:
         "desktop_frame_pixels": 50_000_000,
         "desktop_png_bytes": 64 * 1024 * 1024,
         "enumerated_owned_windows": 64,
+        "desktop_clipboard_utf8_bytes": 8 * 1024 * 1024,
     }
 
 
@@ -196,6 +204,20 @@ def test_http_exposes_desktop_actions_only_when_adapter_is_wired(tmp_path: Path)
             "POST",
             "/v1/action",
             body=b'{"action":"desktop_windows"}',
+            headers={"Content-Type": "application/json"},
+        )
+        clipboard_status, clipboard_body, _ = request(
+            instance,
+            "POST",
+            "/v1/action",
+            body=json.dumps(
+                {
+                    "action": "desktop_clipboard_text",
+                    "window_handle": 101,
+                    "expected_pid": 202,
+                    "expected_title": "Calculator",
+                }
+            ).encode(),
             headers={"Content-Type": "application/json"},
         )
         secret_text = "temporary-secret-not-for-audit"
@@ -248,12 +270,21 @@ def test_http_exposes_desktop_actions_only_when_adapter_is_wired(tmp_path: Path)
     capabilities = json.loads(capability_body)
     assert capability_status == 200
     assert capabilities["constrained_desktop_input"] is True
+    assert {
+        "key_ctrl_c",
+        "key_ctrl_d",
+        "key_ctrl_home",
+        "key_ctrl_shift_end",
+    }.issubset(capabilities["desktop_input_operations"])
     assert "desktop_windows" in capabilities["actions"]
     assert "desktop_snapshot" in capabilities["actions"]
+    assert "desktop_clipboard_text" in capabilities["actions"]
     assert "desktop_input" in capabilities["mutating_actions"]
     assert "desktop_input_sequence" in capabilities["mutating_actions"]
     assert windows_status == 200
     assert json.loads(windows_body)["desktop_windows"][0]["handle"] == 101
+    assert clipboard_status == 200
+    assert json.loads(clipboard_body)["desktop_clipboard_text"]["text"] == "XRF assay"
     assert input_status == 200
     assert json.loads(input_response)["performed"] is True
     assert sequence_status == 200
@@ -294,6 +325,7 @@ def test_desktop_only_worker_exposes_no_application_specific_actions(
     assert actions == {
         "desktop_windows",
         "desktop_snapshot",
+        "desktop_clipboard_text",
         "desktop_input",
         "desktop_input_sequence",
     }

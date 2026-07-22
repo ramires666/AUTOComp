@@ -15,6 +15,10 @@ class DesktopInputOperation(StrEnum):
     KEY_ENTER = "key_enter"
     KEY_ESCAPE = "key_escape"
     KEY_CTRL_A = "key_ctrl_a"
+    KEY_CTRL_C = "key_ctrl_c"
+    KEY_CTRL_D = "key_ctrl_d"
+    KEY_CTRL_HOME = "key_ctrl_home"
+    KEY_CTRL_SHIFT_END = "key_ctrl_shift_end"
     KEY_F2 = "key_f2"
     TAB = "tab"
     SHIFT_TAB = "shift_tab"
@@ -44,3 +48,13 @@ class DesktopFrame:
     png_base64: str
     png_sha256: str
     mime_type: str = "image/png"
+
+
+@dataclass(frozen=True, slots=True)
+class DesktopClipboardText:
+    """One bounded, read-only CF_UNICODETEXT clipboard snapshot."""
+
+    text: str
+    length: int
+    utf8_bytes: int
+    sha256: str
