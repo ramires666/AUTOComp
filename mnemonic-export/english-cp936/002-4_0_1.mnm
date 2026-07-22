@@ -1,0 +1,243 @@
+DEVICE:132
+;MODULE:Main
+;MODULE_TYPE:0
+;SCRIPT_TYPE:
+;/*MR600-MR715*/
+;<h1/>/*Manual/Automatic*/
+LD CR2008
+MOV #0 DM101
+MOV #0 DM201
+LD<> DM101 #0
+OR<> DM201 #0
+MEP
+SET MR700
+LD<> DM101 #0
+OR<> DM201 #0
+ANP MR600
+ORP MR600
+ORP MR610
+OR CR2008
+RES MR700
+MOV #0 @DM1
+MOV #0 @DM0
+;During single-machine debugging£¬To Host computer Running£¬Cannot send commands toPLC
+LD MR601
+ANB MR615
+ANB MR614
+ANB MR608
+OR= DM584 #1
+MOV #3 DM100
+LDF MR601
+ANB MR700
+MOV #2 DM100
+LD CR2008
+ANB MR700
+MOV #2 DM100
+;<h1/>/*Start*/
+LD CR2006
+MEP
+INC @DM0
+LD>= @DM0 #8
+MOV #0 @DM1
+MOV #0 @DM0
+LD MR601
+ANP MR603
+INC @DM1
+LD MR601
+AND MR603
+ONDL #200 @MR001
+CON
+AND @MR001
+MEP
+SET MR612
+RES MR611
+LD>= @DM1 #2
+MEP
+SET MR612
+RES MR611
+LD MR612
+MOV #0 @DM1
+MOV #0 @DM0
+;<h1/>/*Stop*/
+LD MR6404
+ANP MR609
+LDB MR608
+ANP MR609
+ORL
+RES MR611
+MOV #0 DM102
+ZRES MR1000 MR1914
+LD MR600
+OR> DM102 #0
+OR MR608
+SET MR611
+RES MR612
+;<h1/>/*Emergency stop*/
+LDP MR701
+LD= DM1001 #1
+ANB MR610
+ORL
+SET MR610
+LD MR610
+AND<> DM1001 #0
+MOV #0 DM1001
+;<h1/>/*Fault Reset*/
+LD MR000
+ONDL #200 @MR002
+CON
+AND @MR002
+MEP
+SET MR609
+LD MR609
+ONDL #10 @MR003
+CON
+AND @MR003
+MEP
+RES MR609
+LD CR2008
+RES MR609
+;<h1/>/*Related Memory*/
+LDB R012
+AND R013
+AND R1515
+OUT MR710
+LD=.L CM8830 DM4050
+AND=.L CM8870 DM4052
+AND=.L CM8910 DM4054
+OUT @MR011
+LD=.L CM8830 DM4032
+AND=.L CM8870 DM4034
+AND=.L CM8910 DM4036
+OUT @MR012
+LD=.L CM8830 DM4038
+AND=.L CM8870 DM4040
+AND=.L CM8910 DM4042
+OUT @MR013
+LD @MR012
+OR @MR013
+OUT @MR014
+LD @MR014
+ANP R003
+OR R003
+MOV #0 DM600
+LD @MR014
+ANP R004
+MOV #1 DM600
+;<h1/>/*Device Status_HMIDisplay*/
+;IF DM100=255 THEN
+;   DM98=4
+;ELSE IF MR611 THEN
+;   DM98=5
+;ELSE
+;   DM98=DM100
+;END IF
+;IF DM100=255 THEN
+;
+LD= DM100 #255
+NCJ #2000
+;   DM98=4
+;
+LD CR2002
+MOV #4 DM98
+LD CR2002
+CJ #2001
+LABEL #2000
+;ELSE IF MR611 THEN
+;
+LD MR611
+NCJ #2002
+;   DM98=5
+;
+LD CR2002
+MOV #5 DM98
+;ELSE
+;
+LD CR2002
+CJ #2003
+LABEL #2002
+;   DM98=DM100
+;
+LD CR2002
+MOV DM100 DM98
+;END IF
+LABEL #2003
+LABEL #2001
+;
+;<h1/>/*Default Configuration*/
+;DM569=0        '=0£¬Mandarin Annunciation£»=1£¬English Annunciation
+;DM570=1        '=0£¬No Voice Annunciation£»=1£¬Voice Annunciation
+;DM571=1        '=0£¬Two-Channel Temperature Module£»=1£¬Four-Channel Temperature
+;DM572=1        '=0£¬Old Chiller£¨Large Screen£©£»=1£¬New Chiller
+;DM573=0        '=0£¬Do Not Use Pure Gold¡¢K-Gold Station£»=1£¬Use
+;DM574=1        '=0£¬Do Not Use Secondary Tare£»=1£¬Use
+;DM575=0        '=0£¬Do Not Use Temperature and Humidity£»=1£¬Use Temperature and Humidity
+;DM576=0        '=0£¬Do Not Use Carrier-Tray Residue Detection£»=1£¬Use
+;DM577=0        '=0£¬Chiller Has Water£»=1£¬Chiller No Water
+;'DM578=0       '
+;'DM579=0       '
+;DM580=0        '£¨PLC£©£½1£¬No Induction Melting£»=0£¬Normal Induction Melting
+LDP MR4902
+NCJ #1000
+;DM569=0        '=0£¬Mandarin Annunciation£»=1£¬English Annunciation
+;
+LD CR2002
+MOV #0 DM569
+;DM570=1        '=0£¬No Voice Annunciation£»=1£¬Voice Annunciation
+;
+LD CR2002
+MOV #1 DM570
+;DM571=1        '=0£¬Two-Channel Temperature Module£»=1£¬Four-Channel Temperature
+;
+LD CR2002
+MOV #1 DM571
+;DM572=1        '=0£¬Old Chiller£¨Large Screen£©£»=1£¬New Chiller
+;
+LD CR2002
+MOV #1 DM572
+;DM573=0        '=0£¬Do Not Use Pure Gold¡¢K-Gold Station£»=1£¬Use
+;
+LD CR2002
+MOV #0 DM573
+;DM574=1        '=0£¬Do Not Use Secondary Tare£»=1£¬Use
+;
+LD CR2002
+MOV #1 DM574
+;DM575=0        '=0£¬Do Not Use Temperature and Humidity£»=1£¬Use Temperature and Humidity
+;
+LD CR2002
+MOV #0 DM575
+;DM576=0        '=0£¬Do Not Use Carrier-Tray Residue Detection£»=1£¬Use
+;
+LD CR2002
+MOV #0 DM576
+;DM577=0        '=0£¬Chiller Has Water£»=1£¬Chiller No Water
+;
+LD CR2002
+MOV #0 DM577
+;'DM578=0       '
+;
+;'DM579=0       '
+;
+;DM580=0        '£¨PLC£©£½1£¬No Induction Melting£»=0£¬Normal Induction Melting
+LD CR2002
+MOV #0 DM580
+LABEL #1000
+;
+LDP MR4902
+MPS
+AND<=.F DM546 +0
+MOV.F +100 DM546
+MRD
+AND<=.F DM548 +0
+MOV.F +2 DM548
+MPP
+AND= DM540 #0
+MOV #101 DM540
+;<h1/>/*Program Version*/
+;DM550.T="V3.6.0.8_250702"
+;DM550.T="V3.6.0.8_250702"
+LD CR2002
+SMOV "V3.6.0.8_250702" DM550
+;
+END
+ENDH

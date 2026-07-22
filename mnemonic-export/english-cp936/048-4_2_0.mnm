@@ -1,0 +1,11 @@
+DEVICE:132
+;MODULE:Update-log1
+;MODULE_TYPE:0
+;/*V3.6.0.8*/£¨20250702£©
+;1.Added voice module selection feature£¨0£¬White model£»1£¬Black new model£©//Black model supports Cantonese playback
+;
+;2.Added voice announcement settings feature£¨Mandarin¡¢English¡¢Local Dialect£©
+;
+;3.Different languages£¬Delay time setting between voice announcements
+END
+ENDH
