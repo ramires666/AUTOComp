@@ -2,6 +2,8 @@
 
 from .adapter import UniversalDesktopAdapter
 from .models import (
+    DesktopClipboardFormat,
+    DesktopClipboardSnapshot,
     DesktopClipboardText,
     DesktopFrame,
     DesktopInputOperation,
@@ -9,6 +11,8 @@ from .models import (
 )
 
 __all__ = [
+    "DesktopClipboardFormat",
+    "DesktopClipboardSnapshot",
     "DesktopClipboardText",
     "DesktopFrame",
     "DesktopInputOperation",

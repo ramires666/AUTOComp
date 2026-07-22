@@ -23,6 +23,7 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 PROGRAM_CHILD_MARKERS = frozenset({"局部标号", "书签"})
+EDIT_LIST_TITLE_PREFIX = "编辑列"
 REQUIRED_ACTIONS = frozenset(
     {
         "inventory_project_tree",
@@ -39,7 +40,9 @@ REQUIRED_INPUT_OPERATIONS = frozenset(
         "key_ctrl_home",
         "key_ctrl_shift_end",
         "key_ctrl_c",
-        "key_ctrl_d",
+        "key_ctrl_down",
+        "key_ctrl_end",
+        "key_ctrl_up",
         "key_ctrl_a",
         "key_escape",
     }
@@ -239,6 +242,13 @@ def _snapshot(client: WorkerClient, window: dict[str, Any]) -> dict[str, Any]:
     return frame
 
 
+def _frame_hash(frame: dict[str, Any]) -> str:
+    digest = frame.get("png_sha256")
+    if not isinstance(digest, str) or not digest:
+        raise RuntimeError("worker desktop snapshot has no PNG hash")
+    return digest
+
+
 def _content_point(
     *, frame: dict[str, Any], coordinate_space: str, x: int, y: int
 ) -> tuple[int, int]:
@@ -323,7 +333,7 @@ def _is_post_action_unavailable(error: Exception) -> bool:
     )
 
 
-def _popup_window(
+def _edit_list_popup(
     windows: list[dict[str, Any]],
     *,
     main: dict[str, Any],
@@ -335,7 +345,9 @@ def _popup_window(
         window
         for window in windows
         if int(window.get("handle", 0)) != main_handle
+        and int(window.get("handle", 0)) not in previous_handles
         and int(window.get("process_id", 0)) == process_id
+        and str(window.get("title", "")).startswith(EDIT_LIST_TITLE_PREFIX)
         and not window.get("minimized")
         and window.get("enabled", True)
     ]
@@ -344,12 +356,45 @@ def _popup_window(
     return max(
         candidates,
         key=lambda window: (
-            int(int(window.get("handle", 0)) not in previous_handles),
             int(bool(window.get("foreground"))),
             int(int(window.get("owner_handle", 0)) == main_handle),
             _window_area(window),
         ),
     )
+
+
+def _wait_for_edit_list_popup(
+    client: WorkerClient,
+    *,
+    main: dict[str, Any],
+    previous_handles: set[int],
+    timeout_seconds: float,
+) -> dict[str, Any] | None:
+    deadline = time.monotonic() + timeout_seconds
+    while True:
+        popup = _edit_list_popup(
+            _desktop_windows(client),
+            main=main,
+            previous_handles=previous_handles,
+        )
+        if popup is not None:
+            return popup
+        if time.monotonic() >= deadline:
+            return None
+        time.sleep(0.1)
+
+
+def _wait_for_window_closed(
+    client: WorkerClient, *, handle: int, timeout_seconds: float
+) -> bool:
+    deadline = time.monotonic() + timeout_seconds
+    while True:
+        handles = {int(window.get("handle", 0)) for window in _desktop_windows(client)}
+        if handle not in handles:
+            return True
+        if time.monotonic() >= deadline:
+            return False
+        time.sleep(0.1)
 
 
 def _activate_program(
@@ -411,7 +456,23 @@ def _save_attempt(
     method: str,
     clipboard: dict[str, Any],
 ) -> dict[str, Any]:
-    text = str(clipboard["text"])
+    return _save_text_attempt(
+        output_dir,
+        stem=stem,
+        method=method,
+        text=str(clipboard["text"]),
+        worker_sha256=str(clipboard.get("sha256", "")),
+    )
+
+
+def _save_text_attempt(
+    output_dir: Path,
+    *,
+    stem: str,
+    method: str,
+    text: str,
+    worker_sha256: str = "",
+) -> dict[str, Any]:
     encoded = text.encode("utf-8")
     digest = hashlib.sha256(encoded).hexdigest()
     relative = Path("programs") / f"{stem}.{method}.txt"
@@ -422,9 +483,71 @@ def _save_attempt(
         "characters": len(text),
         "utf8_bytes": len(encoded),
         "sha256": digest,
-        "worker_sha256": clipboard.get("sha256", ""),
+        "worker_sha256": worker_sha256,
         "captured_at": _now(),
     }
+
+
+def _join_block_texts(texts: list[str]) -> str:
+    """Join blocks without changing their content or merging adjacent lines."""
+    joined = ""
+    for text in texts:
+        if joined and not joined.endswith(("\r", "\n")):
+            joined += "\n"
+        joined += text
+    return joined
+
+
+def _save_block(
+    output_dir: Path,
+    *,
+    stem: str,
+    block_index: int,
+    clipboard: dict[str, Any],
+    popup: dict[str, Any],
+) -> tuple[dict[str, Any], str]:
+    text = str(clipboard["text"])
+    encoded = text.encode("utf-8")
+    relative = Path("programs") / f"{stem}.blocks" / f"{block_index:05d}.txt"
+    _atomic_write_bytes(output_dir / relative, encoded)
+    metadata = {
+        "index": block_index,
+        "text_file": relative.as_posix(),
+        "characters": len(text),
+        "utf8_bytes": len(encoded),
+        "sha256": hashlib.sha256(encoded).hexdigest(),
+        "worker_sha256": clipboard.get("sha256", ""),
+        "popup": _identity(popup),
+        "captured_at": _now(),
+    }
+    return metadata, text
+
+
+def _write_blocks_metadata(
+    output_dir: Path,
+    *,
+    stem: str,
+    program: dict[str, Any],
+    blocks: list[dict[str, Any]],
+    complete: bool,
+) -> str:
+    relative = Path("programs") / f"{stem}.blocks.json"
+    _atomic_write_json(
+        output_dir / relative,
+        {
+            "schema_version": 1,
+            "program": {
+                "name": program["name"],
+                "path": program["path"],
+                "locator": program["locator"],
+            },
+            "complete": complete,
+            "block_count": len(blocks),
+            "blocks": blocks,
+            "updated_at": _now(),
+        },
+    )
+    return relative.as_posix()
 
 
 def _load_state(path: Path) -> dict[str, Any]:
@@ -464,9 +587,14 @@ def _extract_one(
     coordinate_space: str,
     content_x: int,
     content_y: int,
+    edit_menu_x: int,
+    edit_menu_y: int,
+    edit_list_x: int,
+    edit_list_y: int,
     min_text_chars: int,
     pause_ms: int,
     popup_wait_seconds: float,
+    max_blocks: int,
 ) -> dict[str, Any]:
     record: dict[str, Any] = {
         **program,
@@ -494,19 +622,31 @@ def _extract_one(
         x=content_x,
         y=content_y,
     )
-    plain_previous_hash = _clipboard_hash_best_effort(client, main)
-    _input_sequence(
-        client,
-        window=main,
-        checkpoint=f"{checkpoint}-copy-{index:03d}",
-        operations=[
-            {"operation": "click", "x": x, "y": y, "pause_ms": pause_ms},
-            {"operation": "key_ctrl_home", "pause_ms": pause_ms},
-            {"operation": "key_ctrl_shift_end", "pause_ms": pause_ms},
-            {"operation": "key_ctrl_c", "pause_ms": pause_ms},
-        ],
+    menu_x, menu_y = _content_point(
+        frame=frame,
+        coordinate_space=coordinate_space,
+        x=edit_menu_x,
+        y=edit_menu_y,
     )
+    list_x, list_y = _content_point(
+        frame=frame,
+        coordinate_space=coordinate_space,
+        x=edit_list_x,
+        y=edit_list_y,
+    )
+    plain_previous_hash = _clipboard_hash_best_effort(client, main)
     try:
+        _input_sequence(
+            client,
+            window=main,
+            checkpoint=f"{checkpoint}-copy-{index:03d}",
+            operations=[
+                {"operation": "click", "x": x, "y": y, "pause_ms": pause_ms},
+                {"operation": "key_ctrl_home", "pause_ms": pause_ms},
+                {"operation": "key_ctrl_shift_end", "pause_ms": pause_ms},
+                {"operation": "key_ctrl_c", "pause_ms": pause_ms},
+            ],
+        )
         plain_clipboard = _clipboard(client, main)
         _require_changed_clipboard(
             plain_clipboard,
@@ -523,91 +663,203 @@ def _extract_one(
         if attempt["characters"] >= min_text_chars:
             record.update(status="complete", selected_attempt=0, completed_at=_now())
             return record
+        record["errors"].append(
+            f"plain copy returned only {attempt['characters']} characters"
+        )
     except Exception as exc:  # Preserve the per-program failure and try edit-list.
         record["errors"].append(f"plain copy: {exc}")
 
-    previous_handles = {int(window["handle"]) for window in _desktop_windows(client)}
-    open_error: Exception | None = None
     try:
         _input_sequence(
             client,
             window=main,
-            checkpoint=f"{checkpoint}-open-edit-list-{index:03d}",
-            operations=[{"operation": "key_ctrl_d", "pause_ms": pause_ms}],
-        )
-    except Exception as exc:
-        if not _is_post_action_unavailable(exc):
-            raise
-        open_error = exc
-    time.sleep(popup_wait_seconds)
-    popup = _popup_window(
-        _desktop_windows(client), main=main, previous_handles=previous_handles
-    )
-    if open_error is not None:
-        popup_appeared = (
-            popup is not None and int(popup["handle"]) not in previous_handles
-        )
-        if not popup_appeared:
-            raise RuntimeError(
-                f"Ctrl+D returned post-action worker_unavailable and no new popup appeared: "
-                f"{open_error}"
-            ) from open_error
-        record["warnings"].append(
-            f"Ctrl+D returned post-action worker_unavailable, but a new popup appeared: "
-            f"{str(open_error)[:500]}"
-        )
-    edit_window = popup or main
-    method = "edit-list-popup" if popup else "edit-list-focused-child"
-    cleanup_error = ""
-    try:
-        edit_previous_hash = _clipboard_hash_best_effort(client, edit_window)
-        _input_sequence(
-            client,
-            window=edit_window,
-            checkpoint=f"{checkpoint}-copy-edit-list-{index:03d}",
+            checkpoint=f"{checkpoint}-anchor-edit-list-{index:03d}",
             operations=[
-                {"operation": "key_ctrl_a", "pause_ms": pause_ms},
-                {"operation": "key_ctrl_c", "pause_ms": pause_ms},
+                {"operation": "key_escape", "pause_ms": pause_ms},
+                {"operation": "click", "x": x, "y": y, "pause_ms": pause_ms},
+                {"operation": "key_ctrl_home", "pause_ms": pause_ms},
             ],
         )
-        edit_clipboard = _clipboard(client, edit_window)
-        _require_changed_clipboard(
-            edit_clipboard,
-            previous_hash=edit_previous_hash,
-            method=method,
-        )
-        attempt = _save_attempt(
-            output_dir,
-            stem=stem,
-            method=method,
-            clipboard=edit_clipboard,
-        )
-        record["attempts"].append(attempt)
-        if attempt["characters"] >= min_text_chars:
-            record.update(
-                status="complete",
-                selected_attempt=len(record["attempts"]) - 1,
-                completed_at=_now(),
+        time.sleep(pause_ms / 1000)
+        anchor_frame = _snapshot(client, main)
+        record["fallback_start_frame_sha256"] = _frame_hash(anchor_frame)
+
+        blocks: list[dict[str, Any]] = []
+        block_texts: list[str] = []
+        blocks_file = ""
+        reached_end = False
+        for block_index in range(1, max_blocks + 1):
+            windows_before = _desktop_windows(client)
+            previous_handles = {int(window["handle"]) for window in windows_before}
+            open_error: Exception | None = None
+            try:
+                _input_sequence(
+                    client,
+                    window=main,
+                    checkpoint=(
+                        f"{checkpoint}-open-edit-list-{index:03d}-{block_index:05d}"
+                    ),
+                    operations=[
+                        {
+                            "operation": "click",
+                            "x": menu_x,
+                            "y": menu_y,
+                            "pause_ms": pause_ms,
+                        },
+                        {
+                            "operation": "click",
+                            "x": list_x,
+                            "y": list_y,
+                            "pause_ms": pause_ms,
+                        },
+                    ],
+                )
+            except Exception as exc:
+                if not _is_post_action_unavailable(exc):
+                    raise
+                open_error = exc
+
+            popup = _wait_for_edit_list_popup(
+                client,
+                main=main,
+                previous_handles=previous_handles,
+                timeout_seconds=popup_wait_seconds,
             )
-        else:
-            record["errors"].append(
-                f"{method} copy returned only {attempt['characters']} characters"
+            if popup is None:
+                detail = f": {open_error}" if open_error is not None else ""
+                raise RuntimeError(
+                    "Edit-menu clicks did not create a new same-PID popup whose title "
+                    f"starts with {EDIT_LIST_TITLE_PREFIX!r}{detail}"
+                ) from open_error
+            if open_error is not None:
+                record["warnings"].append(
+                    "Edit-menu open returned post-action worker_unavailable, but the exact "
+                    f"new popup appeared: {str(open_error)[:500]}"
+                )
+
+            copied = False
+            try:
+                previous_hash = _clipboard_hash_best_effort(client, popup)
+                _input_sequence(
+                    client,
+                    window=popup,
+                    checkpoint=(
+                        f"{checkpoint}-copy-edit-list-{index:03d}-{block_index:05d}"
+                    ),
+                    operations=[
+                        {"operation": "key_ctrl_a", "pause_ms": pause_ms},
+                        {"operation": "key_ctrl_c", "pause_ms": pause_ms},
+                    ],
+                )
+                clipboard = _clipboard(client, popup)
+                _require_changed_clipboard(
+                    clipboard,
+                    previous_hash=previous_hash,
+                    method=f"edit-list block {block_index}",
+                )
+                if not str(clipboard["text"]).strip():
+                    raise RuntimeError(
+                        f"edit-list block {block_index} returned empty Unicode text"
+                    )
+                block, block_text = _save_block(
+                    output_dir,
+                    stem=stem,
+                    block_index=block_index,
+                    clipboard=clipboard,
+                    popup=popup,
+                )
+                copied = True
+            finally:
+                try:
+                    _input_sequence(
+                        client,
+                        window=popup,
+                        checkpoint=(
+                            f"{checkpoint}-close-edit-list-{index:03d}-{block_index:05d}"
+                        ),
+                        operations=[
+                            {"operation": "key_escape", "pause_ms": pause_ms}
+                        ],
+                    )
+                except Exception as exc:
+                    record["fatal_cleanup_error"] = True
+                    raise RuntimeError(f"edit-list cleanup failed: {exc}") from exc
+                if not _wait_for_window_closed(
+                    client,
+                    handle=int(popup["handle"]),
+                    timeout_seconds=popup_wait_seconds,
+                ):
+                    record["fatal_cleanup_error"] = True
+                    raise RuntimeError("edit-list popup remained open after Escape")
+
+            if not copied:
+                raise RuntimeError(f"edit-list block {block_index} was not copied")
+            blocks.append(block)
+            block_texts.append(block_text)
+            blocks_file = _write_blocks_metadata(
+                output_dir,
+                stem=stem,
+                program=program,
+                blocks=blocks,
+                complete=False,
             )
-    except Exception as exc:
-        record["errors"].append(f"{method} copy: {exc}")
-    finally:
-        try:
+
+            main = _main_window(
+                _desktop_windows(client),
+                process_id=process_id,
+                title=inventory_title,
+            )
+            before = _snapshot(client, main)
+            before_hash = _frame_hash(before)
             _input_sequence(
                 client,
-                window=edit_window,
-                checkpoint=f"{checkpoint}-close-edit-list-{index:03d}",
-                operations=[{"operation": "key_escape", "pause_ms": pause_ms}],
+                window=main,
+                checkpoint=(
+                    f"{checkpoint}-next-block-{index:03d}-{block_index:05d}"
+                ),
+                operations=[
+                    {"operation": "key_ctrl_down", "pause_ms": pause_ms}
+                ],
             )
-        except Exception as exc:
-            cleanup_error = f"edit-list cleanup failed: {exc}"
-            record["errors"].append(cleanup_error)
-    if cleanup_error:
-        record["fatal_cleanup_error"] = True
+            time.sleep(pause_ms / 1000)
+            after_hash = _frame_hash(_snapshot(client, main))
+            block["frame_before_ctrl_down_sha256"] = before_hash
+            block["frame_after_ctrl_down_sha256"] = after_hash
+            block["end_detected"] = before_hash == after_hash
+            blocks_file = _write_blocks_metadata(
+                output_dir,
+                stem=stem,
+                program=program,
+                blocks=blocks,
+                complete=block["end_detected"],
+            )
+            if block["end_detected"]:
+                reached_end = True
+                break
+
+        if not reached_end:
+            raise RuntimeError(
+                f"edit-list traversal reached the hard cap of {max_blocks} blocks"
+            )
+        joined = _join_block_texts(block_texts)
+        if not joined.strip():
+            raise RuntimeError("edit-list traversal produced no Unicode text")
+        attempt = _save_text_attempt(
+            output_dir,
+            stem=stem,
+            method="edit-list-blocks",
+            text=joined,
+        )
+        attempt.update(block_count=len(blocks), blocks_file=blocks_file)
+        record["attempts"].append(attempt)
+        record["blocks"] = blocks
+        record.update(
+            status="complete",
+            selected_attempt=len(record["attempts"]) - 1,
+            completed_at=_now(),
+        )
+    except Exception as exc:
+        record["errors"].append(f"edit-list traversal: {exc}")
     if record["status"] != "complete":
         record.update(status="error", completed_at=_now())
     return record
@@ -668,8 +920,9 @@ def run(args: argparse.Namespace) -> int:
         },
         coordinates={
             "space": args.coordinate_space,
-            "x": args.content_x,
-            "y": args.content_y,
+            "block_anchor": {"x": args.content_x, "y": args.content_y},
+            "edit_menu": {"x": args.edit_menu_x, "y": args.edit_menu_y},
+            "edit_list": {"x": args.edit_list_x, "y": args.edit_list_y},
         },
     )
     inventory_title = str(inventory["window_title"])
@@ -698,9 +951,14 @@ def run(args: argparse.Namespace) -> int:
                 coordinate_space=args.coordinate_space,
                 content_x=args.content_x,
                 content_y=args.content_y,
+                edit_menu_x=args.edit_menu_x,
+                edit_menu_y=args.edit_menu_y,
+                edit_list_x=args.edit_list_x,
+                edit_list_y=args.edit_list_y,
                 min_text_chars=args.min_text_chars,
                 pause_ms=args.pause_ms,
                 popup_wait_seconds=args.popup_wait_seconds,
+                max_blocks=args.max_blocks,
             )
         except Exception as exc:
             record = {
@@ -746,18 +1004,55 @@ def main() -> int:
     parser.add_argument(
         "--coordinate-space", choices=("normalized", "pixels"), default="normalized"
     )
-    parser.add_argument("--content-x", type=int, default=650)
-    parser.add_argument("--content-y", type=int, default=450)
+    parser.add_argument(
+        "--content-x",
+        type=int,
+        default=724,
+        help="initial empty ladder-cell anchor X (default: normalized live 1400/1936)",
+    )
+    parser.add_argument(
+        "--content-y",
+        type=int,
+        default=287,
+        help="initial empty ladder-cell anchor Y (default: normalized live 300/1048)",
+    )
+    parser.add_argument(
+        "--edit-menu-x",
+        type=int,
+        default=44,
+        help="Edit menu X (default: normalized live 85/1936)",
+    )
+    parser.add_argument(
+        "--edit-menu-y",
+        type=int,
+        default=40,
+        help="Edit menu Y (default: normalized live 42/1048)",
+    )
+    parser.add_argument(
+        "--edit-list-x",
+        type=int,
+        default=72,
+        help="List Edit item X (default: normalized live 140/1936)",
+    )
+    parser.add_argument(
+        "--edit-list-y",
+        type=int,
+        default=616,
+        help="List Edit item Y (default: normalized live 645/1048)",
+    )
     parser.add_argument("--min-text-chars", type=int, default=20)
     parser.add_argument("--pause-ms", type=int, default=180)
     parser.add_argument("--popup-wait-seconds", type=float, default=0.6)
+    parser.add_argument("--max-blocks", type=int, default=10_000)
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
     if not args.apply:
         raise SystemExit("explicit --apply is required for UI selection/copy actions")
-    if args.min_text_chars < 1 or args.limit < 0:
-        raise SystemExit("--min-text-chars must be positive and --limit cannot be negative")
+    if args.min_text_chars < 1 or args.limit < 0 or args.max_blocks < 1:
+        raise SystemExit(
+            "--min-text-chars/--max-blocks must be positive and --limit cannot be negative"
+        )
     if not 0 <= args.pause_ms <= 1000 or not 0 <= args.popup_wait_seconds <= 10:
         raise SystemExit("pause values are outside worker bounds")
     return run(args)

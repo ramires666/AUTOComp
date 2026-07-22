@@ -1,11 +1,17 @@
 from __future__ import annotations
 
+import sys
 from dataclasses import dataclass
 
 import pytest
 from PIL import Image
 
-from autocomp.desktop import DesktopInputOperation, UniversalDesktopAdapter
+from autocomp.desktop import (
+    DesktopClipboardFormat,
+    DesktopClipboardSnapshot,
+    DesktopInputOperation,
+    UniversalDesktopAdapter,
+)
 from autocomp.desktop import adapter as adapter_module
 
 
@@ -384,8 +390,12 @@ def test_double_click_and_wheel_use_supported_wrapper_methods() -> None:
         (DesktopInputOperation.KEY_CTRL_A, "^a"),
         (DesktopInputOperation.KEY_CTRL_C, "^c"),
         (DesktopInputOperation.KEY_CTRL_D, "^d"),
+        (DesktopInputOperation.KEY_CTRL_DOWN, "^{DOWN}"),
+        (DesktopInputOperation.KEY_CTRL_END, "^{END}"),
         (DesktopInputOperation.KEY_CTRL_HOME, "^{HOME}"),
         (DesktopInputOperation.KEY_CTRL_SHIFT_END, "^+{END}"),
+        (DesktopInputOperation.KEY_CTRL_UP, "^{UP}"),
+        (DesktopInputOperation.KEY_CTRL_V, "^v"),
         (DesktopInputOperation.KEY_F2, "{F2}"),
         (DesktopInputOperation.TAB, "{TAB}"),
         (DesktopInputOperation.SHIFT_TAB, "+{TAB}"),
@@ -444,6 +454,106 @@ def test_clipboard_text_rejects_response_larger_than_eight_mibibytes() -> None:
             expected_pid=11,
             expected_title="Any App",
         )
+
+
+def test_clipboard_snapshot_is_pinned_and_returns_bounded_typed_formats() -> None:
+    window = _Window(101, "Any App", 11, (0, 0, 100, 100))
+    adapter = _Adapter(window)
+    expected = DesktopClipboardSnapshot(
+        formats=(DesktopClipboardFormat(13, "CF_UNICODETEXT", "text", text="中文"),),
+        format_count=1,
+        returned_data_bytes=6,
+        truncated=False,
+    )
+    adapter._clipboard_snapshot = lambda: expected  # type: ignore[method-assign]
+
+    result = adapter.clipboard_snapshot(
+        handle=101,
+        expected_pid=11,
+        expected_title="Any App",
+    )
+
+    assert result == expected
+
+
+def test_clipboard_format_entry_encodes_bytes_and_enforces_limits(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    binary, returned = UniversalDesktopAdapter._clipboard_format_entry(
+        format_id=49152,
+        name="Vendor Format",
+        data=b"\x00\xff",
+        remaining_bytes=100,
+    )
+    unsupported, unsupported_returned = UniversalDesktopAdapter._clipboard_format_entry(
+        format_id=2,
+        name="CF_BITMAP",
+        data=12345,
+        remaining_bytes=100,
+    )
+    total_limited, total_returned = UniversalDesktopAdapter._clipboard_format_entry(
+        format_id=49152,
+        name="Vendor Format",
+        data=b"\x00\xff",
+        remaining_bytes=3,
+    )
+    monkeypatch.setattr(adapter_module, "_MAX_CLIPBOARD_FORMAT_BYTES", 1)
+    individual_limited, individual_returned = UniversalDesktopAdapter._clipboard_format_entry(
+        format_id=49152,
+        name="Vendor Format",
+        data=b"\x00\xff",
+        remaining_bytes=100,
+    )
+
+    assert binary.data_base64 == "AP8="
+    assert binary.byte_length == 2
+    assert len(binary.sha256) == 64
+    assert returned == 4
+    assert unsupported.data_type == "int"
+    assert unsupported.error == "unsupported clipboard data type"
+    assert unsupported_returned == 0
+    assert total_limited.data_base64 is None
+    assert "total data limit" in total_limited.error
+    assert total_returned == 0
+    assert individual_limited.data_base64 is None
+    assert "individual data limit" in individual_limited.error
+    assert individual_returned == 0
+
+
+def test_registered_clipboard_handle_falls_back_to_bounded_hglobal(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class _Clipboard:
+        def OpenClipboard(self) -> None:
+            pass
+
+        def CloseClipboard(self) -> None:
+            pass
+
+        def EnumClipboardFormats(self, current: int) -> int:
+            return 49152 if current == 0 else 0
+
+        def GetClipboardFormatName(self, format_id: int) -> str:
+            assert format_id == 49152
+            return "KV Custom Format"
+
+        def GetClipboardData(self, format_id: int) -> int:
+            assert format_id == 49152
+            return 12345
+
+    monkeypatch.setitem(sys.modules, "win32clipboard", _Clipboard())
+    monkeypatch.setattr(
+        UniversalDesktopAdapter,
+        "_clipboard_hglobal_bytes",
+        staticmethod(lambda format_id: (b"\x01\x02", 2, "")),
+    )
+
+    snapshot = UniversalDesktopAdapter._clipboard_snapshot()
+
+    assert snapshot.format_count == 1
+    assert snapshot.formats[0].name == "KV Custom Format"
+    assert snapshot.formats[0].data_base64 == "AQI="
+    assert snapshot.formats[0].byte_length == 2
 
 
 def test_unknown_operation_and_stale_identity_fail_before_input() -> None:

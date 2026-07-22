@@ -5,7 +5,13 @@ from pathlib import Path
 
 import pytest
 
-from autocomp.desktop import DesktopClipboardText, DesktopFrame, DesktopWindow
+from autocomp.desktop import (
+    DesktopClipboardFormat,
+    DesktopClipboardSnapshot,
+    DesktopClipboardText,
+    DesktopFrame,
+    DesktopWindow,
+)
 from autocomp.worker.adapter import FakeKVStudioAdapter
 from autocomp.worker.http import WorkerHttpServer
 from autocomp.worker.models import ActionRequest, ActionResult, WindowSnapshot
@@ -50,6 +56,17 @@ class HttpDesktopStub:
     ) -> DesktopClipboardText:
         del handle, expected_pid, expected_title
         return DesktopClipboardText("XRF assay", 9, 9, "b" * 64)
+
+    def clipboard_snapshot(
+        self, *, handle: int, expected_pid: int, expected_title: str
+    ) -> DesktopClipboardSnapshot:
+        del handle, expected_pid, expected_title
+        return DesktopClipboardSnapshot(
+            (DesktopClipboardFormat(13, "CF_UNICODETEXT", "text", text="XRF"),),
+            1,
+            3,
+            False,
+        )
 
     def input(
         self,
@@ -161,6 +178,9 @@ def test_capabilities_explicitly_exclude_shell_input_and_plc(server) -> None:
         "desktop_png_bytes": 64 * 1024 * 1024,
         "enumerated_owned_windows": 64,
         "desktop_clipboard_utf8_bytes": 8 * 1024 * 1024,
+        "desktop_clipboard_formats": 64,
+        "desktop_clipboard_format_bytes": 8 * 1024 * 1024,
+        "desktop_clipboard_snapshot_bytes": 16 * 1024 * 1024,
     }
 
 
@@ -273,12 +293,17 @@ def test_http_exposes_desktop_actions_only_when_adapter_is_wired(tmp_path: Path)
     assert {
         "key_ctrl_c",
         "key_ctrl_d",
+        "key_ctrl_down",
+        "key_ctrl_end",
         "key_ctrl_home",
         "key_ctrl_shift_end",
+        "key_ctrl_up",
+        "key_ctrl_v",
     }.issubset(capabilities["desktop_input_operations"])
     assert "desktop_windows" in capabilities["actions"]
     assert "desktop_snapshot" in capabilities["actions"]
     assert "desktop_clipboard_text" in capabilities["actions"]
+    assert "desktop_clipboard_snapshot" in capabilities["actions"]
     assert "desktop_input" in capabilities["mutating_actions"]
     assert "desktop_input_sequence" in capabilities["mutating_actions"]
     assert windows_status == 200
@@ -326,6 +351,7 @@ def test_desktop_only_worker_exposes_no_application_specific_actions(
         "desktop_windows",
         "desktop_snapshot",
         "desktop_clipboard_text",
+        "desktop_clipboard_snapshot",
         "desktop_input",
         "desktop_input_sequence",
     }

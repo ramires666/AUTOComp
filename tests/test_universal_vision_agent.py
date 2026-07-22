@@ -102,7 +102,16 @@ def test_atomic_input_payload_contains_only_worker_protocol_fields(
 
 @pytest.mark.parametrize(
     "operation",
-    ["key_ctrl_c", "key_ctrl_d", "key_ctrl_home", "key_ctrl_shift_end"],
+    [
+        "key_ctrl_c",
+        "key_ctrl_d",
+        "key_ctrl_down",
+        "key_ctrl_end",
+        "key_ctrl_home",
+        "key_ctrl_shift_end",
+        "key_ctrl_up",
+        "key_ctrl_v",
+    ],
 )
 def test_fixed_selection_and_copy_shortcuts_are_in_runner_schema(
     agent: dict[str, Any], operation: str

@@ -6,7 +6,12 @@ import re
 import time
 from typing import Protocol
 
-from autocomp.desktop import DesktopClipboardText, DesktopFrame, DesktopWindow
+from autocomp.desktop import (
+    DesktopClipboardSnapshot,
+    DesktopClipboardText,
+    DesktopFrame,
+    DesktopWindow,
+)
 
 from .adapter import KVStudioAdapter
 from .models import ActionKind, ActionRequest, ActionResult
@@ -32,6 +37,14 @@ class DesktopAdapter(Protocol):
         expected_pid: int,
         expected_title: str,
     ) -> DesktopClipboardText: ...
+
+    def clipboard_snapshot(
+        self,
+        *,
+        handle: int,
+        expected_pid: int,
+        expected_title: str,
+    ) -> DesktopClipboardSnapshot: ...
 
     def input(
         self,
@@ -102,6 +115,19 @@ class DesktopWorker:
                 message="Pinned process Unicode clipboard text collected (read-only).",
                 audit={"mode": "dry-run", "operation": "desktop_clipboard_text"},
                 desktop_clipboard_text=desktop.clipboard_text(
+                    handle=request.window_handle,
+                    expected_pid=request.expected_pid,
+                    expected_title=request.expected_title,
+                ),
+            )
+        if request.kind is ActionKind.DESKTOP_CLIPBOARD_SNAPSHOT:
+            desktop = self._require_desktop_adapter()
+            return ActionResult(
+                kind=request.kind,
+                performed=False,
+                message="Pinned process clipboard formats collected (read-only).",
+                audit={"mode": "dry-run", "operation": "desktop_clipboard_snapshot"},
+                desktop_clipboard_snapshot=desktop.clipboard_snapshot(
                     handle=request.window_handle,
                     expected_pid=request.expected_pid,
                     expected_title=request.expected_title,

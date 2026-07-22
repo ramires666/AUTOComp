@@ -12,13 +12,24 @@ from contextlib import suppress
 from io import BytesIO
 from typing import Any
 
-from .models import DesktopClipboardText, DesktopFrame, DesktopInputOperation, DesktopWindow
+from .models import (
+    DesktopClipboardFormat,
+    DesktopClipboardSnapshot,
+    DesktopClipboardText,
+    DesktopFrame,
+    DesktopInputOperation,
+    DesktopWindow,
+)
 
 _MAX_FRAME_PIXELS = 50_000_000
 _MAX_PNG_BYTES = 64 * 1024 * 1024
 _MAX_TEXT_LENGTH = 4096
 _MAX_DIALOG_WINDOWS = 64
 _MAX_CLIPBOARD_UTF8_BYTES = 8 * 1024 * 1024
+_MAX_CLIPBOARD_FORMATS = 64
+_MAX_CLIPBOARD_FORMAT_BYTES = 8 * 1024 * 1024
+_MAX_CLIPBOARD_SNAPSHOT_DATA_BYTES = 16 * 1024 * 1024
+_CLIPBOARD_SNAPSHOT_METADATA_RESERVE = 128 * 1024
 _CLIPBOARD_LOCK = threading.Lock()
 _DPI_LOCK = threading.Lock()
 _DPI_INITIALIZED = False
@@ -161,6 +172,23 @@ class UniversalDesktopAdapter:
             sha256=hashlib.sha256(encoded).hexdigest(),
         )
 
+    def clipboard_snapshot(
+        self,
+        *,
+        handle: int,
+        expected_pid: int,
+        expected_title: str,
+    ) -> DesktopClipboardSnapshot:
+        """Enumerate bounded clipboard formats while the pinned process owns focus."""
+        window = self._select_window(handle, expected_pid, expected_title)
+        if window.is_minimized():
+            raise RuntimeError("selected window is minimized")
+        self._require_process_foreground_and_focus(expected_pid)
+        snapshot = self._clipboard_snapshot()
+        self._select_window(handle, expected_pid, expected_title)
+        self._require_process_foreground_and_focus(expected_pid)
+        return snapshot
+
     def input(
         self,
         *,
@@ -257,8 +285,12 @@ class UniversalDesktopAdapter:
                 DesktopInputOperation.KEY_CTRL_A: "^a",
                 DesktopInputOperation.KEY_CTRL_C: "^c",
                 DesktopInputOperation.KEY_CTRL_D: "^d",
+                DesktopInputOperation.KEY_CTRL_DOWN: "^{DOWN}",
+                DesktopInputOperation.KEY_CTRL_END: "^{END}",
                 DesktopInputOperation.KEY_CTRL_HOME: "^{HOME}",
                 DesktopInputOperation.KEY_CTRL_SHIFT_END: "^+{END}",
+                DesktopInputOperation.KEY_CTRL_UP: "^{UP}",
+                DesktopInputOperation.KEY_CTRL_V: "^v",
                 DesktopInputOperation.KEY_F2: "{F2}",
                 DesktopInputOperation.TAB: "{TAB}",
                 DesktopInputOperation.SHIFT_TAB: "+{TAB}",
@@ -491,6 +523,251 @@ class UniversalDesktopAdapter:
         if not isinstance(text, str):
             raise RuntimeError("CF_UNICODETEXT clipboard data is not text")
         return text
+
+    @classmethod
+    def _clipboard_snapshot(cls) -> DesktopClipboardSnapshot:
+        import win32clipboard
+
+        cls._open_clipboard(win32clipboard)
+        try:
+            format_ids: list[int] = []
+            current = 0
+            while len(format_ids) <= _MAX_CLIPBOARD_FORMATS:
+                current = int(win32clipboard.EnumClipboardFormats(current) or 0)
+                if not current:
+                    break
+                format_ids.append(current)
+            truncated = len(format_ids) > _MAX_CLIPBOARD_FORMATS
+            formats: list[DesktopClipboardFormat] = []
+            returned_data_bytes = 0
+            for format_id in format_ids[:_MAX_CLIPBOARD_FORMATS]:
+                name = cls._clipboard_format_name(win32clipboard, format_id)
+                custom = format_id >= 0xC000 or not name.startswith(("CF_", "FORMAT_"))
+                try:
+                    data = win32clipboard.GetClipboardData(format_id)
+                except Exception as exc:
+                    if custom:
+                        entry, data_bytes = cls._clipboard_hglobal_entry(
+                            format_id=format_id,
+                            name=name,
+                            remaining_bytes=(
+                                _MAX_CLIPBOARD_SNAPSHOT_DATA_BYTES
+                                - _CLIPBOARD_SNAPSHOT_METADATA_RESERVE
+                                - returned_data_bytes
+                            ),
+                        )
+                    else:
+                        entry = DesktopClipboardFormat(
+                            format_id=format_id,
+                            name=name,
+                            data_type="error",
+                            error=f"{type(exc).__name__}: {exc}"[:512],
+                        )
+                        data_bytes = 0
+                else:
+                    if custom and not isinstance(
+                        data, (str, bytes, bytearray, memoryview)
+                    ):
+                        entry, data_bytes = cls._clipboard_hglobal_entry(
+                            format_id=format_id,
+                            name=name,
+                            remaining_bytes=(
+                                _MAX_CLIPBOARD_SNAPSHOT_DATA_BYTES
+                                - _CLIPBOARD_SNAPSHOT_METADATA_RESERVE
+                                - returned_data_bytes
+                            ),
+                        )
+                    else:
+                        entry, data_bytes = cls._clipboard_format_entry(
+                            format_id=format_id,
+                            name=name,
+                            data=data,
+                            remaining_bytes=(
+                                _MAX_CLIPBOARD_SNAPSHOT_DATA_BYTES
+                                - _CLIPBOARD_SNAPSHOT_METADATA_RESERVE
+                                - returned_data_bytes
+                            ),
+                        )
+                formats.append(entry)
+                returned_data_bytes += data_bytes
+        finally:
+            win32clipboard.CloseClipboard()
+        return DesktopClipboardSnapshot(
+            formats=tuple(formats),
+            format_count=len(formats),
+            returned_data_bytes=returned_data_bytes,
+            truncated=truncated,
+        )
+
+    @staticmethod
+    def _clipboard_format_name(win32clipboard, format_id: int) -> str:  # type: ignore[no-untyped-def]
+        standard = {
+            1: "CF_TEXT",
+            2: "CF_BITMAP",
+            3: "CF_METAFILEPICT",
+            4: "CF_SYLK",
+            5: "CF_DIF",
+            6: "CF_TIFF",
+            7: "CF_OEMTEXT",
+            8: "CF_DIB",
+            9: "CF_PALETTE",
+            10: "CF_PENDATA",
+            11: "CF_RIFF",
+            12: "CF_WAVE",
+            13: "CF_UNICODETEXT",
+            14: "CF_ENHMETAFILE",
+            15: "CF_HDROP",
+            16: "CF_LOCALE",
+            17: "CF_DIBV5",
+        }
+        if format_id in standard:
+            return standard[format_id]
+        try:
+            return str(win32clipboard.GetClipboardFormatName(format_id))
+        except Exception:
+            return f"FORMAT_{format_id}"
+
+    @staticmethod
+    def _clipboard_format_entry(
+        *,
+        format_id: int,
+        name: str,
+        data: object,
+        remaining_bytes: int,
+    ) -> tuple[DesktopClipboardFormat, int]:
+        if isinstance(data, str):
+            raw = data.encode("utf-8")
+            data_type = "text"
+            returned_size = len(raw)
+            encoded_data: str | None = data
+            base64_data: str | None = None
+        elif isinstance(data, (bytes, bytearray, memoryview)):
+            raw = bytes(data)
+            data_type = "bytes"
+            base64_data = base64.b64encode(raw).decode("ascii")
+            returned_size = len(base64_data)
+            encoded_data = None
+        else:
+            return (
+                DesktopClipboardFormat(
+                    format_id=format_id,
+                    name=name,
+                    data_type=type(data).__name__,
+                    error="unsupported clipboard data type",
+                ),
+                0,
+            )
+        digest = hashlib.sha256(raw).hexdigest()
+        if len(raw) > _MAX_CLIPBOARD_FORMAT_BYTES:
+            return (
+                DesktopClipboardFormat(
+                    format_id=format_id,
+                    name=name,
+                    data_type=data_type,
+                    byte_length=len(raw),
+                    sha256=digest,
+                    error="clipboard format exceeds the individual data limit",
+                ),
+                0,
+            )
+        if returned_size > remaining_bytes:
+            return (
+                DesktopClipboardFormat(
+                    format_id=format_id,
+                    name=name,
+                    data_type=data_type,
+                    byte_length=len(raw),
+                    sha256=digest,
+                    error="clipboard snapshot exceeds the total data limit",
+                ),
+                0,
+            )
+        return (
+            DesktopClipboardFormat(
+                format_id=format_id,
+                name=name,
+                data_type=data_type,
+                text=encoded_data,
+                data_base64=base64_data,
+                byte_length=len(raw),
+                sha256=digest,
+            ),
+            returned_size,
+        )
+
+    @classmethod
+    def _clipboard_hglobal_entry(
+        cls,
+        *,
+        format_id: int,
+        name: str,
+        remaining_bytes: int,
+    ) -> tuple[DesktopClipboardFormat, int]:
+        try:
+            raw, byte_length, error = cls._clipboard_hglobal_bytes(format_id)
+        except Exception as exc:
+            return (
+                DesktopClipboardFormat(
+                    format_id=format_id,
+                    name=name,
+                    data_type="error",
+                    error=f"{type(exc).__name__}: {exc}"[:512],
+                ),
+                0,
+            )
+        if raw is None:
+            return (
+                DesktopClipboardFormat(
+                    format_id=format_id,
+                    name=name,
+                    data_type="bytes",
+                    byte_length=byte_length,
+                    error=error,
+                ),
+                0,
+            )
+        return cls._clipboard_format_entry(
+            format_id=format_id,
+            name=name,
+            data=raw,
+            remaining_bytes=remaining_bytes,
+        )
+
+    @staticmethod
+    def _clipboard_hglobal_bytes(format_id: int) -> tuple[bytes | None, int, str]:
+        """Copy one registered-format HGLOBAL while the clipboard is already open."""
+        from ctypes import wintypes
+
+        user32 = ctypes.windll.user32
+        kernel32 = ctypes.windll.kernel32
+        user32.GetClipboardData.argtypes = [wintypes.UINT]
+        user32.GetClipboardData.restype = wintypes.HANDLE
+        kernel32.GlobalSize.argtypes = [wintypes.HANDLE]
+        kernel32.GlobalSize.restype = ctypes.c_size_t
+        kernel32.GlobalLock.argtypes = [wintypes.HANDLE]
+        kernel32.GlobalLock.restype = wintypes.LPVOID
+        kernel32.GlobalUnlock.argtypes = [wintypes.HANDLE]
+        kernel32.GlobalUnlock.restype = wintypes.BOOL
+
+        handle = user32.GetClipboardData(format_id)
+        if not handle:
+            return None, 0, "GetClipboardData returned no HGLOBAL"
+        byte_length = int(kernel32.GlobalSize(handle))
+        if byte_length <= 0:
+            return None, 0, "clipboard handle is not a readable HGLOBAL"
+        if byte_length > _MAX_CLIPBOARD_FORMAT_BYTES:
+            return (
+                None,
+                byte_length,
+                "clipboard format exceeds the individual data limit",
+            )
+        pointer = kernel32.GlobalLock(handle)
+        if not pointer:
+            return None, byte_length, "GlobalLock failed for clipboard HGLOBAL"
+        try:
+            return ctypes.string_at(pointer, byte_length), byte_length, ""
+        finally:
+            kernel32.GlobalUnlock(handle)
 
     @staticmethod
     def _send_keys(keys: str) -> None:

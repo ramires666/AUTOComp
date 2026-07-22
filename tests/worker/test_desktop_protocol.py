@@ -6,6 +6,8 @@ from dataclasses import replace
 import pytest
 
 from autocomp.desktop import (
+    DesktopClipboardFormat,
+    DesktopClipboardSnapshot,
     DesktopClipboardText,
     DesktopFrame,
     DesktopInputOperation,
@@ -36,8 +38,24 @@ class DesktopStub:
             utf8_bytes=9,
             sha256="b" * 64,
         )
+        self.clipboard_snapshot_result = DesktopClipboardSnapshot(
+            formats=(
+                DesktopClipboardFormat(
+                    49152,
+                    "Vendor Format",
+                    "bytes",
+                    data_base64="AP8=",
+                    byte_length=2,
+                    sha256="c" * 64,
+                ),
+            ),
+            format_count=1,
+            returned_data_bytes=4,
+            truncated=False,
+        )
         self.snapshot_calls: list[dict[str, object]] = []
         self.clipboard_calls: list[dict[str, object]] = []
+        self.clipboard_snapshot_calls: list[dict[str, object]] = []
         self.input_calls: list[dict[str, object]] = []
 
     def enumerate_windows(self) -> tuple[DesktopWindow, ...]:
@@ -74,6 +92,22 @@ class DesktopStub:
             }
         )
         return self.clipboard
+
+    def clipboard_snapshot(
+        self,
+        *,
+        handle: int,
+        expected_pid: int,
+        expected_title: str,
+    ) -> DesktopClipboardSnapshot:
+        self.clipboard_snapshot_calls.append(
+            {
+                "handle": handle,
+                "expected_pid": expected_pid,
+                "expected_title": expected_title,
+            }
+        )
+        return self.clipboard_snapshot_result
 
     def input(
         self,
@@ -154,10 +188,19 @@ def test_desktop_window_and_snapshot_payloads_are_exact_and_typed() -> None:
             "expected_title": "Calculator",
         }
     )
+    clipboard_snapshot = action_request_from_payload(
+        {
+            "action": "desktop_clipboard_snapshot",
+            "window_handle": 101,
+            "expected_pid": 202,
+            "expected_title": "Calculator",
+        }
+    )
 
     assert windows.kind is ActionKind.DESKTOP_WINDOWS
     assert snapshot.kind is ActionKind.DESKTOP_SNAPSHOT
     assert clipboard.kind is ActionKind.DESKTOP_CLIPBOARD_TEXT
+    assert clipboard_snapshot.kind is ActionKind.DESKTOP_CLIPBOARD_SNAPSHOT
     assert snapshot.window_handle == 101
     assert snapshot.expected_pid == 202
     assert snapshot.expected_title == "Calculator"
@@ -186,8 +229,12 @@ def test_desktop_window_and_snapshot_payloads_are_exact_and_typed() -> None:
         ("key_ctrl_a", {}),
         ("key_ctrl_c", {}),
         ("key_ctrl_d", {}),
+        ("key_ctrl_down", {}),
+        ("key_ctrl_end", {}),
         ("key_ctrl_home", {}),
         ("key_ctrl_shift_end", {}),
+        ("key_ctrl_up", {}),
+        ("key_ctrl_v", {}),
         ("key_f2", {}),
         ("tab", {}),
         ("shift_tab", {}),
@@ -282,6 +329,14 @@ def test_desktop_read_actions_return_structured_adapter_results() -> None:
             expected_title="Calculator",
         )
     )
+    clipboard_snapshot = worker.execute(
+        ActionRequest(
+            ActionKind.DESKTOP_CLIPBOARD_SNAPSHOT,
+            window_handle=101,
+            expected_pid=202,
+            expected_title="Calculator",
+        )
+    )
 
     assert worker.desktop_available is True
     assert windows.performed is False
@@ -289,10 +344,18 @@ def test_desktop_read_actions_return_structured_adapter_results() -> None:
     assert frame.desktop_snapshot == desktop.frame
     assert clipboard.performed is False
     assert clipboard.desktop_clipboard_text == desktop.clipboard
+    assert clipboard_snapshot.performed is False
+    assert (
+        clipboard_snapshot.desktop_clipboard_snapshot
+        == desktop.clipboard_snapshot_result
+    )
     assert desktop.snapshot_calls == [
         {"handle": 101, "expected_pid": 202, "expected_title": "Calculator"}
     ]
     assert desktop.clipboard_calls == [
+        {"handle": 101, "expected_pid": 202, "expected_title": "Calculator"}
+    ]
+    assert desktop.clipboard_snapshot_calls == [
         {"handle": 101, "expected_pid": 202, "expected_title": "Calculator"}
     ]
 

@@ -17,8 +17,12 @@ class DesktopInputOperation(StrEnum):
     KEY_CTRL_A = "key_ctrl_a"
     KEY_CTRL_C = "key_ctrl_c"
     KEY_CTRL_D = "key_ctrl_d"
+    KEY_CTRL_DOWN = "key_ctrl_down"
+    KEY_CTRL_END = "key_ctrl_end"
     KEY_CTRL_HOME = "key_ctrl_home"
     KEY_CTRL_SHIFT_END = "key_ctrl_shift_end"
+    KEY_CTRL_UP = "key_ctrl_up"
+    KEY_CTRL_V = "key_ctrl_v"
     KEY_F2 = "key_f2"
     TAB = "tab"
     SHIFT_TAB = "shift_tab"
@@ -58,3 +62,27 @@ class DesktopClipboardText:
     length: int
     utf8_bytes: int
     sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class DesktopClipboardFormat:
+    """One enumerated clipboard format and optional bounded data."""
+
+    format_id: int
+    name: str
+    data_type: str
+    text: str | None = None
+    data_base64: str | None = None
+    byte_length: int | None = None
+    sha256: str = ""
+    error: str = ""
+
+
+@dataclass(frozen=True, slots=True)
+class DesktopClipboardSnapshot:
+    """A bounded read-only snapshot of the current Windows clipboard."""
+
+    formats: tuple[DesktopClipboardFormat, ...]
+    format_count: int
+    returned_data_bytes: int
+    truncated: bool

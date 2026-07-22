@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 
 from autocomp.desktop import (
+    DesktopClipboardSnapshot,
     DesktopClipboardText,
     DesktopFrame,
     DesktopInputOperation,
@@ -29,6 +30,7 @@ class ActionKind(StrEnum):
     DESKTOP_WINDOWS = "desktop_windows"
     DESKTOP_SNAPSHOT = "desktop_snapshot"
     DESKTOP_CLIPBOARD_TEXT = "desktop_clipboard_text"
+    DESKTOP_CLIPBOARD_SNAPSHOT = "desktop_clipboard_snapshot"
     DESKTOP_INPUT = "desktop_input"
     DESKTOP_INPUT_SEQUENCE = "desktop_input_sequence"
 
@@ -230,6 +232,7 @@ class ActionResult:
     desktop_windows: tuple[DesktopWindow, ...] = ()
     desktop_snapshot: DesktopFrame | None = None
     desktop_clipboard_text: DesktopClipboardText | None = None
+    desktop_clipboard_snapshot: DesktopClipboardSnapshot | None = None
 
 
 def action_request_from_payload(payload: object) -> ActionRequest:
@@ -346,6 +349,10 @@ def action_request_from_payload(payload: object) -> ActionRequest:
             {"action", "window_handle", "expected_pid", "expected_title"},
             {"action", "window_handle", "expected_pid", "expected_title"},
         ),
+        ActionKind.DESKTOP_CLIPBOARD_SNAPSHOT: (
+            {"action", "window_handle", "expected_pid", "expected_title"},
+            {"action", "window_handle", "expected_pid", "expected_title"},
+        ),
         ActionKind.DESKTOP_INPUT: (
             {
                 "action",
@@ -458,6 +465,7 @@ def action_request_from_payload(payload: object) -> ActionRequest:
     if kind in {
         ActionKind.DESKTOP_SNAPSHOT,
         ActionKind.DESKTOP_CLIPBOARD_TEXT,
+        ActionKind.DESKTOP_CLIPBOARD_SNAPSHOT,
         ActionKind.DESKTOP_INPUT,
         ActionKind.DESKTOP_INPUT_SEQUENCE,
     }:

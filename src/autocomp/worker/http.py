@@ -45,6 +45,9 @@ MAX_DESKTOP_FRAME_PIXELS: Final = 50_000_000
 MAX_DESKTOP_PNG_BYTES: Final = 64 * 1024 * 1024
 MAX_ENUMERATED_OWNED_WINDOWS: Final = 64
 MAX_DESKTOP_CLIPBOARD_UTF8_BYTES: Final = 8 * 1024 * 1024
+MAX_DESKTOP_CLIPBOARD_FORMATS: Final = 64
+MAX_DESKTOP_CLIPBOARD_FORMAT_BYTES: Final = 8 * 1024 * 1024
+MAX_DESKTOP_CLIPBOARD_SNAPSHOT_BYTES: Final = 16 * 1024 * 1024
 
 
 def _source_build_id() -> str:
@@ -338,6 +341,7 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                     "DESKTOP_WINDOWS",
                     "DESKTOP_SNAPSHOT",
                     "DESKTOP_CLIPBOARD_TEXT",
+                    "DESKTOP_CLIPBOARD_SNAPSHOT",
                     "DESKTOP_INPUT",
                     "DESKTOP_INPUT_SEQUENCE",
                 )
@@ -397,6 +401,9 @@ def _handler_type(server: WorkerHttpServer) -> type[BaseHTTPRequestHandler]:
                     "desktop_png_bytes": MAX_DESKTOP_PNG_BYTES,
                     "enumerated_owned_windows": MAX_ENUMERATED_OWNED_WINDOWS,
                     "desktop_clipboard_utf8_bytes": MAX_DESKTOP_CLIPBOARD_UTF8_BYTES,
+                    "desktop_clipboard_formats": MAX_DESKTOP_CLIPBOARD_FORMATS,
+                    "desktop_clipboard_format_bytes": MAX_DESKTOP_CLIPBOARD_FORMAT_BYTES,
+                    "desktop_clipboard_snapshot_bytes": MAX_DESKTOP_CLIPBOARD_SNAPSHOT_BYTES,
                 },
             }
 

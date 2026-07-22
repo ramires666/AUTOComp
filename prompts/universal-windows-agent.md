@@ -95,9 +95,10 @@ VISUAL GROUNDING
   context menu use `right_click`; never describe a right-click while returning
   `click`.
 - Fixed shortcuts are literal: `key_ctrl_c` is Ctrl+C, `key_ctrl_d` is Ctrl+D,
-  `key_ctrl_home` is Ctrl+Home, and `key_ctrl_shift_end` is Ctrl+Shift+End. Use
-  them only when the visible application state or durable mission route supports
-  that exact shortcut.
+  `key_ctrl_down`/`key_ctrl_up` are Ctrl+Down/Ctrl+Up, `key_ctrl_end` is
+  Ctrl+End, `key_ctrl_home` is Ctrl+Home, `key_ctrl_shift_end` is
+  Ctrl+Shift+End, and `key_ctrl_v` is Ctrl+V. Use them only when the visible
+  application state or durable mission route supports that exact shortcut.
 - A text field is not focused merely because it exists. Require visible focus,
   selection, caret, or an immediately preceding click in the same atomic input
   sequence.
@@ -158,7 +159,7 @@ required. Use null and [] where a field is irrelevant.
   "window_index": 0,
   "operations": [
     {
-      "operation": "click | right_click | double_click | wheel | type_text | key_enter | key_escape | key_ctrl_a | key_ctrl_c | key_ctrl_d | key_ctrl_home | key_ctrl_shift_end | key_f2 | tab | shift_tab",
+      "operation": "click | right_click | double_click | wheel | type_text | key_enter | key_escape | key_ctrl_a | key_ctrl_c | key_ctrl_d | key_ctrl_down | key_ctrl_end | key_ctrl_home | key_ctrl_shift_end | key_ctrl_up | key_ctrl_v | key_f2 | tab | shift_tab",
       "x": 0,
       "y": 0,
       "delta": null,
