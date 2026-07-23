@@ -1,0 +1,29 @@
+DEVICE:132
+;MODULE:配件寿命提醒
+;MODULE_TYPE:0
+;/*MR2000-MR2015*/
+;<h1/>/*Lifespan Setting*/
+;'Graphite Crucible Tentative Near-End-of-Life90 Times
+LD< DM530 #0
+OR= DM530 #0
+MOV #90 DM530
+;'Graphite Crucible Tentative Lifespan100 Times
+LD< DM531 #0
+OR= DM531 #0
+MOV #100 DM531
+;<h1/>/*Usage Count Record*/
+LD R1508
+AND R1513
+MEP
+INC DM535
+LDP MR1915
+MOV #0 DM535
+;<h1/>/*Lifespan Near Expiration_Reminder*/
+LD>= DM535 DM530
+AND< DM535 DM531
+OUT MR2000
+;<h1/>/*Lifespan Expired_Reminder*/
+LD> DM535 DM531
+OUT MR2002
+END
+ENDH

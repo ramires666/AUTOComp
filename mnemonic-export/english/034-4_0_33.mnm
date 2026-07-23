@@ -1,0 +1,2752 @@
+DEVICE:132
+;MODULE:通信程序
+;MODULE_TYPE:0
+;SCRIPT_TYPE:
+;/*MR20600-21115*/
+;/*MR10000~*/（voice announcement1_Automatic~）
+;<h1/>/*Reset*/
+LDP MR615
+LD MR608
+AND MR609
+ORL
+OR MR610
+OR CR2008
+ZRES MR10000 MR10315
+ZRES @MR000 @MR915
+RES MR20700
+MOV #0 DM10
+ZRES MR20501 MR20915
+MOV #0 DM382
+MOV #0 DM2202
+RES @MR006
+ZRES MR20412 MR20500
+RES MR1700
+MOV #2 Z2
+MPS
+AND MR21011
+MOV #0 Z1
+MRD
+ANB MR21011
+MOV #8 Z1
+MRD
+RES MR21011
+MRD
+RES CR7301
+MRD
+RES CR7201
+MRD
+RES MR21006
+MRD
+RES MR21008
+MRD
+RES MR21009
+MPP
+FMOV #0 @DM0 #60
+LDF R1510
+ORP R1510
+ORP @MR010
+ORF @MR010
+RES CR7201
+RES CR7301
+LD CR2003
+TMR #19 #2
+TMR #29 #2
+;<h1/>/*Alarm*/
+;/*automatic alarm reset：5S Window: No More Than 3 Times，then auto-reset*/
+LD CR7302
+MEP
+INC @DM4
+LD< @DM4 #0
+ORP R1510
+ORF R1510
+ORP @MR010
+ORP @MR002
+MOV #0 @DM4
+LD> @DM4 #0
+AND<= @DM4 #5
+ANB MR1700
+ONDL #1000 @MR003
+CON
+AND @MR003
+OUT @MR002
+LD> @DM4 #5
+ANB @MR002
+ONDL #500 @MR007
+CON
+AND @MR007
+AND MR601
+SET MR1700
+LDP MR615
+OR CR2008
+ORP MR609
+OR @MR002
+MOV #0 DM10
+MOV #0 @DM4
+;/*voice announcement in progress*/
+LD=.D @MR600 #0
+AND=.D @MR800 #0
+AND=.D MR10000 #0
+AND=.D MR10200 #0
+INV
+AND> DM570 #0
+OUT MR21100
+CON
+OUT @MR010
+;/*MR20600-21115*/
+;<h1/>-------Z2=2-------
+;<h1/>/*coarse weighing communication*/（1#）
+;<h1/>A_cancel coarse weighing tare，=2
+LD MR20603
+OR MR20503
+ANB @MR203
+SET @MR203
+LDB R1510
+AND @MR203
+MC
+LD= @DM1 #0
+AND @MR203
+RES MR20613
+MOV #10 @DM1
+LDB @MR010
+AND= @DM1 #10
+ANB CR7303
+ANB T29
+ANB T19
+ANB MR20703
+TMH #20 #10
+LDP T20
+MOV #1 W00
+MOV #6 W02
+MOV #40022 CM7009
+MOV #2 CM7011
+MOV #20 @DM1
+RES MR20713
+SET MR20703
+LD= @DM1 #20
+AND MR20713
+SET MR20613
+MOV #0 @DM1
+MCR
+LDB MR20613
+INV
+RES MR20503
+RES MR20603
+RES MR20703
+RES @MR203
+RES MR20713
+;<h1/>A_coarse weighing tare，=1
+LD MR20604
+OR MR20504
+ANB @MR204
+SET @MR204
+;/*V3.512-21*/
+;fix coarse scale tare failure，gate not opening issue
+LDP MR20514
+ORP MR615
+OR CR2008
+RES @MR204
+RES MR20614
+RES MR20704
+MOV #0 @DM2
+RES MR20514
+LDB R1510
+AND @MR204
+MC
+LD= @DM2 #0
+AND @MR204
+RES MR20614
+MOV #10 @DM2
+LDB @MR010
+AND= @DM2 #10
+ANB CR7303
+ANB T29
+ANB T19
+ANB MR20704
+ANB MR20700
+TMH #21 #10
+LDP T21
+MOV #1 W00
+MOV #6 W02
+MOV #40022 CM7009
+MOV #1 CM7011
+MOV #20 @DM2
+RES MR20714
+SET MR20704
+LD= @DM2 #20
+AND MR20714
+SET MR20614
+MOV #0 @DM2
+MCR
+LDB MR20614
+INV
+RES MR20504
+RES MR20604
+RES MR20704
+RES @MR204
+RES MR20714
+;<h1/>B_coarse weighing zeroing，=1
+;'standard weight default value：500g
+LD= DM384 #0
+OR< DM384 #0
+MOV #500 DM384
+LD MR601
+AND MR20505
+ANB @MR205
+SET @MR205
+LDB R1510
+AND @MR205
+MC
+;/*Step1：disable write protection*/
+LDB @MR010
+AND= @DM3 #0
+ANB CR7303
+ANB T29
+ANB T19
+AND @MR205
+ANB @MR206
+TMH #22 #10
+LDP T22
+SET MR20601
+CON
+MOV #10 @DM3
+LD CR2002
+AND= @DM3 #10
+ANP MR20711
+MOV #20 @DM3
+;/*Step2：coarse weighing zeroing*/
+LDB @MR010
+AND= @DM3 #20
+ANB CR7303
+ANB T29
+ANB MR20705
+TMH #23 #10
+LDP T23
+MOV #1 W00
+MOV #6 W02
+MOV #40023 CM7009
+MOV #1 CM7010
+MOV #1 CM7011
+MOV #30 @DM3
+RES MR20805
+SET MR20705
+LD= @DM3 #30
+AND MR20805
+RES MR20705
+RES MR20505
+MOV #40 @DM3
+;<h1/>B_standard weight calibration
+;/*Step2：standard weight calibration*/
+LD MR20506
+SET @MR206
+LD= @DM3 #40
+AND> DM384 #0
+AND @MR206
+MOV #50 @DM3
+LD= @DM3 #50
+ANB CR7303
+ANB T29
+ANB MR20700
+ANB MR20706
+TMH #24 #10
+LDP T24
+MOV #1 W00
+MOV #6 W02
+MOV #40007 CM7009
+MOV #1 CM7010
+MOV #500 CM7011
+MOV #60 @DM3
+RES MR20806
+SET MR20706
+LD= @DM3 #60
+AND MR20806
+RES @MR205
+RES MR20706
+RES @MR206
+MOV #0 @DM3
+;/*Step3：enable write protection*/
+LD CR2003
+AND= @DM3 #65
+ANB CR7303
+TMH #25 #10
+LDP T25
+SET MR20602
+MOV #70 @DM3
+LD= @DM3 #70
+ANP MR20712
+RES @MR205
+RES MR20602
+MOV #0 @DM3
+MCR
+LD MR20806
+AND @MR206
+RES MR20505
+RES MR20706
+RES @MR206
+;<h1/>C_zero drift setting
+LD MR601
+AND MR20507
+ANB @MR012
+SET @MR012
+RES MR20507
+LDB R1510
+AND @MR012
+MC
+;/*Step1：disable write protection*/
+LDB @MR010
+AND= @DM9 #0
+ANB CR7303
+ANB T29
+ANB T19
+AND @MR012
+TMH #34 #10
+LDP T34
+SET MR20601
+MOV #10 @DM9
+LD CR2002
+AND= @DM9 #10
+ANP MR20711
+MOV #20 @DM9
+LDB @MR010
+AND= @DM9 #20
+ANB CR7303
+ANB T29
+ANB MR20800
+TMH #35 #10
+LDP T35
+MOV #1 W00
+MOV #6 W02
+MOV #40020 CM7009
+MOV #1 CM7010
+MOV #0 CM7011
+MOV #30 @DM9
+RES MR20810
+SET MR20800
+LD= @DM9 #30
+AND MR20810
+RES MR20800
+MOV #40 @DM9
+LDB @MR010
+AND= @DM9 #40
+ANB CR7303
+ANB T29
+ANB MR20801
+TMH #37 #10
+LDP T37
+MOV #1 W00
+MOV #6 W02
+MOV #40012 CM7009
+MOV #1 CM7010
+MOV #1 CM7011
+MOV #50 @DM9
+RES MR20811
+SET MR20801
+LD= @DM9 #35
+AND MR20811
+RES MR20801
+RES @MR012
+MOV #0 @DM9
+MCR
+;<h1/>D_current coarse weighing weight，Z2=2
+;'current coarse weighing weight display_HMI
+;DM382.S=DM2202.S
+;'current coarse weighing weight display_HMI
+;
+;DM382.S=DM2202.S
+LD CR2002
+MOV.S DM2202 DM382
+;
+LDB @MR201
+ANB MR20701
+ANB @MR202
+ANB MR20702
+ANB @MR203
+ANB @MR204
+ANB MR20704
+ANB MR20705
+ANB MR20706
+ANB @MR206
+ANB @MR010
+ANB @MR012
+INV
+OUT @MR103
+;/*V3.6.0.1*/（20241025）
+;<increase tare speed>：when tare command is present，First perform Tare，Then communicate with the temperature controller
+LD MR20700
+AND MR20710
+RES MR20700
+RES MR20600
+RES MR20710
+MOV #8 Z2
+LDB R1510
+ANB @MR010
+MC
+LD= @DM0 #0
+ANB @MR103
+ANB @MR006
+SET @MR006
+RES MR20700
+RES MR20710
+MOV #10 @DM0
+LDB @MR010
+AND= Z2 #2
+AND= @DM0 #10
+AND @MR006
+ANB CR7303
+ANB T29
+ANB T19
+ANB @MR103
+TMH #26 #20
+LDP T26
+MOV #1 W00
+MOV #3 W02
+MOV #40001 W04
+MPS
+MOV #2 W06
+MPP
+ANB @MR103
+SET MR20700
+MCR
+;<h1/>E_disable write protection，=1
+LD MR20711
+MOV #1 DM2523
+LD MR20601
+OR MR20501
+ANB @MR201
+SET @MR201
+LDB R1510
+AND @MR201
+MC
+LDB R1510
+AND @MR201
+ANB CR7303
+ANB @MR010
+ANB T29
+ANB T19
+ANB MR20701
+TMH #27 #10
+LDP T27
+MOV #1 W00
+MOV #6 W02
+MOV #40024 CM7009
+MOV #1 CM7010
+MOV #1 CM7011
+SET MR20701
+RES MR20711
+RES @MR201
+RES MR20601
+MCR
+LDP MR20711
+RES MR20601
+RES MR20501
+RES MR20701
+;<h1/>E_enable write protection，=0
+LD MR20712
+MOV #0 DM2523
+LD MR20602
+OR MR20502
+ANB @MR202
+SET @MR202
+LDB R1510
+AND @MR202
+ANB @MR010
+MC
+LD @MR202
+SET @MR102
+LD @MR102
+ANB CR7303
+ANB @MR010
+ANB T29
+ANB MR20702
+TMH #28 #10
+LDP T28
+MOV #1 W00
+MOV #6 W02
+MOV #40024 CM7009
+MOV #0 CM7011
+SET MR20702
+RES @MR102
+RES MR20712
+MCR
+LD MR20712
+AND @MR202
+RES MR20602
+RES MR20502
+RES MR20702
+RES @MR202
+;<h1/>-------
+;<h1/>-------Z1=0~10-------
+;<h1/>/*Chiller communication*/（3#）
+;'Chiller cooling water default temperature：18℃
+LD< DM500 #100
+OR> DM500 #300
+MOV #180 DM500
+;'Chiller start hysteresis default temperature：2℃
+LD<= DM502 #0
+OR> DM502 #150
+MOV #20 DM502
+;'Chiller stop hysteresis default temperature：0.5℃
+LD<= DM503 #0
+OR> DM503 #50
+MOV #5 DM503
+;'Chiller Upper-Alarm Default Temperature：60℃
+LD<= DM498 #0
+OR> DM498 #800
+MOV #600 DM498
+;'Chiller Lower-Alarm Default Temperature：5℃
+LD<= DM499 #0
+OR> DM499 #200
+MOV #50 DM499
+;'Pre-Melting Max Water Temp Default：30℃
+LD<= DM504 #0
+OR> DM504 #800
+MOV #300 DM504
+;'Furnace Delayed-Stop Temperature：960℃
+LD< DM150 #385
+OR> DM150 #1200
+MOV #960 DM150
+;'Pressure-Release Temperature：600℃
+LD< DM152 #385
+OR> DM152 #1000
+MOV #500 DM152
+;'Stop Air Blow Temperature：400℃
+LD< DM154 #385
+OR> DM154 #600
+MOV #400 DM154
+;/*After Chiller Start，Communication Switch Delay Start*/
+LD R1510
+ONDL #50 @MR400
+;/*Chiller Independent Clock*/_20240514(V3.5Version)
+;Default Communication Cycle：2S
+LD<=.L DM496 +0
+MOV #200 DM496
+LD @MR400
+MPS
+ANB MR21011
+TMH #38 DM496
+MPP
+ANP T38
+SET MR21011
+LD @MR400
+ANB @MR401
+SET @MR401
+RES @MR402
+MPS
+AND MR21011
+MOV #0 Z1
+MPP
+ANB MR21011
+MOV #8 Z1
+LDB R1510
+RES @MR401
+LD @MR501
+INV
+RES MR20607
+LD @MR502
+INV
+RES MR20608
+LD R1510
+AND @MR401
+ANB @MR010
+MC
+LD MR20605
+SET @MR501
+RES MR20605
+SET MR20607
+LD MR20606
+SET @MR502
+RES MR20606
+SET MR20608
+LD= Z1 #0
+ANB @MR402
+ANB T15
+ANB T18
+TMH #9 #10
+LD T9
+SET @MR402
+CON
+MPS
+LDB @MR501
+ANB @MR502
+ANL
+MOV #6 Z1
+MRD
+AND @MR501
+MOV #2 Z1
+MPP
+LDB @MR501
+AND @MR502
+ANL
+MOV #4 Z1
+;<h1/>A_Chiller-Tank Temperature SetpointDM500；Z1=2
+LD @MR501
+ANB @MR010
+AND R1510
+AND= Z1 #2
+ANB CR7303
+ANB T15
+ANB T18
+ANB MR20901
+TMH #10 #50
+LDP T10
+MOV #3 W00
+MOV #6 W02
+MPS
+AND= DM572 #0
+MOV #47 CM7009
+MRD
+AND= DM572 #1
+MOV $0028 CM7009
+MRD
+MOV #1 CM7010
+MRD
+MOV DM500 CM7011
+MPP
+ANB MR20901
+MOV #2 @DM30
+RES MR20911
+RES @MR501
+SET MR20901
+LD= @DM30 #2
+AND MR20911
+RES MR20901
+CON
+MPS
+ANB @MR502
+MOV #6 Z1
+MPP
+AND @MR502
+MOV #4 Z1
+;<h1/>B_Chiller-Tank Return-Temperature Setpoint：DM502（Start Temperature Differential）、DM503（Stop Temperature Differential）；Z1=4
+;/*Start Return-Temperature*/
+LD @MR502
+ANB @MR010
+AND R1510
+AND= Z1 #4
+ANB CR7303
+ANB T15
+ANB T18
+ANB MR20902
+TMH #11 #50
+LDP T11
+MOV #3 W00
+MOV #6 W02
+MPS
+AND= DM572 #0
+MOV #48 CM7009
+MRD
+AND= DM572 #1
+MOV $0029 CM7009
+MRD
+MOV #1 CM7010
+MRD
+MOV DM502 CM7011
+MPP
+ANB MR20902
+MOV #4 @DM30
+SET MR20902
+RES MR20912
+RES @MR502
+LD= @DM30 #4
+AND MR20902
+AND MR20912
+RES MR20902
+MPS
+AND= DM572 #0
+MOV #6 Z1
+MPP
+AND= DM572 #1
+MOV #5 Z1
+;/*Stop Reheating*/
+LDB @MR010
+AND R1510
+AND= Z1 #5
+ANB CR7303
+ANB T15
+ANB T18
+ANB MR21006
+TMH #5 #50
+LDP T5
+MOV #3 W00
+MOV #6 W02
+MOV $002A CM7009
+MOV #1 CM7010
+MPS
+MOV DM503 CM7011
+MPP
+ANB MR21006
+MOV #5 @DM30
+SET MR21006
+RES MR21007
+LD= @DM30 #5
+AND MR21007
+RES MR21006
+MOV #6 Z1
+;<h1/>C_Chiller Cooling Water Real-Time TemperatureDM2008；Z1=6
+LDB @MR010
+AND R1510
+AND= Z1 #6
+ANB CR7303
+ANB T15
+ANB T18
+ANB MR20903
+TMH #12 #10
+LDP T12
+MOV #3 W00
+MPS
+AND= DM572 #0
+MOV #4 W02
+MRD
+AND= DM572 #1
+MOV #3 W02
+MRD
+MOV #0 W04
+MRD
+MOV #1 W06
+MPP
+ANB MR20903
+MOV #6 @DM30
+SET MR20903
+RES MR20913
+LD= @DM30 #6
+AND MR20913
+RES MR20903
+MOV #8 Z1
+RES MR21011
+MCR
+;<h1/>-------
+;<h1/>/*Temperature Controller Communication*/（4#）
+;<h1/>CH1_Vacuum Chamber Furnace Internal TemperaturePV1_HMI DM390；PLC:DM2000；Z1=8
+LDB @MR010
+AND R1510
+AND= Z1 #8
+LDB @MR010
+ANB @MR103
+ANB R1510
+AND= Z2 #8
+ORL
+ANB CR7303
+ANB T15
+ANB T18
+ANB MR20904
+TMH #13 #10
+LDP T13
+MOV #4 W00
+MOV #3 W02
+MOV $0000 W04
+MPS
+MOV #1 W06
+MPP
+ANB MR20904
+MOV #8 @DM30
+SET MR20904
+RES MR20914
+LD= @DM30 #8
+AND MR20914
+RES MR20904
+MPS
+AND R1510
+MOV #10 Z1
+MPP
+ANB R1510
+MOV #10 Z2
+;<h1/>CH2_Graphite Crucible Cooling Station TemperaturePV2_HMI DM392；PLC:DM2002；Z1=10
+LDB @MR010
+AND R1510
+AND= Z1 #10
+LDB @MR010
+ANB @MR103
+ANB R1510
+AND= Z2 #10
+ORL
+ANB CR7303
+ANB T15
+ANB T18
+ANB MR20905
+TMH #14 #10
+LDP T14
+MOV #4 W00
+MOV #3 W02
+MOV $0001 W04
+MPS
+MOV #1 W06
+MPP
+ANB MR20905
+MOV #10 @DM30
+SET MR20905
+RES MR20915
+LD= @DM30 #10
+AND MR20915
+RES MR20905
+RES @MR402
+MPS
+AND= DM571 #0
+MPS
+AND R1510
+MPS
+AND MR21011
+MOV #0 Z1
+MPP
+ANB MR21011
+MOV #8 Z1
+MPP
+ANB R1510
+RES @MR006
+MOV #0 @DM30
+MOV #0 @DM0
+MOV #2 Z2
+MPP
+AND= DM571 #1
+MPS
+AND R1510
+MOV #12 Z1
+MPP
+ANB R1510
+MOV #12 Z2
+;<h1/>CH3_Return Water TemperaturePV2_HMI:DM2004；Z1=12
+LDB @MR010
+AND R1510
+AND= Z1 #12
+LDB @MR010
+ANB @MR103
+ANB R1510
+AND= Z2 #12
+ORL
+ANB CR7303
+ANB T15
+ANB T18
+ANB MR20906
+TMH #16 #10
+LDP T16
+MOV #4 W00
+MOV #3 W02
+MOV $0002 W04
+MPS
+MOV #1 W06
+MPP
+ANB MR20906
+MOV #12 @DM30
+SET MR20906
+RES MR21001
+LD= @DM30 #12
+AND MR21001
+RES MR20906
+MPS
+AND R1510
+MOV #14 Z1
+MPP
+ANB R1510
+MOV #14 Z2
+;<h1/>CH4_Vacuum Chamber TemperaturePV2_HMI：DM2006；Z1=14
+LDB @MR010
+AND R1510
+AND= Z1 #14
+LDB @MR010
+ANB @MR103
+ANB R1510
+AND= Z2 #14
+ORL
+ANB CR7303
+ANB T15
+ANB T18
+ANB MR20907
+TMH #17 #10
+LDP T17
+MOV #4 W00
+MOV #3 W02
+MOV $0003 W04
+MPS
+MOV #1 W06
+MPP
+ANB MR20907
+MOV #14 @DM30
+SET MR20907
+RES MR21002
+LD= @DM30 #14
+AND MR21002
+RES @MR402
+RES MR20907
+MPS
+AND= DM572 #0
+MPS
+AND R1510
+MPS
+AND= DM575 #1
+MOV #26 Z1
+MPP
+AND= DM575 #0
+MPS
+AND MR21011
+MOV #0 Z1
+MPP
+ANB MR21011
+MOV #8 Z1
+MPP
+ANB R1510
+MPS
+AND= DM575 #1
+MOV #26 Z2
+MPP
+AND= DM575 #0
+RES @MR006
+MOV #0 @DM30
+MOV #0 @DM0
+MOV #2 Z2
+MRD
+AND= DM572 #1
+MPS
+AND R1510
+MPS
+AND= DM575 #1
+MOV #26 Z1
+MPP
+AND= DM575 #0
+MOV #16 Z1
+MPP
+ANB R1510
+MPS
+AND= DM575 #1
+MOV #26 Z2
+MPP
+AND= DM575 #0
+RES @MR006
+MOV #0 @DM30
+MOV #0 @DM0
+MOV #2 Z2
+MPP
+AND= DM575 #0
+MOV #0 @DM30
+;<h1/>Temperature and Humidity Communication：HMI：DM??；Z1=26；Z1=28
+;/*Humidity Read*/
+;/*
+LDB @MR010
+AND R1510
+AND= Z1 #26
+LDB @MR010
+ANB @MR103
+ANB R1510
+AND= Z2 #26
+ORL
+ANB CR7303
+ANB T15
+ANB T18
+ANB MR20907
+TMH #33 #10
+LDP T33
+MOV #10 W00
+MOV #3 W02
+MOV $0000 W04
+MPS
+MOV #2 W06
+MPP
+ANB MR20908
+MOV #26 @DM30
+SET MR20908
+RES MR20909
+LD= @DM30 #26
+AND MR20909
+RES @MR402
+RES MR20908
+MPS
+AND= DM572 #0
+MPS
+AND R1510
+MOV #28 Z1
+MPP
+ANB R1510
+MOV #28 @DM30
+MOV #28 Z2
+MPP
+AND= DM572 #1
+MPS
+AND R1510
+MOV #28 Z1
+MPP
+ANB R1510
+MOV #28 @DM30
+MOV #28 Z2
+;/*Temperature Read*/
+LDB @MR010
+AND R1510
+AND= Z1 #28
+LDB @MR010
+ANB @MR103
+ANB R1510
+AND= Z2 #28
+ORL
+ANB CR7303
+ANB T15
+ANB T18
+ANB MR20907
+TMH #36 #10
+LDP T36
+MOV #10 W00
+MOV #3 W02
+MOV $0001 W04
+MPS
+MOV #2 W06
+MPP
+ANB MR21008
+MOV #28 @DM30
+SET MR21008
+RES MR21009
+LD= @DM30 #28
+AND MR21009
+RES @MR402
+RES MR21008
+MPS
+AND= DM572 #0
+MPS
+AND R1510
+MPS
+AND MR21011
+MOV #0 Z1
+MPP
+ANB MR21011
+MOV #8 Z1
+MPP
+ANB R1510
+RES @MR006
+MOV #0 @DM30
+MOV #0 @DM0
+MOV #2 Z2
+MRD
+AND= DM572 #1
+MPS
+AND R1510
+MOV #16 Z1
+MPP
+ANB R1510
+RES @MR006
+MOV #0 @DM30
+MOV #0 @DM0
+MOV #2 Z2
+MPP
+MOV #0 @DM30
+;<h1/>/*Data Send and Receive*/【Coarse Weighing+Temperature Controller】
+;/*Data Send*/
+LDB R1510
+MC
+LDP MR20701
+ORP MR20702
+ORP MR20703
+ORP MR20704
+ORP MR20705
+ORP MR20706
+ORP MR20800
+ORP MR20801
+SET @MR100
+LDP MR20700
+ORP MR20904
+ORP MR20905
+ORP MR20906
+ORP MR20907
+ORP MR20908
+ORP MR21008
+SET @MR015
+LD @MR015
+ANB @MR100
+ONDL #2 @MR014
+LD @MR014
+RES @MR015
+SET @MR013
+LD @MR100
+OR @MR013
+ANB @MR010
+ANB R1510
+ANB CR7301
+ANB CR7302
+ANB CR7303
+MOV W00 CM7001
+MOV W02 CM7002
+MOV W04 CM7007
+MOV W06 CM7008
+SET CR7201
+MPS
+AND @MR100
+RES @MR100
+MPP
+AND @MR013
+RES @MR013
+;/*Data Receive*/
+LDP CR7301
+ANB R1510
+ANB CR7303
+MPS
+ANB CR7302
+BMOV CM7311 DM2200:Z2 #2
+MRD
+AND CR7302
+MOV CM7300 DM10
+MPP
+RES CR7201
+;Completion Flag
+LDP CR7301
+ANB R1510
+ANB CR7303
+MPS
+AND MR20700
+SET MR20710
+MRD
+AND MR20701
+SET MR20711
+MRD
+AND MR20702
+SET MR20712
+MRD
+AND MR20703
+SET MR20713
+MRD
+AND MR20704
+SET MR20714
+MRD
+AND MR20705
+SET MR20805
+MRD
+LD MR20706
+ANB MR20700
+ANB MR20710
+ANL
+SET MR20806
+MRD
+AND MR20800
+SET MR20810
+MRD
+AND MR20801
+SET MR20811
+MRD
+AND MR20904
+SET MR20914
+MRD
+AND MR20905
+SET MR20915
+MRD
+AND MR20906
+SET MR21001
+MRD
+AND MR20907
+SET MR21002
+MRD
+AND MR20908
+SET MR20909
+MPP
+AND MR21008
+SET MR21009
+;/*Data Send Wait*/
+LD CR7304
+RES CR7204
+MCR
+;<h1/>/*Data Send and Receive*/【Chiller+Temperature Controller】
+;/*Data Send*/
+LD R1510
+MC
+LDP MR20901
+ORP MR20902
+ORP MR20903
+ORP MR20904
+ORP MR20905
+ORP MR20906
+ORP MR20907
+ORP MR21006
+ORP MR20908
+ORP MR21008
+OUT @MR500
+LD @MR500
+AND R1510
+ANB @MR010
+ANB CR7301
+ANB CR7302
+ANB CR7303
+MOV W00 CM7001
+MOV W02 CM7002
+MOV W04 CM7007
+MOV W06 CM7008
+SET CR7201
+;/*Data Receive*/
+LDP CR7301
+AND R1510
+ANB CR7303
+MPS
+ANB CR7302
+BMOV CM7311 DM2300:Z1 #2
+MRD
+AND CR7302
+MOV CM7300 DM10
+MPP
+RES CR7201
+;Completion Flag
+LDP CR7301
+AND R1510
+ANB CR7303
+MPS
+AND MR20901
+SET MR20911
+MRD
+AND MR20902
+SET MR20912
+MRD
+AND MR20903
+SET MR20913
+MRD
+AND MR20904
+SET MR20914
+MRD
+AND MR20905
+SET MR20915
+MRD
+AND MR20906
+SET MR21001
+MRD
+AND MR20907
+SET MR21002
+MRD
+AND MR21006
+SET MR21007
+MRD
+AND MR20908
+SET MR20909
+MPP
+AND MR21008
+SET MR21009
+;/*Data Send Wait*/
+LD CR7304
+RES CR7204
+MCR
+;<h1/>-------
+;<h1/>/*Lag Prevention Program*/（Temperature Communication）_5S
+;
+LDB CR7303
+AND R1510
+ANB @MR010
+ANB T15
+TMH #15 #500
+LD CR7303
+AND R1510
+ANB @MR010
+ANB T18
+TMH #18 #500
+LDP T15
+ORP T18
+RES MR21006
+RES @MR512
+ZRES MR20901 MR20915
+RES @MR402
+RES @MR511
+RES @MR401
+MPS
+AND MR21011
+MOV #0 Z1
+MRD
+ANB MR21011
+MOV #8 Z1
+MPP
+RES MR21011
+;<h1/>/*HMITemperature Display*/
+;'Furnace Temperature
+;DM2000=DM2208
+;'Graphite-Crucible Station Temperature
+;DM2002=DM2210
+;'Return Water Temperature
+;DM2004=DM2212
+;'Vacuum Chamber Temperature
+;DM2006=DM2214
+;'Internal Equipment Temperature
+;DM2010=DM2226
+;'Internal Equipment Humidity
+;DM2012=DM2228
+;
+LDB R1510
+NCJ #1002
+;'Furnace Temperature
+;
+;DM2000=DM2208
+;
+LD CR2002
+MOV DM2208 DM2000
+;'Graphite-Crucible Station Temperature
+;
+;DM2002=DM2210
+;
+LD CR2002
+MOV DM2210 DM2002
+;'Return Water Temperature
+;
+;DM2004=DM2212
+;
+LD CR2002
+MOV DM2212 DM2004
+;'Vacuum Chamber Temperature
+;
+;DM2006=DM2214
+;
+LD CR2002
+MOV DM2214 DM2006
+;'Internal Equipment Temperature
+;
+;DM2010=DM2226
+;
+LD CR2002
+MOV DM2226 DM2010
+;'Internal Equipment Humidity
+;
+;DM2012=DM2228
+;
+LD CR2002
+MOV DM2228 DM2012
+LABEL #1002
+;
+;'Chiller Real-Time Water Temperature
+;IF DM2306<>0 THEN
+;   DM2008=DM2306
+;END IF
+;'Furnace Temperature
+;IF DM2308<>0 THEN
+;   DM2000=DM2308
+;END IF
+;'Graphite-Crucible Station Temperature
+;IF DM2310<>0 THEN
+;   DM2002=DM2310
+;END IF
+;'Return Water Temperature
+;IF DM2312<>0 THEN
+;   DM2004=DM2312
+;END IF
+;'Vacuum Chamber Temperature
+;IF DM2314<>0 THEN
+;   DM2006=DM2314
+;END IF
+;'Internal Equipment Humidity
+;IF DM2326<>0 THEN
+;   DM2010=DM2326
+;END IF
+;'Internal Equipment Temperature
+;IF DM2328<>0 THEN
+;   DM2012=DM2328
+;END IF
+LD R1510
+NCJ #1003
+;'Chiller Real-Time Water Temperature
+;
+;IF DM2306<>0 THEN
+;
+LD<> DM2306 #0
+NCJ #2000
+;   DM2008=DM2306
+;
+LD CR2002
+MOV DM2306 DM2008
+;END IF
+;
+LABEL #2000
+;'Furnace Temperature
+;
+;IF DM2308<>0 THEN
+;
+LD<> DM2308 #0
+NCJ #2001
+;   DM2000=DM2308
+;
+LD CR2002
+MOV DM2308 DM2000
+;END IF
+;
+LABEL #2001
+;'Graphite-Crucible Station Temperature
+;
+;IF DM2310<>0 THEN
+;
+LD<> DM2310 #0
+NCJ #2002
+;   DM2002=DM2310
+;
+LD CR2002
+MOV DM2310 DM2002
+;END IF
+;
+LABEL #2002
+;'Return Water Temperature
+;
+;IF DM2312<>0 THEN
+;
+LD<> DM2312 #0
+NCJ #2003
+;   DM2004=DM2312
+;
+LD CR2002
+MOV DM2312 DM2004
+;END IF
+;
+LABEL #2003
+;'Vacuum Chamber Temperature
+;
+;IF DM2314<>0 THEN
+;
+LD<> DM2314 #0
+NCJ #2004
+;   DM2006=DM2314
+;
+LD CR2002
+MOV DM2314 DM2006
+;END IF
+;
+LABEL #2004
+;'Internal Equipment Humidity
+;
+;IF DM2326<>0 THEN
+;
+LD<> DM2326 #0
+NCJ #2005
+;   DM2010=DM2326
+;
+LD CR2002
+MOV DM2326 DM2010
+;END IF
+;
+LABEL #2005
+;'Internal Equipment Temperature
+;
+;IF DM2328<>0 THEN
+;
+LD<> DM2328 #0
+NCJ #2006
+;   DM2012=DM2328
+;
+LD CR2002
+MOV DM2328 DM2012
+;END IF
+LABEL #2006
+LABEL #1003
+;
+;<h1/>------------------
+;<h1/>/*voice announcement*/
+;/*MR10000~*/（voice announcement1_Automatic~）
+LD> DM570 #0
+MC
+;--------------------------------------------------------Alarm Repeat Broadcast Program-----------------------------------------------------
+LD<> DM100 #255
+INV
+MEP
+SET @MR209
+SET @MR210
+LD CR2006
+MPS
+ANB @MR208
+@INC @DM8
+MPP
+LD>= @DM8 #10
+ANB @MR208
+ANL
+SET @MR208
+LD @MR210
+OUT MR10301
+RES @MR210
+@INC @DM6
+LD @MR209
+AND= @DM7 #0
+MPS
+LD> @DM6 #0
+AND< @DM6 #4
+ANL
+MOV #10 @DM7
+MPP
+AND>= @DM6 #3
+MOV #30 @DM7
+LD= @DM7 #10
+AND @MR208
+SET @MR210
+MOV #0 @DM8
+RES @MR208
+MOV #0 @DM7
+LD= @DM7 #30
+DW #0 @DM6
+RES @MR208
+RES @MR209
+RES @MR210
+MOV #0 @DM7
+;-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+;Simulate Host Computer To-Initial Inspection-Data
+LD MR10005
+MEP
+SET @MR211
+LD @MR211
+MPS
+AND= DM570 #1
+ONDL #1000 @MR212
+MPP
+AND= DM570 #2
+ONDL DM1007 @MR212
+LD @MR212
+OR @MR212
+ANB @MR307
+SET MR10006
+RES @MR211
+;Simulate Host Computer To-Final Inspection-Data
+LD= DM570 #1
+AND MR10012
+MEP
+SET @MR213
+LD= DM570 #2
+AND MR10011
+MEP
+SET @MR213
+LD @MR213
+MPS
+AND= DM570 #1
+ONDL #700 @MR214
+MPP
+AND= DM570 #2
+ONDL DM1008 @MR214
+LD @MR214
+OR @MR214
+ANB @MR307
+SET MR10013
+RES @MR213
+;'--Trigger Condition--
+;FOR @DM5=0 TO 50 STEP 1
+;SET(LDP(MR10000:@DM5),@MR600:@DM5)
+;NEXT
+LD=.D MR10000 #0
+AND=.D MR10200 #0
+INV
+MEP
+NCJ #1000
+;'--Trigger Condition--
+;
+;FOR @DM5=0 TO 50 STEP 1
+;
+LD CR2002
+MOV #0 @DM5
+LABEL #2007
+LD> @DM5 #50
+CJ #2008
+;SET(LDP(MR10000:@DM5),@MR600:@DM5)
+;
+LD CR2002
+LDA @DM5
+CON
+EXT
+CON
+STA.L Z12
+LDP MR10000:Z12
+OUT @VB00
+LD CR2002
+LDA @DM5
+CON
+EXT
+CON
+STA.L Z12
+LD @VB00
+SET @MR600:Z12
+;NEXT
+LD CR2002
+INC @DM5
+LDB CR2009
+CJ #2007
+LABEL #2008
+LABEL #1000
+;
+LD=.D MR10000 #0
+AND=.D MR10200 #0
+INV
+ZRES MR10000 MR10315
+LD=.D @MR600 #0
+AND=.D @MR800 #0
+INV
+MPS
+AND= DM570 #1
+SET @MR306
+MPP
+LD= DM570 #2
+ANB @MR307
+ANL
+MOV #10 @DM23
+;<h1/>==Mandarin Version==
+LD @MR306
+AND= DM569 #0
+AND= DM570 #1
+MC
+;FMOV(0,DM1300,120)
+;FMOV(0,CM7011,120)
+;'--Voice Text Editing--
+;IF      @MR600 THEN
+;   DM1300.T="[v10][s5]欢迎使用黄金回收智能终端，我是小雅，让我带你一起体验黄金智能回收"
+;ELSE IF @MR601 THEN
+;   DM1300.T="[v10][s5]设备准备中，请稍候"
+;ELSE IF @MR602 THEN
+;   DM1300.T="[v10][s4]闸口即将打开，请你把要回收的黄金放入闸口内的载盘中间，记得堆放高度不要超过载盘高度"
+;ELSE IF @MR603 THEN
+;   DM1300.T="[v10][s4]黄金放好后，手要尽快离开闸口，我要关闭闸口了"
+;ELSE IF @MR604 THEN
+;   DM1300.T="[v10][s4]接下来小雅给黄金精确秤重，重量会在屏幕上显示"
+;ELSE IF @MR605 THEN
+;   DM1300.T="[v10][s4]接下来小雅给黄金检测含金量，大概要1分钟，检测结果会屏幕上显示"
+;ELSE IF @MR606 THEN
+;    DM1300.T="[v10][s4]初检检测出来的重量和含金量将在屏幕显示      如须要回收请在屏幕上点下一步，如不回收请点退货，小雅会将黄金退回到闸口，请你全部取出"
+;ELSE IF @MR607 THEN
+;   DM1300.T="[v10][s4]请按屏幕提示输入身份证和银行卡账户后点下一步"
+;ELSE IF @MR608 THEN
+;   DM1300.T="[v10][s5]小哑准备对黄金进行高温熔解，大概需要4分钟左右，请稍候"
+;ELSE IF @MR609 THEN
+;   DM1300.T="[v10][s5]加热熔解已结束，正在箱内冷却，大概需要2分钟，请稍候"
+;ELSE IF @MR610 THEN
+;   DM1300.T="[v10][s5]黄金已移载到箱外冷却，大概需要2分钟，请稍候"
+;ELSE IF @MR611 THEN
+;   DM1300.T="[v10][s5]小雅再次检测黄金的含金量，大概需要2分钟，请稍候"
+;ELSE IF @MR612 THEN
+;   DM1300.T="[v10][s5]小雅再次检测黄金的重量，请稍候"
+;ELSE IF @MR613 THEN
+;    DM1300.T="[v10][s4]最终检测出来的重量和含金量将在屏幕显示     如确认要回收兑现请在屏幕上点确定，如不回收请点退货，小雅会将黄金退回到闸口，请你全部取出"
+;ELSE IF @MR614 THEN
+;   DM1300.T="[v10][s5]感谢此次回收兑现，小雅会将最终确定的回收金额支付到你的帐户，欢迎再次使用"
+;ELSE IF @MR615 THEN
+;   DM1300.T="[v10][s4]你已取消此次回收操作，小雅将黄金退回到闸门口，请及时将全部黄金取走，感谢你的使用"
+;ELSE IF @MR700 THEN
+;   DM1300.T="[v10][s4]此次回收的物品不符合我们的回收标准，小雅将物品退回到闸门口，请及时将全部黄金取走，感谢你的使用"
+;ELSE IF @MR701 THEN
+;   DM1300.T="[v10][s5]小雅将黄金退回到闸门口，请及时将全部黄金取走，感谢你的使用"
+;ELSE IF @MR702 THEN
+;   DM1300.T="[v10][s5]黄金取走后，手要尽快离开闸口，我要关闭闸口了" 
+;ELSE IF @MR703 THEN
+;   DM1300.T="[v10][s5]手要尽快离开闸口，我要关闭闸口了"
+;'>>First alert   
+;ELSE IF @MR815 THEN 
+;   DM1300.T="[v10][s5]请尽快放入符合回收克重的黄金" 
+;'>>Second alert
+;ELSE IF @MR900 THEN 
+;   DM1300.T="[v10][s5]请尽快放入符合回收克重的黄金"   
+;ELSE IF @MR901 THEN
+;   DM1300.T=""
+;ELSE
+;FMOV(0,DM1300,120)
+;FMOV(0,CM7011,120)
+;END IF
+;'---------------   
+;BMOV(CR2002,DM1300,CM7011,120) 
+;
+;FMOV(0,DM1300,120)
+;
+LD CR2002
+FMOV #0 DM1300 #120
+;FMOV(0,CM7011,120)
+;
+LD CR2002
+FMOV #0 CM7011 #120
+;'--Voice Text Editing--
+;
+;IF      @MR600 THEN
+;
+LD @MR600
+NCJ #2009
+;   DM1300.T="[v10][s5]欢迎使用黄金回收智能终端，我是小雅，让我带你一起体验黄金智能回收"
+;
+LD CR2002
+SMOV "[v10][s5]欢迎使用黄金回收智能终" DM1300
+SADD DM1315 "端，我是小雅，让我带你一起体验" DM1315
+SADD DM1330 "黄金智能回收" DM1330
+LD CR2002
+CJ #2010
+LABEL #2009
+;ELSE IF @MR601 THEN
+;
+LD @MR601
+NCJ #2011
+;   DM1300.T="[v10][s5]设备准备中，请稍候"
+;
+LD CR2002
+SMOV "[v10][s5]设备准备中，请稍候" DM1300
+LD CR2002
+CJ #2012
+LABEL #2011
+;ELSE IF @MR602 THEN
+;
+LD @MR602
+NCJ #2013
+;   DM1300.T="[v10][s4]闸口即将打开，请你把要回收的黄金放入闸口内的载盘中间，记得堆放高度不要超过载盘高度"
+;
+LD CR2002
+SMOV "[v10][s4]闸口即将打开，请你把要" DM1300
+SADD DM1315 "回收的黄金放入闸口内的载盘中间" DM1315
+SADD DM1330 "，记得堆放高度不要超过载盘高度" DM1330
+LD CR2002
+CJ #2014
+LABEL #2013
+;ELSE IF @MR603 THEN
+;
+LD @MR603
+NCJ #2015
+;   DM1300.T="[v10][s4]黄金放好后，手要尽快离开闸口，我要关闭闸口了"
+;
+LD CR2002
+SMOV "[v10][s4]黄金放好后，手要尽快离" DM1300
+SADD DM1315 "开闸口，我要关闭闸口了" DM1315
+LD CR2002
+CJ #2016
+LABEL #2015
+;ELSE IF @MR604 THEN
+;
+LD @MR604
+NCJ #2017
+;   DM1300.T="[v10][s4]接下来小雅给黄金精确秤重，重量会在屏幕上显示"
+;
+LD CR2002
+SMOV "[v10][s4]接下来小雅给黄金精确秤" DM1300
+SADD DM1315 "重，重量会在屏幕上显示" DM1315
+LD CR2002
+CJ #2018
+LABEL #2017
+;ELSE IF @MR605 THEN
+;
+LD @MR605
+NCJ #2019
+;   DM1300.T="[v10][s4]接下来小雅给黄金检测含金量，大概要1分钟，检测结果会屏幕上显示"
+;
+LD CR2002
+SMOV "[v10][s4]接下来小雅给黄金检测含" DM1300
+SADD DM1315 "金量，大概要1分钟，检测结果会屏" DM1315
+SADD DM1330 "幕上显示" DM1330
+LD CR2002
+CJ #2020
+LABEL #2019
+;ELSE IF @MR606 THEN
+;
+LD @MR606
+NCJ #2021
+;    DM1300.T="[v10][s4]初检检测出来的重量和含金量将在屏幕显示      如须要回收请在屏幕上点下一步，如不回收请点退货，小雅会将黄金退回到闸口，请你全部取出"
+;
+LD CR2002
+SMOV "[v10][s4]初检检测出来的重量和含" DM1300
+SADD DM1315 "金量将在屏幕显示      如须要回" DM1315
+SADD DM1330 "收请在屏幕上点下一步，如不回收" DM1330
+SADD DM1345 "请点退货，小雅会将黄金退回到闸" DM1345
+SADD DM1360 "口，请你全部取出" DM1360
+LD CR2002
+CJ #2022
+LABEL #2021
+;ELSE IF @MR607 THEN
+;
+LD @MR607
+NCJ #2023
+;   DM1300.T="[v10][s4]请按屏幕提示输入身份证和银行卡账户后点下一步"
+;
+LD CR2002
+SMOV "[v10][s4]请按屏幕提示输入身份证" DM1300
+SADD DM1315 "和银行卡账户后点下一步" DM1315
+LD CR2002
+CJ #2024
+LABEL #2023
+;ELSE IF @MR608 THEN
+;
+LD @MR608
+NCJ #2025
+;   DM1300.T="[v10][s5]小哑准备对黄金进行高温熔解，大概需要4分钟左右，请稍候"
+;
+LD CR2002
+SMOV "[v10][s5]小哑准备对黄金进行高温" DM1300
+SADD DM1315 "熔解，大概需要4分钟左右，请稍候" DM1315
+LD CR2002
+CJ #2026
+LABEL #2025
+;ELSE IF @MR609 THEN
+;
+LD @MR609
+NCJ #2027
+;   DM1300.T="[v10][s5]加热熔解已结束，正在箱内冷却，大概需要2分钟，请稍候"
+;
+LD CR2002
+SMOV "[v10][s5]加热熔解已结束，正在箱" DM1300
+SADD DM1315 "内冷却，大概需要2分钟，请稍候" DM1315
+LD CR2002
+CJ #2028
+LABEL #2027
+;ELSE IF @MR610 THEN
+;
+LD @MR610
+NCJ #2029
+;   DM1300.T="[v10][s5]黄金已移载到箱外冷却，大概需要2分钟，请稍候"
+;
+LD CR2002
+SMOV "[v10][s5]黄金已移载到箱外冷却，" DM1300
+SADD DM1315 "大概需要2分钟，请稍候" DM1315
+LD CR2002
+CJ #2030
+LABEL #2029
+;ELSE IF @MR611 THEN
+;
+LD @MR611
+NCJ #2031
+;   DM1300.T="[v10][s5]小雅再次检测黄金的含金量，大概需要2分钟，请稍候"
+;
+LD CR2002
+SMOV "[v10][s5]小雅再次检测黄金的含金" DM1300
+SADD DM1315 "量，大概需要2分钟，请稍候" DM1315
+LD CR2002
+CJ #2032
+LABEL #2031
+;ELSE IF @MR612 THEN
+;
+LD @MR612
+NCJ #2033
+;   DM1300.T="[v10][s5]小雅再次检测黄金的重量，请稍候"
+;
+LD CR2002
+SMOV "[v10][s5]小雅再次检测黄金的重量" DM1300
+SADD DM1315 "，请稍候" DM1315
+LD CR2002
+CJ #2034
+LABEL #2033
+;ELSE IF @MR613 THEN
+;
+LD @MR613
+NCJ #2035
+;    DM1300.T="[v10][s4]最终检测出来的重量和含金量将在屏幕显示     如确认要回收兑现请在屏幕上点确定，如不回收请点退货，小雅会将黄金退回到闸口，请你全部取出"
+;
+LD CR2002
+SMOV "[v10][s4]最终检测出来的重量和含" DM1300
+SADD DM1315 "金量将在屏幕显示     如确认要回" DM1315
+SADD DM1330 "收兑现请在屏幕上点确定，如不回" DM1330
+SADD DM1345 "收请点退货，小雅会将黄金退回到" DM1345
+SADD DM1360 "闸口，请你全部取出" DM1360
+LD CR2002
+CJ #2036
+LABEL #2035
+;ELSE IF @MR614 THEN
+;
+LD @MR614
+NCJ #2037
+;   DM1300.T="[v10][s5]感谢此次回收兑现，小雅会将最终确定的回收金额支付到你的帐户，欢迎再次使用"
+;
+LD CR2002
+SMOV "[v10][s5]感谢此次回收兑现，小雅" DM1300
+SADD DM1315 "会将最终确定的回收金额支付到你" DM1315
+SADD DM1330 "的帐户，欢迎再次使用" DM1330
+LD CR2002
+CJ #2038
+LABEL #2037
+;ELSE IF @MR615 THEN
+;
+LD @MR615
+NCJ #2039
+;   DM1300.T="[v10][s4]你已取消此次回收操作，小雅将黄金退回到闸门口，请及时将全部黄金取走，感谢你的使用"
+;
+LD CR2002
+SMOV "[v10][s4]你已取消此次回收操作，" DM1300
+SADD DM1315 "小雅将黄金退回到闸门口，请及时" DM1315
+SADD DM1330 "将全部黄金取走，感谢你的使用" DM1330
+LD CR2002
+CJ #2040
+LABEL #2039
+;ELSE IF @MR700 THEN
+;
+LD @MR700
+NCJ #2041
+;   DM1300.T="[v10][s4]此次回收的物品不符合我们的回收标准，小雅将物品退回到闸门口，请及时将全部黄金取走，感谢你的使用"
+;
+LD CR2002
+SMOV "[v10][s4]此次回收的物品不符合我" DM1300
+SADD DM1315 "们的回收标准，小雅将物品退回到" DM1315
+SADD DM1330 "闸门口，请及时将全部黄金取走，" DM1330
+SADD DM1345 "感谢你的使用" DM1345
+LD CR2002
+CJ #2042
+LABEL #2041
+;ELSE IF @MR701 THEN
+;
+LD @MR701
+NCJ #2043
+;   DM1300.T="[v10][s5]小雅将黄金退回到闸门口，请及时将全部黄金取走，感谢你的使用"
+;
+LD CR2002
+SMOV "[v10][s5]小雅将黄金退回到闸门口" DM1300
+SADD DM1315 "，请及时将全部黄金取走，感谢你" DM1315
+SADD DM1330 "的使用" DM1330
+LD CR2002
+CJ #2044
+LABEL #2043
+;ELSE IF @MR702 THEN
+;
+LD @MR702
+NCJ #2045
+;   DM1300.T="[v10][s5]黄金取走后，手要尽快离开闸口，我要关闭闸口了" 
+;
+LD CR2002
+SMOV "[v10][s5]黄金取走后，手要尽快离" DM1300
+SADD DM1315 "开闸口，我要关闭闸口了" DM1315
+LD CR2002
+CJ #2046
+LABEL #2045
+;ELSE IF @MR703 THEN
+;
+LD @MR703
+NCJ #2047
+;   DM1300.T="[v10][s5]手要尽快离开闸口，我要关闭闸口了"
+;
+LD CR2002
+SMOV "[v10][s5]手要尽快离开闸口，我要" DM1300
+SADD DM1315 "关闭闸口了" DM1315
+;'>>First alert   
+;
+LD CR2002
+CJ #2048
+LABEL #2047
+;ELSE IF @MR815 THEN 
+;
+LD @MR815
+NCJ #2049
+;   DM1300.T="[v10][s5]请尽快放入符合回收克重的黄金" 
+;
+LD CR2002
+SMOV "[v10][s5]请尽快放入符合回收克重" DM1300
+SADD DM1315 "的黄金" DM1315
+;'>>Second alert
+;
+LD CR2002
+CJ #2050
+LABEL #2049
+;ELSE IF @MR900 THEN 
+;
+LD @MR900
+NCJ #2051
+;   DM1300.T="[v10][s5]请尽快放入符合回收克重的黄金"   
+;
+LD CR2002
+SMOV "[v10][s5]请尽快放入符合回收克重" DM1300
+SADD DM1315 "的黄金" DM1315
+LD CR2002
+CJ #2052
+LABEL #2051
+;ELSE IF @MR901 THEN
+;
+LD @MR901
+NCJ #2053
+;   DM1300.T=""
+;
+LD CR2002
+SMOV "" DM1300
+;ELSE
+;
+LD CR2002
+CJ #2054
+LABEL #2053
+;FMOV(0,DM1300,120)
+;
+LD CR2002
+FMOV #0 DM1300 #120
+;FMOV(0,CM7011,120)
+;
+LD CR2002
+FMOV #0 CM7011 #120
+;END IF
+;
+LABEL #2054
+LABEL #2052
+LABEL #2050
+LABEL #2048
+LABEL #2046
+LABEL #2044
+LABEL #2042
+LABEL #2040
+LABEL #2038
+LABEL #2036
+LABEL #2034
+LABEL #2032
+LABEL #2030
+LABEL #2028
+LABEL #2026
+LABEL #2024
+LABEL #2022
+LABEL #2020
+LABEL #2018
+LABEL #2016
+LABEL #2014
+LABEL #2012
+LABEL #2010
+;'---------------   
+;
+;BMOV(CR2002,DM1300,CM7011,120) 
+;
+LD CR2002
+BMOV DM1300 CM7011 #120
+;
+MCR
+;<h1/>==English Version==
+LD @MR306
+AND= DM569 #1
+AND= DM570 #1
+MC
+;FMOV(0,DM1300,120)
+;FMOV(0,CM7011,120)
+;'--Voice Text Editing--
+;IF      @MR600 THEN
+;   DM1300.T="[v10][s6][te50]Welcome to use Kinghood smart recycling terminal. I am cell ya. Let me take you to experience intelligent gold recycling."
+;ELSE IF @MR601 THEN
+;   DM1300.T="[v10][s5]The equipment is being prepared. Please wait a moment."
+;ELSE IF @MR602 THEN
+;   DM1300.T="[v10][s4]Please put the gold to be recycled in the middle of the carrier tray inside the gate. Remember that the stacking height should not exceed the height of the carrier tray."
+;ELSE IF @MR603 THEN
+;   DM1300.T="[v10][s4]After putting the gold in place, please remove your hand from the gate as soon as possible. I am going to close the gate."
+;ELSE IF @MR604 THEN
+;   DM1300.T="[v10][s4]Next, Xiaoya will accurately weigh the gold. The weight will be displayed on the screen."
+;ELSE IF @MR605 THEN
+;   DM1300.T="[v10][s4]Next, Xiaoya will detect the gold fineness of the gold. The detection result will be displayed on the screen."
+;ELSE IF @MR606 THEN
+;    DM1300.T="[v10][s4]The first detected weight and the gold fineness will be displayed on the screen.If you want to recycle, please click on the screen. If you don't want to recycle, please click Next. Xiaoya will return the gold to the gate. Please take it all out."
+;ELSE IF @MR607 THEN
+;   DM1300.T="[v10][s4]Please enter your ID card and bank card account as prompted on the screen and then click Next."
+;ELSE IF @MR608 THEN
+;   DM1300.T="[v10][s5]Xiaoya is preparing to melt the gold at high temperature. Please wait."
+;ELSE IF @MR609 THEN
+;   DM1300.T="[v10][s5]The heating and melting have ended and it is cooling inside the cavity. Please wait."
+;ELSE IF @MR610 THEN
+;   DM1300.T="[v10][s5]The gold has been transferred outside the cavity for cooling. Please wait."
+;ELSE IF @MR611 THEN
+;   DM1300.T="[v10][s5]Xiaoya will detect the gold fineness of the gold again. Please wait."
+;ELSE IF @MR612 THEN
+;   DM1300.T="[v10][s5]Xiaoya will detect the weight of the gold again. Please wait."
+;ELSE IF @MR613 THEN
+;    DM1300.T="[v10][s4]The first detected weight and the gold fineness will be displayed on the screen.If you want to recycle, please click confirm on the screen. If you don't want to recycle, please click Next. Xiaoya will return the gold to the gate. Please take it all out."
+;ELSE IF @MR614 THEN
+;   DM1300.T="[v10][s5]Thank you for this recycling and cashing in. Xiaoya will pay the finally determined recycling amount to your account. Welcome to use it again."
+;ELSE IF @MR615 THEN
+;   DM1300.T="[v10][s4]You have canceled this recycling operation. Xiaoya will return the gold to the gate. Please take all the gold out in time. Thank you for your use."
+;ELSE IF @MR700 THEN
+;   DM1300.T="[v10][s4]The recycled item this time does not meet our recycling standards. Xiaoya will return the item to the gate. Please take all the gold out in time. Thank you for your use."
+;ELSE IF @MR701 THEN
+;   DM1300.T="[v10][s5]Xiaoya will return the gold to the gate. Please take all the gold out in time. Thank you for your use."
+;ELSE IF @MR702 THEN
+;   DM1300.T="[v10][s5]After take all the gold,please remove your hand from the gate as soon as possible. I am going to close the gate." 
+;ELSE IF @MR703 THEN
+;   DM1300.T="[v10][s5]Please remove your hand from the gate as soon as possible. I am going to close the gate."
+;'>>First alert   
+;ELSE IF @MR815 THEN 
+;   DM1300.T="[v10][s5]Please putting the gold with the recovered grams as soon as possible." 
+;'>>Second alert
+;ELSE IF @MR900 THEN 
+;   DM1300.T="[v10][s5]Please putting the gold with the recovered grams as soon as possible."   
+;ELSE IF @MR901 THEN
+;   DM1300.T=""
+;ELSE
+;FMOV(0,DM1300,120)
+;FMOV(0,CM7011,120)
+;END IF
+;'---------------   
+;BMOV(CR2002,DM1300,CM7011,120) 
+;
+;FMOV(0,DM1300,120)
+;
+LD CR2002
+FMOV #0 DM1300 #120
+;FMOV(0,CM7011,120)
+;
+LD CR2002
+FMOV #0 CM7011 #120
+;'--Voice Text Editing--
+;
+;IF      @MR600 THEN
+;
+LD @MR600
+NCJ #2055
+;   DM1300.T="[v10][s6][te50]Welcome to use Kinghood smart recycling terminal. I am cell ya. Let me take you to experience intelligent gold recycling."
+;
+LD CR2002
+SMOV "[v10][s6][te50]Welcome to use K" DM1300
+SADD DM1315 "inghood smart recycling termina" DM1315
+SADD DM1330 "l. I am cell ya. Let me take yo" DM1330
+SADD DM1345 "u to experience intelligent gol" DM1345
+SADD DM1360 "d recycling." DM1360
+LD CR2002
+CJ #2056
+LABEL #2055
+;ELSE IF @MR601 THEN
+;
+LD @MR601
+NCJ #2057
+;   DM1300.T="[v10][s5]The equipment is being prepared. Please wait a moment."
+;
+LD CR2002
+SMOV "[v10][s5]The equipment is being" DM1300
+SADD DM1315 " prepared. Please wait a moment" DM1315
+SADD DM1330 "." DM1330
+LD CR2002
+CJ #2058
+LABEL #2057
+;ELSE IF @MR602 THEN
+;
+LD @MR602
+NCJ #2059
+;   DM1300.T="[v10][s4]Please put the gold to be recycled in the middle of the carrier tray inside the gate. Remember that the stacking height should not exceed the height of the carrier tray."
+;
+LD CR2002
+SMOV "[v10][s4]Please put the gold to" DM1300
+SADD DM1315 " be recycled in the middle of t" DM1315
+SADD DM1330 "he carrier tray inside the gate" DM1330
+SADD DM1345 ". Remember that the stacking he" DM1345
+SADD DM1360 "ight should not exceed the heig" DM1360
+SADD DM1375 "ht of the carrier tray." DM1375
+LD CR2002
+CJ #2060
+LABEL #2059
+;ELSE IF @MR603 THEN
+;
+LD @MR603
+NCJ #2061
+;   DM1300.T="[v10][s4]After putting the gold in place, please remove your hand from the gate as soon as possible. I am going to close the gate."
+;
+LD CR2002
+SMOV "[v10][s4]After putting the gold" DM1300
+SADD DM1315 " in place, please remove your h" DM1315
+SADD DM1330 "and from the gate as soon as po" DM1330
+SADD DM1345 "ssible. I am going to close the" DM1345
+SADD DM1360 " gate." DM1360
+LD CR2002
+CJ #2062
+LABEL #2061
+;ELSE IF @MR604 THEN
+;
+LD @MR604
+NCJ #2063
+;   DM1300.T="[v10][s4]Next, Xiaoya will accurately weigh the gold. The weight will be displayed on the screen."
+;
+LD CR2002
+SMOV "[v10][s4]Next, Xiaoya will accu" DM1300
+SADD DM1315 "rately weigh the gold. The weig" DM1315
+SADD DM1330 "ht will be displayed on the scr" DM1330
+SADD DM1345 "een." DM1345
+LD CR2002
+CJ #2064
+LABEL #2063
+;ELSE IF @MR605 THEN
+;
+LD @MR605
+NCJ #2065
+;   DM1300.T="[v10][s4]Next, Xiaoya will detect the gold fineness of the gold. The detection result will be displayed on the screen."
+;
+LD CR2002
+SMOV "[v10][s4]Next, Xiaoya will dete" DM1300
+SADD DM1315 "ct the gold fineness of the gol" DM1315
+SADD DM1330 "d. The detection result will be" DM1330
+SADD DM1345 " displayed on the screen." DM1345
+LD CR2002
+CJ #2066
+LABEL #2065
+;ELSE IF @MR606 THEN
+;
+LD @MR606
+NCJ #2067
+;    DM1300.T="[v10][s4]The first detected weight and the gold fineness will be displayed on the screen.If you want to recycle, please click on the screen. If you don't want to recycle, please click Next. Xiaoya will return the gold to the gate. Please take it all out."
+;
+LD CR2002
+SMOV "[v10][s4]The first detected wei" DM1300
+SADD DM1315 "ght and the gold fineness will " DM1315
+SADD DM1330 "be displayed on the screen.If y" DM1330
+SADD DM1345 "ou want to recycle, please clic" DM1345
+SADD DM1360 "k on the screen. If you don't w" DM1360
+SADD DM1375 "ant to recycle, please click Ne" DM1375
+SADD DM1390 "xt. Xiaoya will return the gold" DM1390
+SADD DM1405 " to the gate. Please take it al" DM1405
+SADD DM1420 "l out." DM1420
+LD CR2002
+CJ #2068
+LABEL #2067
+;ELSE IF @MR607 THEN
+;
+LD @MR607
+NCJ #2069
+;   DM1300.T="[v10][s4]Please enter your ID card and bank card account as prompted on the screen and then click Next."
+;
+LD CR2002
+SMOV "[v10][s4]Please enter your ID c" DM1300
+SADD DM1315 "ard and bank card account as pr" DM1315
+SADD DM1330 "ompted on the screen and then c" DM1330
+SADD DM1345 "lick Next." DM1345
+LD CR2002
+CJ #2070
+LABEL #2069
+;ELSE IF @MR608 THEN
+;
+LD @MR608
+NCJ #2071
+;   DM1300.T="[v10][s5]Xiaoya is preparing to melt the gold at high temperature. Please wait."
+;
+LD CR2002
+SMOV "[v10][s5]Xiaoya is preparing to" DM1300
+SADD DM1315 " melt the gold at high temperat" DM1315
+SADD DM1330 "ure. Please wait." DM1330
+LD CR2002
+CJ #2072
+LABEL #2071
+;ELSE IF @MR609 THEN
+;
+LD @MR609
+NCJ #2073
+;   DM1300.T="[v10][s5]The heating and melting have ended and it is cooling inside the cavity. Please wait."
+;
+LD CR2002
+SMOV "[v10][s5]The heating and meltin" DM1300
+SADD DM1315 "g have ended and it is cooling " DM1315
+SADD DM1330 "inside the cavity. Please wait." DM1330
+LD CR2002
+CJ #2074
+LABEL #2073
+;ELSE IF @MR610 THEN
+;
+LD @MR610
+NCJ #2075
+;   DM1300.T="[v10][s5]The gold has been transferred outside the cavity for cooling. Please wait."
+;
+LD CR2002
+SMOV "[v10][s5]The gold has been tran" DM1300
+SADD DM1315 "sferred outside the cavity for " DM1315
+SADD DM1330 "cooling. Please wait." DM1330
+LD CR2002
+CJ #2076
+LABEL #2075
+;ELSE IF @MR611 THEN
+;
+LD @MR611
+NCJ #2077
+;   DM1300.T="[v10][s5]Xiaoya will detect the gold fineness of the gold again. Please wait."
+;
+LD CR2002
+SMOV "[v10][s5]Xiaoya will detect the" DM1300
+SADD DM1315 " gold fineness of the gold agai" DM1315
+SADD DM1330 "n. Please wait." DM1330
+LD CR2002
+CJ #2078
+LABEL #2077
+;ELSE IF @MR612 THEN
+;
+LD @MR612
+NCJ #2079
+;   DM1300.T="[v10][s5]Xiaoya will detect the weight of the gold again. Please wait."
+;
+LD CR2002
+SMOV "[v10][s5]Xiaoya will detect the" DM1300
+SADD DM1315 " weight of the gold again. Plea" DM1315
+SADD DM1330 "se wait." DM1330
+LD CR2002
+CJ #2080
+LABEL #2079
+;ELSE IF @MR613 THEN
+;
+LD @MR613
+NCJ #2081
+;    DM1300.T="[v10][s4]The first detected weight and the gold fineness will be displayed on the screen.If you want to recycle, please click confirm on the screen. If you don't want to recycle, please click Next. Xiaoya will return the gold to the gate. Please take it all out."
+;
+LD CR2002
+SMOV "[v10][s4]The first detected wei" DM1300
+SADD DM1315 "ght and the gold fineness will " DM1315
+SADD DM1330 "be displayed on the screen.If y" DM1330
+SADD DM1345 "ou want to recycle, please clic" DM1345
+SADD DM1360 "k confirm on the screen. If you" DM1360
+SADD DM1375 " don't want to recycle, please " DM1375
+SADD DM1390 "click Next. Xiaoya will return " DM1390
+SADD DM1405 "the gold to the gate. Please ta" DM1405
+SADD DM1420 "ke it all out." DM1420
+LD CR2002
+CJ #2082
+LABEL #2081
+;ELSE IF @MR614 THEN
+;
+LD @MR614
+NCJ #2083
+;   DM1300.T="[v10][s5]Thank you for this recycling and cashing in. Xiaoya will pay the finally determined recycling amount to your account. Welcome to use it again."
+;
+LD CR2002
+SMOV "[v10][s5]Thank you for this rec" DM1300
+SADD DM1315 "ycling and cashing in. Xiaoya w" DM1315
+SADD DM1330 "ill pay the finally determined " DM1330
+SADD DM1345 "recycling amount to your accoun" DM1345
+SADD DM1360 "t. Welcome to use it again." DM1360
+LD CR2002
+CJ #2084
+LABEL #2083
+;ELSE IF @MR615 THEN
+;
+LD @MR615
+NCJ #2085
+;   DM1300.T="[v10][s4]You have canceled this recycling operation. Xiaoya will return the gold to the gate. Please take all the gold out in time. Thank you for your use."
+;
+LD CR2002
+SMOV "[v10][s4]You have canceled this" DM1300
+SADD DM1315 " recycling operation. Xiaoya wi" DM1315
+SADD DM1330 "ll return the gold to the gate." DM1330
+SADD DM1345 " Please take all the gold out i" DM1345
+SADD DM1360 "n time. Thank you for your use." DM1360
+LD CR2002
+CJ #2086
+LABEL #2085
+;ELSE IF @MR700 THEN
+;
+LD @MR700
+NCJ #2087
+;   DM1300.T="[v10][s4]The recycled item this time does not meet our recycling standards. Xiaoya will return the item to the gate. Please take all the gold out in time. Thank you for your use."
+;
+LD CR2002
+SMOV "[v10][s4]The recycled item this" DM1300
+SADD DM1315 " time does not meet our recycli" DM1315
+SADD DM1330 "ng standards. Xiaoya will retur" DM1330
+SADD DM1345 "n the item to the gate. Please " DM1345
+SADD DM1360 "take all the gold out in time. " DM1360
+SADD DM1375 "Thank you for your use." DM1375
+LD CR2002
+CJ #2088
+LABEL #2087
+;ELSE IF @MR701 THEN
+;
+LD @MR701
+NCJ #2089
+;   DM1300.T="[v10][s5]Xiaoya will return the gold to the gate. Please take all the gold out in time. Thank you for your use."
+;
+LD CR2002
+SMOV "[v10][s5]Xiaoya will return the" DM1300
+SADD DM1315 " gold to the gate. Please take " DM1315
+SADD DM1330 "all the gold out in time. Thank" DM1330
+SADD DM1345 " you for your use." DM1345
+LD CR2002
+CJ #2090
+LABEL #2089
+;ELSE IF @MR702 THEN
+;
+LD @MR702
+NCJ #2091
+;   DM1300.T="[v10][s5]After take all the gold,please remove your hand from the gate as soon as possible. I am going to close the gate." 
+;
+LD CR2002
+SMOV "[v10][s5]After take all the gol" DM1300
+SADD DM1315 "d,please remove your hand from " DM1315
+SADD DM1330 "the gate as soon as possible. I" DM1330
+SADD DM1345 " am going to close the gate." DM1345
+LD CR2002
+CJ #2092
+LABEL #2091
+;ELSE IF @MR703 THEN
+;
+LD @MR703
+NCJ #2093
+;   DM1300.T="[v10][s5]Please remove your hand from the gate as soon as possible. I am going to close the gate."
+;
+LD CR2002
+SMOV "[v10][s5]Please remove your han" DM1300
+SADD DM1315 "d from the gate as soon as poss" DM1315
+SADD DM1330 "ible. I am going to close the g" DM1330
+SADD DM1345 "ate." DM1345
+;'>>First alert   
+;
+LD CR2002
+CJ #2094
+LABEL #2093
+;ELSE IF @MR815 THEN 
+;
+LD @MR815
+NCJ #2095
+;   DM1300.T="[v10][s5]Please putting the gold with the recovered grams as soon as possible." 
+;
+LD CR2002
+SMOV "[v10][s5]Please putting the gol" DM1300
+SADD DM1315 "d with the recovered grams as s" DM1315
+SADD DM1330 "oon as possible." DM1330
+;'>>Second alert
+;
+LD CR2002
+CJ #2096
+LABEL #2095
+;ELSE IF @MR900 THEN 
+;
+LD @MR900
+NCJ #2097
+;   DM1300.T="[v10][s5]Please putting the gold with the recovered grams as soon as possible."   
+;
+LD CR2002
+SMOV "[v10][s5]Please putting the gol" DM1300
+SADD DM1315 "d with the recovered grams as s" DM1315
+SADD DM1330 "oon as possible." DM1330
+LD CR2002
+CJ #2098
+LABEL #2097
+;ELSE IF @MR901 THEN
+;
+LD @MR901
+NCJ #2099
+;   DM1300.T=""
+;
+LD CR2002
+SMOV "" DM1300
+;ELSE
+;
+LD CR2002
+CJ #2100
+LABEL #2099
+;FMOV(0,DM1300,120)
+;
+LD CR2002
+FMOV #0 DM1300 #120
+;FMOV(0,CM7011,120)
+;
+LD CR2002
+FMOV #0 CM7011 #120
+;END IF
+;
+LABEL #2100
+LABEL #2098
+LABEL #2096
+LABEL #2094
+LABEL #2092
+LABEL #2090
+LABEL #2088
+LABEL #2086
+LABEL #2084
+LABEL #2082
+LABEL #2080
+LABEL #2078
+LABEL #2076
+LABEL #2074
+LABEL #2072
+LABEL #2070
+LABEL #2068
+LABEL #2066
+LABEL #2064
+LABEL #2062
+LABEL #2060
+LABEL #2058
+LABEL #2056
+;'---------------   
+;
+;BMOV(CR2002,DM1300,CM7011,120) 
+;
+LD CR2002
+BMOV DM1300 CM7011 #120
+;
+MCR
+;<h1/>/*Black New Voice Module*/
+LD MR4911
+ONDL #100 @MR1010
+LD @MR1010
+FMOV #0 DM1010 #100
+LD MR4910
+ONDL #100 @MR1011
+LD @MR1011
+FMOV DM1005 DM1010 #50
+FMOV DM1006 DM1060 #50
+;'Get Play Bit(Mandarin：+256；English，+512；Dialect，+768)
+;@DM20=ENCO(@MR515,50)
+;Z4=@DM20
+;@DM23=20
+;SET(@MR307)
+LD= @DM23 #10
+NCJ #1001
+;'Get Play Bit(Mandarin：+256；English，+512；Dialect，+768)
+;
+;@DM20=ENCO(@MR515,50)
+;
+LD CR2002
+ENCO @MR515 #50
+CON
+STA @DM20
+;Z4=@DM20
+;
+LD CR2002
+LDA @DM20
+CON
+EXT
+CON
+STA.L Z4
+;@DM23=20
+;
+LD CR2002
+MOV #20 @DM23
+;SET(@MR307)
+LD CR2002
+SET @MR307
+LABEL #1001
+;
+LD @MR307
+MC
+LD= @DM23 #20
+FMOV #0 DM1300 #120
+MOV #30 @DM23
+;*Selective Broadcast by Language Setting（DM568）
+;0,Mandarin Only；1，English Only；2，Dialect Only；3，Mandarin+English；4，Mandarin+Dialect；5，English+Dialect；6，Mandarin+English+Dialect
+;Mandarin Delay：DM1009+Z；English Delay：DM1059+Z；Dialect Delay：DM1109+Z
+LD= @DM23 #30
+MPS
+AND< DM568 #3
+MOV #40 @DM23
+MPP
+LD>= DM568 #3
+AND<= DM568 #6
+ANL
+MOV #50 @DM23
+LD= @DM23 #40
+OR= @DM23 #400
+OR= @DM23 #3400
+OR= @DM23 #34000
+MPS
+LD= DM568 #0
+OR= @DM21 #10
+ANL
+MPS
+LDA.L Z4
+CON
+ADD.L +256
+CON
+STA @DM25
+MPP
+MOV DM1009:Z4 @DM24
+MRD
+LD= DM568 #1
+OR= @DM21 #11
+OR= @DM21 #111
+ANL
+MPS
+LDA.L Z4
+CON
+ADD.L +512
+CON
+STA @DM25
+MPP
+MOV DM1059:Z4 @DM24
+MRD
+LD= DM568 #2
+OR= @DM21 #12
+OR= @DM21 #112
+ANL
+MPS
+LDA.L Z4
+CON
+ADD.L +768
+CON
+STA @DM25
+MPP
+MOV DM1109:Z4 @DM24
+MRD
+AND= @DM23 #40
+MOV #1000 @DM23
+MRD
+AND= @DM23 #400
+MOV #10000 @DM23
+MRD
+AND= @DM23 #3400
+MOV #3500 @DM23
+MPP
+AND= @DM23 #34000
+MOV #35000 @DM23
+LD= @DM23 #50
+MPS
+LD= DM568 #3
+OR= DM568 #4
+OR= DM568 #6
+ANL
+MPS
+LDA.L Z4
+CON
+ADD.L +256
+CON
+STA @DM25
+MPP
+MOV DM1009:Z4 @DM24
+MRD
+AND= DM568 #5
+MPS
+LDA.L Z4
+CON
+ADD.L +512
+CON
+STA @DM25
+MPP
+MOV DM1059:Z4 @DM24
+MPP
+MOV #1000 @DM23
+;/*Step_Parameter Entry Complete，Send Voice Command*/
+LD= @DM23 #1000
+OR= @DM23 #10000
+OR= @DM23 #3500
+OR= @DM23 #35000
+SET @MR306
+RES @MR1000
+MPS
+AND= @DM23 #1000
+MOV #1100 @DM23
+MRD
+AND= @DM23 #10000
+MOV #11000 @DM23
+MRD
+AND= @DM23 #3500
+MOV #3600 @DM23
+MPP
+AND= @DM23 #35000
+MOV #36000 @DM23
+;/*Step_Playback Complete，Select Whether to Continue Playback*/
+LD= @DM23 #1100
+OR= @DM23 #11000
+OR= @DM23 #3600
+OR= @DM23 #36000
+AND @MR1000
+MPS
+LD< DM568 #3
+OR= @DM23 #11000
+OR= @DM23 #36000
+ANL
+MOV #5000 @DM23
+MRD
+LD>= DM568 #3
+AND< DM568 #6
+AND= @DM23 #1100
+ANL
+MOV #1500 @DM23
+MPP
+AND= DM568 #6
+MPS
+AND= @DM23 #1100
+MOV #3000 @DM23
+MPP
+AND= @DM23 #3600
+MOV #30000 @DM23
+;*Inter-Sentence Delay
+LD= @DM23 #1500
+OR= @DM23 #15000
+MPS
+ONDL @DM24 @MR1005
+MPP
+AND @MR1005
+MPS
+AND= DM568 #3
+MOV #11 @DM21
+MRD
+LD= DM568 #4
+OR= DM568 #5
+ANL
+MOV #12 @DM21
+MPP
+MOV #400 @DM23
+LD= @DM23 #3000
+OR= @DM23 #30000
+MPS
+ONDL @DM24 @MR1006
+MPP
+LD @MR1006
+AND= DM568 #6
+ANL
+MPS
+AND= @DM23 #3000
+MOV #111 @DM21
+MOV #3400 @DM23
+MRD
+AND= @DM23 #30000
+MOV #112 @DM21
+MOV #34000 @DM23
+MPP
+RES @MR1003
+;*Broadcast Complete，Clear and Reset
+LD= @DM23 #5000
+LD< DM568 #3
+LD> DM568 #2
+AND< DM568 #6
+ORL
+OR= DM568 #6
+ANL
+MOV #0 @DM22
+MOV #0 Z4
+MOV #0 @DM20
+MOV #0 @DM21
+MOV #0 @DM23
+RES @MR307
+MCR
+;<h1/>/*voice announcement-Command Send*/
+LD @MR306
+ANB @MR114
+ANB CR7303
+ANB T31
+ANB T32
+TMH #30 #5
+LDP T30
+SET @MR200
+;****White Model Voice Annunciation****
+LD= DM570 #1
+ANP @MR200
+MOV $0009 CM7001
+MOV $0010 CM7002
+MOV #1 CM7009
+MOV #120 CM7010
+SET CR7201
+RES CR7301
+SET @MR114
+;****Black Model Voice Annunciation****
+LD= DM570 #2
+ANB @MR114
+AND @MR200
+MOV $0009 CM7001
+MOV $0006 CM7002
+MOV $000F CM7009
+MOV #1 CM7010
+MOV @DM25 CM7011
+SET CR7201
+RES CR7301
+SET @MR114
+;/*Receive Response*/
+LD @MR114
+ANP CR7301
+MPS
+RES CR7201
+MPP
+AND= DM570 #2
+SET @MR1000
+;<h1/>/*After Voice Annunciation Completion：Coarse Weighing and Temperature Communication Reset*/
+LD @MR114
+ANP CR7301
+RES @MR200
+RES @MR115
+ZRES @MR600 @MR915
+RES @MR306
+RES @MR308
+RES @MR215
+LD @MR114
+ANP CR7301
+RES @MR512
+ZRES MR20901 MR20915
+RES @MR402
+RES @MR511
+RES MR21006
+MPS
+AND MR21011
+MOV #0 Z1
+MRD
+ANB MR21011
+MOV #8 Z1
+MRD
+RES MR21011
+MRD
+ZRES MR20700 MR20715
+MRD
+RES @MR112
+MRD
+FMOV #0 @DM0 #4
+MRD
+RES @MR006
+MRD
+MOV #2 Z2
+MPP
+RES @MR114
+MCR
+;<h1/>-------
+;<h1/>/*Lag Prevention Program*/（voice announcement）_1S
+LDB CR7303
+AND @MR010
+ANB T31
+TMH #31 #300
+LD CR7303
+AND @MR010
+ANB T32
+TMH #32 #300
+LDP T31
+ORP T32
+DW #0 @DM7
+RES @MR515
+RES @MR200
+RES @MR115
+RES @MR114
+ZRES @MR600 @MR915
+RES @MR306
+ZRES @MR209 @MR210
+ZRES @MR213 @MR215
+RES @MR514
+END
+ENDH

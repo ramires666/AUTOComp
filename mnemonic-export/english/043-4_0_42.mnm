@@ -1,0 +1,9 @@
+DEVICE:132
+;MODULE:MQTT
+;MODULE_TYPE:0
+;/*Communication Settings*/
+;1、Before Factory Shipment, SetPort0Set To ModbusSlave Mode
+;2、4GCommunications Module Connects To232，PLCTerminationPort0
+;/*MR23300~MR23315*/
+END
+ENDH

@@ -15,6 +15,7 @@ import hashlib
 import json
 import os
 import re
+import struct
 import tempfile
 import time
 from contextlib import suppress
@@ -217,9 +218,9 @@ def _main_window(
         and not window.get("minimized")
         and int(window.get("owner_handle", 0)) == 0
     ]
-    if len(same_process) != 1:
+    if not same_process:
         raise RuntimeError("cannot uniquely identify the main editor window")
-    return same_process[0]
+    return max(same_process, key=_window_area)
 
 
 def _window_area(window: dict[str, Any]) -> int:
@@ -418,21 +419,104 @@ def _wait_for_window_closed(
         time.sleep(0.1)
 
 
+def _clear_failed_edit_menu(
+    client: WorkerClient, *, main: dict[str, Any], checkpoint: str, pause_ms: int
+) -> None:
+    for window in _desktop_windows(client):
+        if int(window.get("process_id", 0)) != int(main["process_id"]):
+            continue
+        is_direct_input = str(window.get("title", "")) == "DirectInput"
+        is_find_replace = str(window.get("title", "")) == "查找/替换"
+        if not (is_direct_input or is_find_replace):
+            continue
+        try:
+            _input_sequence(
+                client,
+                window=window,
+                checkpoint=checkpoint,
+                operations=[{"operation": "key_escape", "pause_ms": pause_ms}],
+            )
+        except Exception as exc:
+            if not _is_post_action_unavailable(exc):
+                raise
+        _wait_for_window_closed(client, handle=int(window["handle"]), timeout_seconds=1)
+
+
+def _dismiss_owned_dialogs(
+    client: WorkerClient,
+    *,
+    process_id: int,
+    main_handle: int,
+    checkpoint: str,
+) -> list[str]:
+    """Safely close only known transient UI opened by this read-only capture."""
+    messages: list[str] = []
+    dialogs = [
+        window
+        for window in _desktop_windows(client)
+        if int(window.get("process_id", 0)) == process_id
+        and int(window.get("owner_handle", 0)) == main_handle
+        and window.get("enabled", True)
+        and not window.get("minimized")
+    ]
+    for dialog in dialogs:
+        title = str(dialog.get("title", ""))
+        is_known_popup = title in {"DirectInput", "查找/替换", "编辑列"}
+        if not is_known_popup:
+            messages.append(f"left unknown blocking dialog untouched: {title}")
+            continue
+        try:
+            _input_sequence(
+                client,
+                window=dialog,
+                checkpoint=f"{checkpoint}-dismiss-dialog",
+                operations=[{"operation": "key_escape", "pause_ms": 150}],
+            )
+        except Exception as exc:
+            if not _is_post_action_unavailable(exc):
+                messages.append(f"dialog dismiss error: {str(exc)[:300]}")
+        if _wait_for_window_closed(
+            client, handle=int(dialog["handle"]), timeout_seconds=1.0
+        ):
+            messages.append(f"dismissed known transient window: {title}")
+        else:
+            messages.append(f"known transient window remained open: {title}")
+    return messages
+
+
 def _activate_program(
     client: WorkerClient, *, program: dict[str, Any], checkpoint: str
 ) -> None:
-    response = client.action(
-        {
-            "action": "activate_tree_item",
-            "checkpoint": checkpoint,
-            "locator": program["locator"],
-            "expected_path": program["path"],
-            "expected_source": program["name"],
-            "apply": True,
-        }
-    )
+    payload = {
+        "action": "activate_tree_item",
+        "checkpoint": checkpoint,
+        "locator": program["locator"],
+        "expected_path": program["path"],
+        "expected_source": program["name"],
+        "apply": True,
+    }
+    response: dict[str, Any] | None = None
+    last_error: Exception | None = None
+    for _ in range(2):
+        try:
+            response = client.action(payload)
+            break
+        except Exception as exc:
+            if not _is_post_action_unavailable(exc):
+                raise
+            last_error = exc
+            time.sleep(0.2)
+    if response is None:
+        raise RuntimeError(
+            f"tree activation could not be confirmed after retry: {last_error}"
+        ) from last_error
     if response.get("performed") is not True:
         raise RuntimeError(str(response.get("message", "tree activation failed")))
+    if response.get("after") != program["name"]:
+        raise RuntimeError(
+            "tree activation returned a different selected item: "
+            f"{response.get('after')!r} != {program['name']!r}"
+        )
 
 
 def _atomic_write_json(path: Path, value: object) -> None:
@@ -449,7 +533,14 @@ def _atomic_write_bytes(path: Path, data: bytes) -> None:
             stream.write(data)
             stream.flush()
             os.fsync(stream.fileno())
-        os.replace(temporary, path)
+        for attempt in range(5):
+            try:
+                os.replace(temporary, path)
+                break
+            except PermissionError:
+                if attempt == 4:
+                    raise
+                time.sleep(0.05 * (attempt + 1))
     except BaseException:
         with suppress(FileNotFoundError):
             os.unlink(temporary)
@@ -463,6 +554,31 @@ def _record_id(program: dict[str, Any]) -> str:
         sort_keys=True,
     )
     return hashlib.sha256(material.encode("utf-8")).hexdigest()[:16]
+
+
+def _module_row_count(path: Path) -> int:
+    data = path.read_bytes()
+    section = data.find(b"MODULE\0\0")
+    if section < 0 or section + 16 > len(data):
+        raise RuntimeError(f"MODULE section is missing: {path}")
+    section_size = struct.unpack_from("<I", data, section + 12)[0]
+    end = section + section_size
+    if section_size < 16 or end > len(data):
+        raise RuntimeError(f"MODULE section is truncated: {path}")
+    cursor = section + 16
+    while cursor < end:
+        if cursor + 42 > end:
+            raise RuntimeError(f"MODULE group header is truncated: {path}")
+        subtype, data_length, count = struct.unpack_from("<HII", data, cursor)
+        group_end = cursor + 42 + data_length
+        if group_end > end:
+            raise RuntimeError(f"MODULE group is truncated: {path}")
+        if subtype == 0x07:
+            if count < 1:
+                raise RuntimeError(f"MODULE row count is empty: {path}")
+            return count
+        cursor = group_end
+    raise RuntimeError(f"MODULE subtype 0x07 is missing: {path}")
 
 
 def _file_stem(index: int, program: dict[str, Any]) -> str:
@@ -680,6 +796,8 @@ def _extract_one(
     popup_wait_seconds: float,
     max_blocks: int,
     clipboard_snapshot_available: bool,
+    force_list_edit: bool,
+    expected_rows: int | None,
 ) -> dict[str, Any]:
     record: dict[str, Any] = {
         **program,
@@ -720,13 +838,42 @@ def _extract_one(
         y=edit_list_y,
     )
     plain_previous_hash = _clipboard_hash_best_effort(client, main)
+    custom_previous_hash = ""
+    if clipboard_snapshot_available:
+        try:
+            previous_format = _kv_studio_format(_clipboard_snapshot(client, main))
+            if previous_format is not None:
+                custom_previous_hash = str(previous_format.get("sha256", ""))
+        except Exception as exc:
+            record["warnings"].append(
+                f"pre-copy CF_KV_STUDIO_2 snapshot: {str(exc)[:500]}"
+            )
     try:
+        if force_list_edit:
+            raise RuntimeError("whole-program copy skipped for forced List Edit pass")
+        try:
+            _input_sequence(
+                client,
+                window=main,
+                checkpoint=f"{checkpoint}-focus-{index:03d}",
+                operations=[
+                    {"operation": "click", "x": x, "y": y, "pause_ms": pause_ms}
+                ],
+            )
+        except Exception as exc:
+            if not _is_post_action_unavailable(exc):
+                raise
+            record["warnings"].append(
+                "content focus changed the editor title; continuing with the refreshed window"
+            )
+        main = _main_window(
+            _desktop_windows(client), process_id=process_id, title=inventory_title
+        )
         _input_sequence(
             client,
             window=main,
             checkpoint=f"{checkpoint}-copy-{index:03d}",
             operations=[
-                {"operation": "click", "x": x, "y": y, "pause_ms": pause_ms},
                 {"operation": "key_ctrl_home", "pause_ms": pause_ms},
                 {"operation": "key_ctrl_shift_end", "pause_ms": pause_ms},
                 {"operation": "key_ctrl_c", "pause_ms": pause_ms},
@@ -737,6 +884,11 @@ def _extract_one(
                 clipboard_formats = _clipboard_snapshot(client, main)
                 custom_format = _kv_studio_format(clipboard_formats)
                 if custom_format is not None:
+                    copied_hash = str(custom_format.get("sha256", ""))
+                    if custom_previous_hash and copied_hash == custom_previous_hash:
+                        raise RuntimeError(
+                            "whole-program copy left stale CF_KV_STUDIO_2 clipboard data"
+                        )
                     attempt = _save_kv_studio_format_attempt(
                         output_dir,
                         stem=stem,
@@ -778,26 +930,141 @@ def _extract_one(
     except Exception as exc:  # Preserve the per-program failure and try edit-list.
         record["errors"].append(f"plain copy: {exc}")
 
+    main = _main_window(
+        _desktop_windows(client), process_id=process_id, title=inventory_title
+    )
     try:
-        _input_sequence(
-            client,
-            window=main,
-            checkpoint=f"{checkpoint}-anchor-edit-list-{index:03d}",
-            operations=[
-                {"operation": "key_escape", "pause_ms": pause_ms},
-                {"operation": "click", "x": x, "y": y, "pause_ms": pause_ms},
-                {"operation": "key_ctrl_home", "pause_ms": pause_ms},
-            ],
+        try:
+            _input_sequence(
+                client,
+                window=main,
+                checkpoint=f"{checkpoint}-focus-edit-list-{index:03d}",
+                operations=[
+                    {"operation": "click", "x": x, "y": y, "pause_ms": pause_ms}
+                ],
+            )
+        except Exception as exc:
+            if not _is_post_action_unavailable(exc):
+                raise
+        main = _main_window(
+            _desktop_windows(client), process_id=process_id, title=inventory_title
+        )
+        home_error: Exception | None = None
+        for home_attempt in range(2):
+            try:
+                _input_sequence(
+                    client,
+                    window=main,
+                    checkpoint=(
+                        f"{checkpoint}-home-edit-list-{index:03d}-"
+                        f"{home_attempt + 1}"
+                    ),
+                    operations=[
+                        {"operation": "key_ctrl_home", "pause_ms": pause_ms}
+                    ],
+                )
+                home_error = None
+                break
+            except Exception as exc:
+                if not _is_post_action_unavailable(exc):
+                    raise
+                home_error = exc
+                main = _main_window(
+                    _desktop_windows(client),
+                    process_id=process_id,
+                    title=inventory_title,
+                )
+        if home_error is not None:
+            raise RuntimeError(
+                f"Ctrl+Home could not be confirmed after retry: {home_error}"
+            ) from home_error
+        main = _main_window(
+            _desktop_windows(client), process_id=process_id, title=inventory_title
+        )
+        try:
+            _input_sequence(
+                client,
+                window=main,
+                checkpoint=f"{checkpoint}-anchor-edit-list-{index:03d}",
+                operations=[
+                    {"operation": "click", "x": x, "y": y, "pause_ms": pause_ms}
+                ],
+            )
+        except Exception as exc:
+            if not _is_post_action_unavailable(exc):
+                raise
+        main = _main_window(
+            _desktop_windows(client), process_id=process_id, title=inventory_title
         )
         time.sleep(pause_ms / 1000)
         anchor_frame = _snapshot(client, main)
         record["fallback_start_frame_sha256"] = _frame_hash(anchor_frame)
+        current_frame_hash = _frame_hash(anchor_frame)
 
         blocks: list[dict[str, Any]] = []
         block_texts: list[str] = []
         blocks_file = ""
         reached_end = False
-        for block_index in range(1, max_blocks + 1):
+        block_limit = max_blocks
+        if expected_rows is not None:
+            record["binary_ladder_row_count"] = expected_rows
+        resume_path = output_dir / "programs" / f"{stem}.blocks.json"
+        if resume_path.is_file():
+            saved = json.loads(resume_path.read_text(encoding="utf-8"))
+            saved_blocks = saved.get("blocks", []) if isinstance(saved, dict) else []
+            if isinstance(saved_blocks, list):
+                for saved_block in saved_blocks:
+                    if not isinstance(saved_block, dict) or not saved_block.get(
+                        "frame_after_ctrl_down_sha256"
+                    ):
+                        break
+                    text_path = output_dir / str(saved_block.get("text_file", ""))
+                    if not text_path.is_file():
+                        break
+                    blocks.append(saved_block)
+                    block_texts.append(text_path.read_text(encoding="utf-8"))
+        if block_texts and block_texts[-1].strip() == "ENDH":
+            blocks[-1]["end_detected"] = True
+            blocks[-1]["end_method"] = "terminal ENDH instruction"
+            blocks_file = _write_blocks_metadata(
+                output_dir,
+                stem=stem,
+                program=program,
+                blocks=blocks,
+                complete=True,
+            )
+            attempt = _save_text_attempt(
+                output_dir,
+                stem=stem,
+                method="edit-list-blocks",
+                text=_join_block_texts(block_texts),
+            )
+            attempt.update(block_count=len(blocks), blocks_file=blocks_file)
+            record["attempts"].append(attempt)
+            record["blocks"] = blocks
+            record.update(status="complete", selected_attempt=0, completed_at=_now())
+            return record
+        remaining_moves = len(blocks)
+        while remaining_moves:
+            batch = min(8, remaining_moves)
+            _input_sequence(
+                client,
+                window=main,
+                checkpoint=(
+                    f"{checkpoint}-resume-{index:03d}-{len(blocks) - remaining_moves:05d}"
+                ),
+                operations=[
+                    {"operation": "key_ctrl_down", "pause_ms": pause_ms}
+                    for _ in range(batch)
+                ],
+            )
+            remaining_moves -= batch
+        if blocks:
+            current_frame_hash = _frame_hash(_snapshot(client, main))
+            record["warnings"].append(
+                f"resumed after {len(blocks)} previously verified blocks"
+            )
+        for block_index in range(len(blocks) + 1, block_limit + 1):
             windows_before = _desktop_windows(client)
             previous_handles = {int(window["handle"]) for window in windows_before}
             open_error: Exception | None = None
@@ -806,7 +1073,7 @@ def _extract_one(
                     client,
                     window=main,
                     checkpoint=(
-                        f"{checkpoint}-open-edit-list-{index:03d}-{block_index:05d}"
+                        f"{checkpoint}-open-edit-menu-{index:03d}-{block_index:05d}"
                     ),
                     operations=[
                         {
@@ -814,7 +1081,27 @@ def _extract_one(
                             "x": menu_x,
                             "y": menu_y,
                             "pause_ms": pause_ms,
-                        },
+                        }
+                    ],
+                )
+            except Exception as exc:
+                if not _is_post_action_unavailable(exc):
+                    raise
+                open_error = exc
+            time.sleep(pause_ms / 1000)
+            main = _main_window(
+                _desktop_windows(client),
+                process_id=process_id,
+                title=inventory_title,
+            )
+            try:
+                _input_sequence(
+                    client,
+                    window=main,
+                    checkpoint=(
+                        f"{checkpoint}-open-edit-list-{index:03d}-{block_index:05d}"
+                    ),
+                    operations=[
                         {
                             "operation": "click",
                             "x": list_x,
@@ -835,6 +1122,105 @@ def _extract_one(
                 timeout_seconds=popup_wait_seconds,
             )
             if popup is None:
+                _clear_failed_edit_menu(
+                    client,
+                    main=main,
+                    checkpoint=(
+                        f"{checkpoint}-clear-edit-menu-{index:03d}-{block_index:05d}"
+                    ),
+                    pause_ms=pause_ms,
+                )
+                main = _main_window(
+                    _desktop_windows(client),
+                    process_id=process_id,
+                    title=inventory_title,
+                )
+                windows_before = _desktop_windows(client)
+                previous_handles = {
+                    int(window["handle"]) for window in windows_before
+                }
+                try:
+                    _input_sequence(
+                        client,
+                        window=main,
+                        checkpoint=(
+                            f"{checkpoint}-retry-edit-menu-{index:03d}-{block_index:05d}"
+                        ),
+                        operations=[
+                            {
+                                "operation": "click",
+                                "x": menu_x,
+                                "y": menu_y,
+                                "pause_ms": pause_ms,
+                            }
+                        ],
+                    )
+                except Exception as exc:
+                    if not _is_post_action_unavailable(exc):
+                        raise
+                    open_error = exc
+                time.sleep(max(0.18, pause_ms / 1000))
+                main = _main_window(
+                    _desktop_windows(client),
+                    process_id=process_id,
+                    title=inventory_title,
+                )
+                try:
+                    _input_sequence(
+                        client,
+                        window=main,
+                        checkpoint=(
+                            f"{checkpoint}-retry-edit-list-{index:03d}-{block_index:05d}"
+                        ),
+                        operations=[
+                            {
+                                "operation": "click",
+                                "x": list_x,
+                                "y": list_y,
+                                "pause_ms": pause_ms,
+                            }
+                        ],
+                    )
+                except Exception as exc:
+                    if not _is_post_action_unavailable(exc):
+                        raise
+                    open_error = exc
+                popup = _wait_for_edit_list_popup(
+                    client,
+                    main=main,
+                    previous_handles=previous_handles,
+                    timeout_seconds=popup_wait_seconds,
+                )
+            if popup is None:
+                _clear_failed_edit_menu(
+                    client,
+                    main=main,
+                    checkpoint=(
+                        f"{checkpoint}-clear-terminal-menu-{index:03d}-{block_index:05d}"
+                    ),
+                    pause_ms=pause_ms,
+                )
+                blocking = [
+                    window
+                    for window in _desktop_windows(client)
+                    if int(window.get("process_id", 0)) == process_id
+                    and int(window.get("owner_handle", 0)) == int(main["handle"])
+                    and window.get("enabled", True)
+                ]
+                if blocks and not blocking:
+                    blocks[-1]["end_detected"] = True
+                    blocks[-1]["end_method"] = (
+                        "CtrlDown followed by unavailable List Edit after retry"
+                    )
+                    blocks_file = _write_blocks_metadata(
+                        output_dir,
+                        stem=stem,
+                        program=program,
+                        blocks=blocks,
+                        complete=True,
+                    )
+                    reached_end = True
+                    break
                 detail = f": {open_error}" if open_error is not None else ""
                 raise RuntimeError(
                     "Edit-menu clicks did not create a new same-PID popup whose title "
@@ -848,7 +1234,6 @@ def _extract_one(
 
             copied = False
             try:
-                previous_hash = _clipboard_hash_best_effort(client, popup)
                 _input_sequence(
                     client,
                     window=popup,
@@ -861,11 +1246,6 @@ def _extract_one(
                     ],
                 )
                 clipboard = _clipboard(client, popup)
-                _require_changed_clipboard(
-                    clipboard,
-                    previous_hash=previous_hash,
-                    method=f"edit-list block {block_index}",
-                )
                 if not str(clipboard["text"]).strip():
                     raise RuntimeError(
                         f"edit-list block {block_index} returned empty Unicode text"
@@ -879,6 +1259,7 @@ def _extract_one(
                 )
                 copied = True
             finally:
+                close_error: Exception | None = None
                 try:
                     _input_sequence(
                         client,
@@ -891,35 +1272,47 @@ def _extract_one(
                         ],
                     )
                 except Exception as exc:
-                    record["fatal_cleanup_error"] = True
-                    raise RuntimeError(f"edit-list cleanup failed: {exc}") from exc
-                if not _wait_for_window_closed(
+                    if not _is_post_action_unavailable(exc):
+                        record["fatal_cleanup_error"] = True
+                        raise RuntimeError(f"edit-list cleanup failed: {exc}") from exc
+                    close_error = exc
+                closed = _wait_for_window_closed(
                     client,
                     handle=int(popup["handle"]),
                     timeout_seconds=popup_wait_seconds,
-                ):
+                )
+                if not closed:
                     record["fatal_cleanup_error"] = True
                     raise RuntimeError("edit-list popup remained open after Escape")
+                if close_error is not None:
+                    record["warnings"].append(
+                        "Edit List close returned post-action worker_unavailable, but "
+                        "the popup was verified closed"
+                    )
 
             if not copied:
                 raise RuntimeError(f"edit-list block {block_index} was not copied")
             blocks.append(block)
             block_texts.append(block_text)
-            blocks_file = _write_blocks_metadata(
-                output_dir,
-                stem=stem,
-                program=program,
-                blocks=blocks,
-                complete=False,
-            )
+
+            if block_text.strip() == "ENDH":
+                block["end_detected"] = True
+                block["end_method"] = "terminal ENDH instruction"
+                blocks_file = _write_blocks_metadata(
+                    output_dir,
+                    stem=stem,
+                    program=program,
+                    blocks=blocks,
+                    complete=True,
+                )
+                reached_end = True
+                break
 
             main = _main_window(
                 _desktop_windows(client),
                 process_id=process_id,
                 title=inventory_title,
             )
-            before = _snapshot(client, main)
-            before_hash = _frame_hash(before)
             _input_sequence(
                 client,
                 window=main,
@@ -932,9 +1325,10 @@ def _extract_one(
             )
             time.sleep(pause_ms / 1000)
             after_hash = _frame_hash(_snapshot(client, main))
-            block["frame_before_ctrl_down_sha256"] = before_hash
+            block["frame_before_ctrl_down_sha256"] = current_frame_hash
             block["frame_after_ctrl_down_sha256"] = after_hash
-            block["end_detected"] = before_hash == after_hash
+            block["end_detected"] = current_frame_hash == after_hash
+            current_frame_hash = after_hash
             blocks_file = _write_blocks_metadata(
                 output_dir,
                 stem=stem,
@@ -948,7 +1342,7 @@ def _extract_one(
 
         if not reached_end:
             raise RuntimeError(
-                f"edit-list traversal reached the hard cap of {max_blocks} blocks"
+                f"edit-list traversal reached the hard cap of {block_limit} blocks"
             )
         joined = _join_block_texts(block_texts)
         if not joined.strip():
@@ -990,15 +1384,23 @@ def run(args: argparse.Namespace) -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
     client = WorkerClient(endpoint, token)
     preflight = _preflight(client)
-    inventory_response = client.action(
-        {
-            "action": "inventory_project_tree",
-            "checkpoint": f"{args.checkpoint}-inventory",
-            "expand_all": True,
-            "restore_state": True,
-            "apply": True,
-        }
-    )
+    if args.inventory_file:
+        inventory_path = Path(args.inventory_file)
+        if not inventory_path.is_absolute():
+            inventory_path = project / inventory_path
+        inventory_response = json.loads(inventory_path.read_text(encoding="utf-8"))
+        if not isinstance(inventory_response, dict):
+            raise RuntimeError("reused inventory must contain a JSON object")
+    else:
+        inventory_response = client.action(
+            {
+                "action": "inventory_project_tree",
+                "checkpoint": f"{args.checkpoint}-inventory",
+                "expand_all": True,
+                "restore_state": True,
+                "apply": True,
+            }
+        )
     _atomic_write_json(output_dir / "tree-inventory.raw.json", inventory_response)
     inventory = inventory_response.get("project_tree_inventory")
     if not isinstance(inventory, dict):
@@ -1037,6 +1439,11 @@ def run(args: argparse.Namespace) -> int:
     inventory_title = str(inventory["window_title"])
     process_id = int(inventory["process_id"])
     selected = programs[: args.limit] if args.limit else programs
+    raw_root: Path | None = None
+    if args.raw_dir:
+        raw_root = Path(args.raw_dir)
+        if not raw_root.is_absolute():
+            raw_root = project / raw_root
     failures = 0
     for index, program in enumerate(selected, start=1):
         record_id = _record_id(program)
@@ -1051,6 +1458,15 @@ def run(args: argparse.Namespace) -> int:
         }
         print(f"[{index}/{len(selected)}] extract: {program['name']}", flush=True)
         try:
+            expected_rows: int | None = None
+            if raw_root is not None:
+                raw_binary = (
+                    raw_root
+                    / "programs"
+                    / f"{_file_stem(index, program)}.CF_KV_STUDIO_2.bin"
+                )
+                if raw_binary.is_file():
+                    expected_rows = _module_row_count(raw_binary)
             record = _extract_one(
                 client,
                 program=active_program,
@@ -1070,7 +1486,10 @@ def run(args: argparse.Namespace) -> int:
                 max_blocks=args.max_blocks,
                 clipboard_snapshot_available=bool(
                     preflight["desktop_clipboard_snapshot_available"]
-                ),
+                )
+                and not args.no_binary_fast_path,
+                force_list_edit=args.no_binary_fast_path,
+                expected_rows=expected_rows,
             )
         except Exception as exc:
             record = {
@@ -1082,6 +1501,25 @@ def run(args: argparse.Namespace) -> int:
                 "completed_at": _now(),
             }
         state["programs"][record_id] = record
+        if record.get("status") != "complete":
+            try:
+                main = _main_window(
+                    _desktop_windows(client),
+                    process_id=process_id,
+                    title=inventory_title,
+                )
+                record.setdefault("warnings", []).extend(
+                    _dismiss_owned_dialogs(
+                        client,
+                        process_id=process_id,
+                        main_handle=int(main["handle"]),
+                        checkpoint=f"{args.checkpoint}-{index:03d}",
+                    )
+                )
+            except Exception as exc:
+                record.setdefault("warnings", []).append(
+                    f"dialog cleanup inspection: {str(exc)[:500]}"
+                )
         state["updated_at"] = _now()
         _atomic_write_json(state_path, state)
         if record.get("status") != "complete":
@@ -1119,14 +1557,14 @@ def main() -> int:
     parser.add_argument(
         "--content-x",
         type=int,
-        default=724,
-        help="initial empty ladder-cell anchor X (default: normalized live 1400/1936)",
+        default=284,
+        help="ladder row-number gutter X (default: normalized live 550/1936)",
     )
     parser.add_argument(
         "--content-y",
         type=int,
         default=287,
-        help="initial empty ladder-cell anchor Y (default: normalized live 300/1048)",
+        help="first visible ladder-circuit gutter Y (default: normalized live 300/1048)",
     )
     parser.add_argument(
         "--edit-menu-x",
@@ -1156,6 +1594,21 @@ def main() -> int:
     parser.add_argument("--pause-ms", type=int, default=180)
     parser.add_argument("--popup-wait-seconds", type=float, default=0.6)
     parser.add_argument("--max-blocks", type=int, default=10_000)
+    parser.add_argument(
+        "--inventory-file",
+        default="",
+        help="reuse a previously verified tree-inventory.raw.json",
+    )
+    parser.add_argument(
+        "--raw-dir",
+        default="",
+        help="use CF_KV_STUDIO_2 binaries in this capture root for exact row counts",
+    )
+    parser.add_argument(
+        "--no-binary-fast-path",
+        action="store_true",
+        help="force List Edit text extraction even when CF_KV_STUDIO_2 is available",
+    )
     parser.add_argument("--limit", type=int, default=0)
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()

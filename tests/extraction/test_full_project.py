@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
 from pathlib import Path
@@ -105,7 +106,10 @@ def test_merges_lossless_mnemonic_content_into_all_language_slots(tmp_path: Path
     assert content["encoding"] == "gb18030"
     assert content["raw_bytes_sha256"] == hashlib.sha256(raw).hexdigest()
     assert content["raw_text"].endswith('MOV "值" DM0\r\n')
-    assert content["lines"][2] == {"number": 3, "text": "LD M0"}
+    assert content["lines"][2] == {"number": 3, "text": "LD M0", "eol": "CRLF"}
+    assert base64.b64decode(content["raw_bytes_base64"]) == raw
+    assert content["newline_styles"] == ["CRLF"]
+    assert content["terminal_newline"] is True
     assert [command["opcode"] for command in content["commands"]] == [
         "Program",
         "LD",

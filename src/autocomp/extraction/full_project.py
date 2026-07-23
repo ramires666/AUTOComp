@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import json
 import re
@@ -11,7 +12,7 @@ from typing import Any
 
 _CJK = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]+")
 _HEADER = re.compile(
-    r"^\s*(?:program(?:\s+name)?|module)\s*[:：]\s*(?P<name>.+?)\s*$",
+    r"^\s*;?\s*(?:program(?:\s+name)?|module)\s*[:：]\s*(?P<name>.+?)\s*$",
     re.IGNORECASE,
 )
 _OPCODE = re.compile(r"^\s*(?P<opcode>[A-Za-z_][A-Za-z0-9_.]*)")
@@ -89,7 +90,23 @@ def _parsed_content(
     file: str,
     capture: dict[str, Any],
 ) -> dict[str, Any]:
-    lines = text.splitlines()
+    physical_lines = text.splitlines(keepends=True)
+    lines: list[str] = []
+    line_records: list[dict[str, Any]] = []
+    newline_styles: set[str] = set()
+    for number, physical in enumerate(physical_lines, 1):
+        if physical.endswith("\r\n"):
+            line, eol = physical[:-2], "CRLF"
+        elif physical.endswith("\n"):
+            line, eol = physical[:-1], "LF"
+        elif physical.endswith("\r"):
+            line, eol = physical[:-1], "CR"
+        else:
+            line, eol = physical, ""
+        lines.append(line)
+        line_records.append({"number": number, "text": line, "eol": eol})
+        if eol:
+            newline_styles.add(eol)
     commands: list[dict[str, Any]] = []
     occurrences: list[dict[str, Any]] = []
     in_block = False
@@ -114,9 +131,12 @@ def _parsed_content(
         "capture": capture,
         "raw_bytes_sha256": hashlib.sha256(raw).hexdigest(),
         "raw_bytes_size": len(raw),
+        "raw_bytes_base64": base64.b64encode(raw).decode("ascii"),
         "encoding": encoding,
         "raw_text": text,
-        "lines": [{"number": number, "text": line} for number, line in enumerate(lines, 1)],
+        "newline_styles": sorted(newline_styles),
+        "terminal_newline": bool(physical_lines and physical_lines[-1] != lines[-1]),
+        "lines": line_records,
         "commands": commands,
         "cjk_occurrences": occurrences,
     }
