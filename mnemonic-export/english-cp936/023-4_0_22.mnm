@@ -123,7 +123,7 @@ AND= @DM0 #20
 SET MR5004
 RES MR5900
 MOV #30 @DM0
-;/*Added£ºRead fine weighing weight*/_20231024
+;/*Added:Read fine weighing weight*/_20231024
 LD CR2002
 AND= @DM0 #30
 AND MR5900

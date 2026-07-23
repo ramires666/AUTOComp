@@ -69,7 +69,7 @@ AND MR6404
 MOV #3 DM100
 MPP
 RES MR705
-;<h1/>/*Cylinder/Solenoid Valve Alarm*/£¨5s£©
+;<h1/>/*Cylinder/Solenoid Valve Alarm*/(5s)
 ;FOR @DM0=0 TO 18 STEP 2
 ;IF DM450:@DM0<500  THEN
 ;   DM450:@DM0=500
@@ -172,7 +172,7 @@ ONDL DM464 @MR007
 CON
 AND @MR007
 SET MR1005
-;<h1/>/*Gate Motor Alarm*/£¨3s£©
+;<h1/>/*Gate Motor Alarm*/(3s)
 LD MR2900
 ANB MR2901
 ANB R100
@@ -189,7 +189,7 @@ ONDL DM468 @MR009
 CON
 AND @MR009
 SET MR1110
-;<h1/>/*Tray-Pickup Motor Alarm*/£¨5s£©
+;<h1/>/*Tray-Pickup Motor Alarm*/(5s)
 LD<= DM470 #0
 MOV #500 DM470
 LD<= DM472 #0
@@ -208,7 +208,7 @@ ONDL DM472 @MR011
 CON
 AND @MR011
 SET MR1108
-;<h1/>/*Flip Motor Alarm*/£¨3s£©
+;<h1/>/*Flip Motor Alarm*/(3s)
 LD<= DM474 #0
 MOV #300 DM474
 LD<= DM476 #0
@@ -239,7 +239,7 @@ LD MR1009
 AND MR1010
 AND MR1104
 SET MR1310
-;<h1/>/*Dumping Motor Alarm*/£¨3s£©
+;<h1/>/*Dumping Motor Alarm*/(3s)
 LD<= DM480 #0
 MOV #300 DM480
 LD<= DM482 #0

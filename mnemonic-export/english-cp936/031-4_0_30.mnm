@@ -170,8 +170,7 @@ CON
 AND @MR002
 SET MR3410
 MOV #50 @DM0
-;For compatibilityV1.0version56#return command£¬@DM0=50assign after
-;completion300
+;For compatibilityV1.0version56#return command,@DM0=50assign after completi...
 LDB @MR000
 AND= @DM0 #50
 AND R109

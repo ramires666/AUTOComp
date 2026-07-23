@@ -72,7 +72,7 @@ AND= @DM1 #60
 ANB R008
 ANB R102
 SET MR1402
-;<h1/>After Reset£¬Go to Lid-Opening Station
+;<h1/>After Reset,Go to Lid-Opening Station
 LD MR601
 MC
 LD=.L CM8830 +0
@@ -93,7 +93,7 @@ AND R105
 ANP MR21506
 ORL
 SET MR8806
-;<h1/>Graphite Crucible¡úInduction Melting
+;<h1/>Graphite CrucibleInduction Melting
 LD=.L CM8830 DM4044
 AND=.L CM8870 DM4046
 AND=.L CM8910 DM4048
@@ -104,7 +104,7 @@ ANB R105
 AND MR601
 ANP MR21508
 SET MR8808
-;<h1/>Induction Melting¡úGraphite Crucible
+;<h1/>Induction MeltingGraphite Crucible
 LD=.L CM8830 DM4050
 AND=.L CM8870 DM4052
 AND=.L CM8910 DM4054
@@ -116,7 +116,7 @@ AND R102
 AND MR601
 ANP MR21507
 SET MR8807
-;<h1/>Open Lid¡úLid-Handling Station
+;<h1/>Open LidLid-Handling Station
 LD=.L CM8830 DM4032
 AND=.L CM8870 DM4034
 AND=.L CM8910 DM4036
@@ -128,7 +128,7 @@ AND R105
 AND MR601
 ANP MR21505
 SET MR8805
-;<h1/>Lid-Handling Station¡úOpen Lid
+;<h1/>Lid-Handling StationOpen Lid
 LD=.L CM8830 DM4038
 AND=.L CM8870 DM4040
 AND=.L CM8910 DM4042
@@ -139,14 +139,14 @@ ANB R105
 AND MR601
 ANP MR21506
 SET MR8806
-;<h1/>Graphite Crucible¡úK-Gold
+;<h1/>Graphite CrucibleK-Gold
 LD @MR000
 OR @MR015
 AND R105
 AND MR601
 ANP MR21509
 SET MR8809
-;<h1/>K-Gold¡úGraphite Crucible
+;<h1/>K-GoldGraphite Crucible
 LD=.L CM8830 DM4060
 AND=.L CM8870 DM4062
 AND=.L CM8910 DM4064
@@ -158,14 +158,14 @@ AND R102
 AND MR601
 ANP MR21507
 SET MR8807
-;<h1/>Graphite Crucible¡úPure gold
+;<h1/>Graphite CruciblePure gold
 LD @MR000
 OR @MR015
 AND R105
 AND MR601
 ANP MR21510
 SET MR8810
-;<h1/>Pure gold¡úGraphite Crucible
+;<h1/>Pure goldGraphite Crucible
 LD=.L CM8830 DM4070
 AND=.L CM8870 DM4072
 AND=.L CM8910 DM4074
@@ -177,7 +177,7 @@ AND R102
 AND MR601
 ANP MR21507
 SET MR8807
-;<h1/>Graphite Crucible¡úLid-Handling Station
+;<h1/>Graphite CrucibleLid-Handling Station
 LD @MR000
 OR @MR015
 ANB R105
@@ -185,7 +185,7 @@ AND R003
 AND MR601
 ANP MR21505
 SET MR8805
-;<h1/>Lid-Handling Station¡úInduction Melting
+;<h1/>Lid-Handling StationInduction Melting
 LD @MR003
 OR @MR015
 ANB R105
@@ -193,8 +193,7 @@ AND R003
 AND MR601
 ANP MR21508
 SET MR8808
-;<h1/>/*Combined Command1£ºOpen Lid+Induction Melting-Graphite Crucible+Close
-;Lid*/@DM0¡¢@MR100
+;<h1/>/*Combined Command1:Open Lid+Induction Melting-Graphite Crucible+Clos...
 LDP MR21410
 AND R003
 AND R009
@@ -242,7 +241,7 @@ RES MR3202
 RES MR3105
 LD @MR100
 MC
-;¡¾Open Lid¡¿
+;Open Lid
 LDP @MR100
 SET MR21415
 SET MR21414
@@ -279,7 +278,7 @@ MOV #24 @DM0
 MPP
 AND<= DM2000 DM154
 MOV #30 @DM0
-;¡¾Air Blow¡¿
+;Air Blow
 LDB @MR104
 AND= @DM0 #24
 SET MR3503
@@ -311,7 +310,7 @@ AND @MR101
 RES MR3503
 RES MR11606
 MOV #30 @DM0
-;¡¾Induction Melting-Graphite Crucible¡¿
+;Induction Melting-Graphite Crucible
 ;/*Go to Induction Melting Station*/
 LDB @MR104
 AND= @DM0 #30
@@ -365,7 +364,7 @@ AND MR5900
 ANB R102
 RES MR5004
 MOV #90 @DM0
-;¡¾Close Lid¡¿
+;Close Lid
 LDB @MR104
 AND= @DM0 #90
 ANB R105
@@ -433,8 +432,7 @@ RES @MR100
 RES MR21411
 MOV #0 @DM0
 MCR
-;<h1/>/*Combined Command2£ºFlip from Graphite-Crucible Station to Carrier-Tray
-;Station*/@DM0¡¢@MR200
+;<h1/>/*Combined Command2:Flip from Graphite-Crucible Station to Carrier-Tr...
 LDB @MR104
 AND= @DM1 #10
 AND MR3612
@@ -451,8 +449,7 @@ LDB @MR104
 AND= @DM1 #70
 AND MR3613
 ONDL DM442 @MR211
-;=============================================================================
-;=================================================
+;==========================================================================...
 LDP MR21412
 AND R010
 AND R009

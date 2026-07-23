@@ -5,9 +5,8 @@ DEVICE:132
 ;/*MR3000-MR3915*/
 ;PLC,60 Point
 ;
-;Output£ºR500-606¡¢1500-1515£»HMIManual£ºMR3000-3115¡¢3200-3215£»Command
-;Auto£º3300-3415¡¢3500-3515
-;Position Reached£º3600-3615
+;Output:R500-6061500-1515;HMIManual:MR3000-31153200-3215;Command Auto:3300-...
+;Position Reached:3600-3615
 ;<h1/>Reset
 LDP MR615
 LD MR608
@@ -104,7 +103,7 @@ ZRES MR3403 MR3515
 ZRES MR3300 MR3401
 MOV #0 @DM3
 ;<h1/>===
-;<h1/>Graphite-Crucible Gripper Cylinder£¬HomeR508¡¢ActuatedR509
+;<h1/>Graphite-Crucible Gripper Cylinder,HomeR508ActuatedR509
 LD MR601
 ANB MR700
 ANP MR3008
@@ -140,7 +139,7 @@ RES MR2708
 LD R006
 AND MR2709
 RES MR2709
-;<h1/>Carrier-Tray Gripper Cylinder£¬HomeR510¡¢ActuatedR511
+;<h1/>Carrier-Tray Gripper Cylinder,HomeR510ActuatedR511
 LD MR601
 ANB MR700
 ANP MR3010
@@ -176,7 +175,7 @@ RES MR2710
 LD R008
 AND MR2711
 RES MR2711
-;<h1/>Z-Axis Gripper Cylinder£¬HomeR512¡¢ActuatedR513
+;<h1/>Z-Axis Gripper Cylinder,HomeR512ActuatedR513
 LD= CM8910 DM4004
 AND= CM8910 DM4012
 AND= CM8910 DM4018
@@ -239,7 +238,7 @@ RES MR2712
 LD R004
 AND MR2713
 RES MR2713
-;<h1/>Dumping Gripper Cylinder£¬HomeR514¡¢ActuatedR515
+;<h1/>Dumping Gripper Cylinder,HomeR514ActuatedR515
 LD MR601
 ANB MR700
 ANP MR3014
@@ -272,7 +271,7 @@ AND @MR202
 RES MR2714
 LD R005
 RES MR2715
-;<h1/>Equipment Right Door Lock (Screen Side)£¬R600
+;<h1/>Equipment Right Door Lock (Screen Side),R600
 LD MR3100
 ONDL #100 @MR301
 LD @MR301
@@ -294,7 +293,7 @@ ORP MR615
 RES R600
 RES @MR311
 RES MR3400
-;<h1/>Equipment Left Door Lock (Gate Side£©£¬R601
+;<h1/>Equipment Left Door Lock (Gate Side),R601
 LD MR3101
 ONDL #100 @MR302
 LD @MR302
@@ -316,7 +315,7 @@ ORP MR615
 RES R601
 RES MR3401
 RES @MR312
-;<h1/>Air-Tank Pressurization Solenoid Valve£¬R602
+;<h1/>Air-Tank Pressurization Solenoid Valve,R602
 LD MR601
 ANB MR700
 AND MR3102
@@ -324,7 +323,7 @@ LD CR2002
 AND MR3402
 ORL
 OUT R602
-;<h1/>Coarse-Weighing Electromagnet£¬R604
+;<h1/>Coarse-Weighing Electromagnet,R604
 LD MR601
 ANB MR700
 AND MR3104
@@ -332,7 +331,7 @@ LD MR700
 AND MR3404
 ORL
 OUT R604
-;<h1/>Chiller Circulation Pump£¬R605
+;<h1/>Chiller Circulation Pump,R605
 LD MR601
 ANB MR700
 AND MR3105
@@ -369,7 +368,7 @@ RES MR3405
 RES MR3105
 RES R605
 MOV #0 DM605
-;/*After Chiller Shutdown£¬Delay30sTurn Off Cooling-Water Pump*/
+;/*After Chiller Shutdown,Delay30sTurn Off Cooling-Water Pump*/
 LD<= DM528 #0
 OR> DM528 #6000
 MOV #3000 DM528
@@ -386,7 +385,7 @@ AND CR2003
 RES MR3406
 MPP
 MOV #0 DM605
-;<h1/>Water-Cooling Head Circulation Pump£¬R606
+;<h1/>Water-Cooling Head Circulation Pump,R606
 LD MR21411
 ANB @MR110
 SET @MR110
@@ -400,7 +399,7 @@ OR @MR110
 AND MR3406
 ORL
 OUT R606
-;<h1/>Industrial Camera Light£¬R607
+;<h1/>Industrial Camera Light,R607
 LD MR601
 ANB MR700
 AND MR3107
@@ -408,8 +407,8 @@ LD MR700
 AND MR3407
 ORL
 OUT R607
-;<h1/>Gate Actuator Motor£¬StartR1500¡¢DirectionR1501
-;Gate Open_HMI£ºMR30108£»Gate Open_Automatic£ºMR30408
+;<h1/>Gate Actuator Motor,StartR1500DirectionR1501
+;Gate Open_HMI:MR30108;Gate Open_Automatic:MR30408
 LDB MR700
 AND MR601
 ANP MR3108
@@ -444,7 +443,7 @@ ONDL #200 @MR109
 CON
 AND @MR109
 RES @MR105
-;Gate Close_HMI£ºMR30109£»Gate Close_Automatic£ºMR30409
+;Gate Close_HMI:MR30109;Gate Close_Automatic:MR30409
 LDB MR700
 AND MR601
 ANP MR3109
@@ -478,7 +477,7 @@ SET MR3609
 RES @MR009
 RES MR2901
 RES MR2900
-;Gate Motor£ºStart¡¢Direction
+;Gate Motor:StartDirection
 LD @MR000
 ANB R100
 LD @MR001
@@ -488,8 +487,8 @@ OUT R1500
 LD @MR001
 ANB R110
 OUT R1501
-;<h1/>Tray-Pickup Motor£¬StartR1502¡¢DirectionR1503
-;Gate Station_HMI£ºMR30410£»Gate Station_Automatic£ºMR30510
+;<h1/>Tray-Pickup Motor,StartR1502DirectionR1503
+;Gate Station_HMI:MR30410;Gate Station_Automatic:MR30510
 LDB MR700
 AND MR601
 ANP MR3110
@@ -505,7 +504,7 @@ ORL
 ANB R109
 OUT @MR002
 RES MR3611
-;Tray-Pickup Station_HMI£ºMR30311£»Tray-Pickup Station_Automatic£ºMR30411
+;Tray-Pickup Station_HMI:MR30311;Tray-Pickup Station_Automatic:MR30411
 LDB MR700
 AND MR601
 ANP MR3111
@@ -537,15 +536,14 @@ RES MR3111
 RES @MR011
 RES MR2903
 RES MR2902
-;Tray-Pickup Motor£ºStart¡¢Direction
+;Tray-Pickup Motor:StartDirection
 LD @MR002
 OR @MR003
 OUT R1502
 LD @MR003
 OUT R1503
-;<h1/>Flip Motor£¬StartR1504¡¢DirectionR1505
-;Flip Motor Carrier-Tray Position_HMI:MR30112£»Flip Motor Carrier-Tray
-;Position_Automatic:MR30412
+;<h1/>Flip Motor,StartR1504DirectionR1505
+;Flip Motor Carrier-Tray Position_HMI:MR30112;Flip Motor Carrier-Tray Posit...
 LD R008
 AND R101
 LDB R008
@@ -582,8 +580,7 @@ AND R010
 ANB R114
 AND R115
 OUT @MR004
-;Flip Motor Graphite-Crucible Position_HMI:MR30113£»Flip Motor
-;Graphite-Crucible Position_Automatic:MR30413
+;Flip Motor Graphite-Crucible Position_HMI:MR30113;Flip Motor Graphite-Cruc...
 LD R006
 AND R102
 LDB R006
@@ -616,12 +613,11 @@ AND= DM15000 #1028
 ORL
 AND R009
 OUT @MR005
-;Flip Motor Home_HMI:MR30215£»Flip Motor Home_Automatic:MR30415
+;Flip Motor Home_HMI:MR30215;Flip Motor Home_Automatic:MR30415
 ;
-;//Start+Direction£ºToward Graphite-Crucible Station
-;//Start£ºToward Carrier-Tray Station
-;//All Three Flip Sensors Are Normally Open£¬At the Current Position, It Is at
-;the Notch£¬Sensor Isoff£¬When Not Present, It Ison
+;//Start+Direction:Toward Graphite-Crucible Station
+;//Start:Toward Carrier-Tray Station
+;//All Three Flip Sensors Are Normally Open,At the Current Position, It Is...
 LDB MR700
 AND MR601
 ANP MR3215
@@ -651,9 +647,7 @@ LD R104
 ANB R009
 ANL
 SET @MR114
-;Homing When Not at Graphite-Crucible Station or Carrier-Tray Station£¬First
-;Move Toward Graphite-Crucible Station£¬1¡¢Rotate Until Graphite-Crucible
-;SensoroffThen Move Toward Carrier-Tray Station£»2¡¢If Home Is Reached, Complete
+;Homing When Not at Graphite-Crucible Station or Carrier-Tray Station,First...
 LDB CR8602
 ANB CR8502
 ANB CR8402
@@ -736,7 +730,7 @@ LDB R104
 RES MR3215
 RES @MR115
 RES @MR114
-;Flip Motor£¬Start¡¢Direction Output
+;Flip Motor,StartDirection Output
 LD @MR004
 ANB MR3302
 SET MR4304
@@ -764,9 +758,7 @@ LDB @MR115
 AND MR4315
 RES MR4315
 RES MR2905
-;-----------------------------------------------------------------------------
-;-----------------------------------------------------------------------------
-;-----------
+;--------------------------------------------------------------------------...
 LD @MR114
 OR @MR004
 OR @MR005
@@ -774,8 +766,8 @@ OUT R1504
 LD @MR115
 OR @MR005
 OUT R1505
-;<h1/>Dumping Motor£¬StartR1506¡¢DirectionR1507
-;Dumping Motor Home_HMI£ºMR30114£»Dumping Motor Home_Automatic£ºMR30414
+;<h1/>Dumping Motor,StartR1506DirectionR1507
+;Dumping Motor Home_HMI:MR30114;Dumping Motor Home_Automatic:MR30414
 LDB MR700
 AND MR601
 ANP MR3114
@@ -801,7 +793,7 @@ ORL
 AND R114
 OUT @MR006
 RES MR3615
-;Dumping Motor Actuation_HMI£ºMR30115£»Dumping Motor Actuation_Automatic£ºMR30415
+;Dumping Motor Actuation_HMI:MR30115;Dumping Motor Actuation_Automatic:MR30415
 LD R005
 AND R101
 LDB R005
@@ -855,13 +847,13 @@ LDB R115
 RES MR3115
 RES @MR015
 RES MR2906
-;Dumping Motor£ºStart¡¢Direction
+;Dumping Motor:StartDirection
 LD @MR006
 OR @MR007
 OUT R1506
 LD @MR006
 OUT R1507
-;<h1/>XRF Analyzer Power£¬R1508
+;<h1/>XRF Analyzer Power,R1508
 LDB MR700
 AND MR601
 AND MR3200
@@ -869,7 +861,7 @@ LD MR700
 AND MR3500
 ORL
 OUT R1508
-;<h1/>Induction Furnace Power£¬R1509
+;<h1/>Induction Furnace Power,R1509
 LDB MR700
 AND MR601
 AND MR3201
@@ -878,7 +870,7 @@ AND MR3501
 ORL
 ANB MR705
 OUT R1509
-;<h1/>Chiller Power£¬R1510
+;<h1/>Chiller Power,R1510
 ;@DM2=DM500-DM502
 ;@DM2=DM500-DM502
 LD CR2002
@@ -905,7 +897,7 @@ ORL
 OR MR21415
 AND R605
 OUT R1510
-;<h1/>Furnace Air-Blow Cooling Solenoid Valve£¬R1511
+;<h1/>Furnace Air-Blow Cooling Solenoid Valve,R1511
 LD MR3203
 ONDL #1000 @MR103
 CON
@@ -919,7 +911,7 @@ OR MR21411
 AND MR3503
 ORL
 OUT R1511
-;<h1/>Air Compressor Power£¬R1512
+;<h1/>Air Compressor Power,R1512
 LD CR2002
 AND MR601
 AND MR3204
@@ -933,7 +925,7 @@ AND R012
 AND MR3204
 RES MR3204
 RES MR3206
-;<h1/>Induction Furnace Start£¬R1513
+;<h1/>Induction Furnace Start,R1513
 LDP MR615
 OR CR2008
 ORP MR610
@@ -957,7 +949,7 @@ ORL
 ANB MR705
 ANB @MR205
 OUT R1513
-;<h1/>Vacuum Chamber Evacuation Solenoid Valve£¬R1514
+;<h1/>Vacuum Chamber Evacuation Solenoid Valve,R1514
 LD CR2002
 AND MR601
 AND MR3206
@@ -967,7 +959,7 @@ ORL
 ANB R012
 ANB R1515
 OUT R1514
-;<h1/>Vacuum Chamber Venting Solenoid Valve£¬R1515
+;<h1/>Vacuum Chamber Venting Solenoid Valve,R1515
 LD MR3507
 AND MR3207
 RES MR3207
@@ -979,7 +971,7 @@ AND MR3507
 ORL
 ANB R1514
 OUT R1515
-;<h1/>/*Fine Weighing Communication Relay*/R603¡¢R11
+;<h1/>/*Fine Weighing Communication Relay*/R603R11
 LDB MR601
 RES MR23404
 LDB MR1011
@@ -995,18 +987,18 @@ ANB MR1011
 OUT R507
 ;<h1/>===
 ;<h1/>/*Output Flag Mapping*/
-;'
+;
 ;MR2700.D=R500.D
 ;
-;'
+;
 ;MR2900.U=R1500.U
-;'
+;
 ;
 ;MR2700.D=R500.D
 ;
 LD CR2002
 MOV.D R500 MR2700
-;'
+;
 ;
 ;MR2900.U=R1500.U
 LD CR2002

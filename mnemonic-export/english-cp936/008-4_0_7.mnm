@@ -38,9 +38,9 @@ ANB MR610
 ANB MR608
 INV
 OUT @MR000
-;<h1/>Command Status Display£¨Not Started-In Progress-Completed£©
-;'1#Command To57#Command
-;'
+;<h1/>Command Status Display(Not Started-In Progress-Completed)
+;1#Command To57#Command
+;
 ;FOR @DM4=0 TO 42 STEP 1
 ;
 ;MR8000:(@DM4*2)=MR6000:(@DM4*2)
@@ -56,9 +56,9 @@ OUT @MR000
 ;	END IF
 ;	
 ;NEXT
-;'1#Command To57#Command
+;1#Command To57#Command
 ;
-;'
+;
 ;
 ;FOR @DM4=0 TO 42 STEP 1
 ;
@@ -188,7 +188,7 @@ LDB CR2009
 CJ #2000
 LABEL #2001
 ;
-;<h1/>/*Standalone Continuous Action Without Return*/£¨1#-25#£©
+;<h1/>/*Standalone Continuous Action Without Return*/(1#-25#)
 LDB @MR000
 AND MR612
 MEP
@@ -218,7 +218,7 @@ MOV #12 @DM0
 MPP
 AND<> DM574 #1
 MOV #20 @DM0
-;/*Standalone Version£¬Simulate Host Computer-Fine Weighing Tare*/
+;/*Standalone Version,Simulate Host Computer-Fine Weighing Tare*/
 LD CR2002
 AND= @DM0 #12
 MPS

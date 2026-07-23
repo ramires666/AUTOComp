@@ -2,7 +2,7 @@ DEVICE:132
 ;MODULE:³õÊ¼»¯³ÌÐò
 ;MODULE_TYPE:0
 ;/*MR000-MR515*/
-;¡¾Initialization¡¿
+;Initialization
 LDP MR700
 ANB MR614
 LD MR608
@@ -21,7 +21,7 @@ LD CR2008
 ORP MR610
 MOV #0 DM1000
 ;<h1/>/*Alarm*/
-;¡¾Solenoid Valve Alarm¡¿
+;Solenoid Valve Alarm
 LDB @MR000
 AND= @DM0 #0
 AND MR614
@@ -48,7 +48,7 @@ AND R004
 ANB R105
 RES MR1003
 MOV #0 DM600
-;¡¾Station Alarm¡¿
+;Station Alarm
 ;/*Flip Station*/
 LD CR2002
 AND= @DM3 #20
@@ -318,7 +318,7 @@ LD MR614
 ANB MR610
 ANB MR613
 MC
-;<h1/>/*Step1£ºXYZ Axes Initialization*/
+;<h1/>/*Step1:XYZ Axes Initialization*/
 LDB @MR000
 AND= @DM0 #0
 AND MR614
@@ -334,7 +334,7 @@ AND R000
 AND R001
 AND R002
 MOV #20 @DM0
-;<h1/>/*Step2£ºMotor Homing*/
+;<h1/>/*Step2:Motor Homing*/
 LDB @MR000
 AND= @DM0 #20
 SET MR100
@@ -346,7 +346,7 @@ MOV #10 @DM1
 MOV #10 @DM2
 MOV #10 @DM3
 MOV #10 @DM4
-;/*Gate Motor*/@DM1¡¢@MR101¡¢@MR111
+;/*Gate Motor*/@DM1@MR101@MR111
 LDB @MR000
 AND= @DM1 #10
 MPS
@@ -371,7 +371,7 @@ SET @MR111
 RES MR4009
 RES MR3609
 MOV #50 @DM0
-;/*Tray-Pickup Motor*/@DM2¡¢@MR102¡¢@MR112
+;/*Tray-Pickup Motor*/@DM2@MR102@MR112
 LDB @MR000
 AND= @DM2 #10
 MPS
@@ -397,7 +397,7 @@ RES MR3611
 SET @MR112
 MOV #0 @DM2
 MOV #50 @DM0
-;/*Flip Motor*/@DM3¡¢@MR103¡¢@MR113
+;/*Flip Motor*/@DM3@MR103@MR113
 LD CR2002
 AND= @DM3 #10
 MPS
@@ -474,7 +474,7 @@ RES MR3909
 SET MR3908
 RES MR3613
 MOV #50 @DM3
-;Tray Placed at Graphite-Crucible Station£¬Check carrier-tray gripper status
+;Tray Placed at Graphite-Crucible Station,Check carrier-tray gripper status
 LD CR2002
 AND= @DM3 #50
 ANB R006
@@ -533,7 +533,7 @@ RES MR3605
 RES MR4115
 MOV #0 @DM3
 MOV #50 @DM0
-;/*Dumping Motor*/@DM4¡¢@MR104¡¢@MR114
+;/*Dumping Motor*/@DM4@MR104@MR114
 LD CR2002
 AND= @DM4 #10
 MPS
@@ -626,7 +626,7 @@ RES @MR113
 RES @MR114
 RES MR100
 MOV #100 @DM0
-;<h1/>/*Step3£ºZ-Axis Gripper Returns Carrier Tray to Carrier-Tray Station*/
+;<h1/>/*Step3:Z-Axis Gripper Returns Carrier Tray to Carrier-Tray Station*/
 LDB @MR000
 AND= @DM0 #100
 MPS
@@ -674,7 +674,7 @@ MPP
 AND= DM573 #1
 MOV #172 @DM0
 ;/*Judge*/
-;@DM7=60£¬Move to graphite-crucible station
+;@DM7=60,Move to graphite-crucible station
 ;/*Move to graphite-crucible station*/
 LDB @MR000
 AND= @DM7 #60
@@ -695,8 +695,7 @@ SET MR3912
 MPP
 AND R003
 MOV #170 @DM0
-;-----------------------------------------------------------------------------
-;------------------------------------------------------------
+;--------------------------------------------------------------------------...
 ;/*Move to coarse-weighing station to pick up tray*/
 LDB @MR000
 AND= @DM5 #10
@@ -792,7 +791,7 @@ MOV #170 @DM0
 LD CR2002
 AND= @DM0 #170
 FMOV #0 @DM1 #7
-;Added£ºPure gold¡¢K-Gold Station Initialization_20231025£¨Preliminary R&D£©
+;Added:Pure goldK-Gold Station Initialization_20231025(Preliminary R&D)
 LDB @MR000
 AND= @DM0 #170
 AND R003
@@ -889,7 +888,7 @@ MPP
 AND @MR315
 RES MR3507
 MOV #200 @DM0
-;<h1/>/*Step4£ºStation status check*/
+;<h1/>/*Step4:Station status check*/
 LD= @DM0 #200
 AND MR3507
 RES MR3507
@@ -939,7 +938,7 @@ ANL
 RES MR20604
 RES MR3507
 MOV #300 @DM0
-;<h1/>/*Step5£ºInitialization complete*/
+;<h1/>/*Step5:Initialization complete*/
 LDB @MR000
 AND= @DM0 #300
 RES MR700

@@ -33,7 +33,7 @@ LD MR22500
 SET @MR000
 RES MR22500
 SET MR22501
-;<h1/>/*Chiller£ºRead Operating Status and Alarms*/ Z1=16
+;<h1/>/*Chiller:Read Operating Status and Alarms*/ Z1=16
 LDB MR21100
 AND R1510
 AND= Z1 #16
@@ -67,7 +67,7 @@ MPP
 AND @MR000
 RES @MR000
 MOV #22 Z1
-;<h1/>/*Chiller Alarm Temperature Limits*/HMI£ºMR22500¡¢DM498¡¢DM499£»Z1=22
+;<h1/>/*Chiller Alarm Temperature Limits*/HMI:MR22500DM498DM499;Z1=22
 ;/*Upper Limit Setting*/
 LDB MR21100
 AND R1510
@@ -166,8 +166,7 @@ SET MR21013
 LD CR7304
 RES CR7204
 MCR
-;<h1/>/*Chiller Status and Alarms-Data Parsing*/FRM
-;Port2£ºDM2316~DM2318£¨FRMChiller£©£»MR22615~MR23115£¨bitStatus£©
+;<h1/>/*Chiller Status and Alarms-Data Parsing*/FRM Port2:DM2316~DM2318(FRM...
 LDB R1510
 AND<> DM2316 #0
 FMOV #0 DM2316 #5
@@ -183,34 +182,34 @@ RES MR22606
 RES MR22815
 RES MR21015
 RES MR21014
-;'Operating Status1
+;Operating Status1
 ;MR22600.U=DM2316
-;'Operating Status2
+;Operating Status2
 ;MR22700.U=DM2317
-;'Alarm Status1
+;Alarm Status1
 ;MR22800.U=DM2318
-;'Alarm Status2~3¡¢DIP Switch Digital Input Status  >>>  Reserved
+;Alarm Status2~3DIP Switch Digital Input Status  >>>  Reserved
 LDP MR21014
 NCJ #1000
-;'Operating Status1
+;Operating Status1
 ;
 ;MR22600.U=DM2316
 ;
 LD CR2002
 MOV DM2316 MR22600
-;'Operating Status2
+;Operating Status2
 ;
 ;MR22700.U=DM2317
 ;
 LD CR2002
 MOV DM2317 MR22700
-;'Alarm Status1
+;Alarm Status1
 ;
 ;MR22800.U=DM2318
 ;
 LD CR2002
 MOV DM2318 MR22800
-;'Alarm Status2~3¡¢DIP Switch Digital Input Status  >>>  Reserved
+;Alarm Status2~3DIP Switch Digital Input Status  >>>  Reserved
 LABEL #1000
 ;
 ;/*Operating Status Monitoring*/

@@ -3,11 +3,11 @@ DEVICE:132
 ;MODULE_TYPE:0
 ;/*MR2000-MR2015*/
 ;<h1/>/*Lifespan Setting*/
-;'Graphite Crucible Tentative Near-End-of-Life90 Times
+;Graphite Crucible Tentative Near-End-of-Life90 Times
 LD< DM530 #0
 OR= DM530 #0
 MOV #90 DM530
-;'Graphite Crucible Tentative Lifespan100 Times
+;Graphite Crucible Tentative Lifespan100 Times
 LD< DM531 #0
 OR= DM531 #0
 MOV #100 DM531

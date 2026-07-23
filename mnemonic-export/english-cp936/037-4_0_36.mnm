@@ -10,7 +10,7 @@ ORP MR609
 OR CR2008
 ZRES MR1000 MR1803
 MOV #0 DM102
-;<h1/>/*Equipment Mechanical Motion Error Category*/£¨1000-1999£©
+;<h1/>/*Equipment Mechanical Motion Error Category*/(1000-1999)
 LD MR1300
 MOV #1000 DM102
 LD MR1000
@@ -105,11 +105,11 @@ LD MR1412
 MOV #1043 DM102
 LD MR1503
 MOV #1044 DM102
-;<h1/>/*Equipment Communication Error Category*/£¨2000-2999£©
+;<h1/>/*Equipment Communication Error Category*/(2000-2999)
 LD MR1700
 MOV #2005 DM102
-;<h1/>/*Equipment XRF Assay Error Category*/£¨3000-3999£©
-;<h1/>/*Equipment Induction Melting Error Category*/£¨4000-4999£©
+;<h1/>/*Equipment XRF Assay Error Category*/(3000-3999)
+;<h1/>/*Equipment Induction Melting Error Category*/(4000-4999)
 LD MR1015
 MOV #4000 DM102
 LD MR1014
@@ -131,14 +131,14 @@ LD MR1603
 MOV #4008 DM102
 LD MR1604
 MOV #4009 DM102
-;<h1/>/*Equipment Cooling Error Category*/£¨5000-5999£©
+;<h1/>/*Equipment Cooling Error Category*/(5000-5999)
 LD MR1902
 MOV #5002 DM102
 LD MR1908
 MOV #5008 DM102
 LD MR1909
 MOV #5009 DM102
-;<h1/>/*Equipment Weighing Error Category*/£¨6000-6999£©
+;<h1/>/*Equipment Weighing Error Category*/(6000-6999)
 LD MR1800
 AND CR2003
 MOV #6000 DM102

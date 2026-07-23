@@ -15,7 +15,7 @@ RES MR3803
 RES MR3804
 ZRES @MR000 @MR415
 FMOV #0 @DM0 #7
-;'Melting Temperature960Timeout Duration,Default800s
+;Melting Temperature960Timeout Duration,Default800s
 LD<=.S DM512 +0
 MOV.D #80000 DM512
 ;<h1/>/*Alarm*/
@@ -48,9 +48,8 @@ AND T53
 AND CR2003
 SET MR1601
 ;/*Furnace Alarm*/
-;/*V3.6.0.1*/£¨20241025£©
-;<Melting Power Supply Alarm>£ºNo Automatic Reset Alarm£¬Requires Manual
-;Handling
+;/*V3.6.0.1*/(20241025)
+;<Melting Power Supply Alarm>:No Automatic Reset Alarm,Requires Manual Hand...
 LD R1509
 AND R015
 ONDL #500 @MR011
@@ -78,7 +77,7 @@ ANB MR1015
 ANB MR705
 INV
 OUT @MR000
-;<h1/>/*Induction Melting*/@MR0¡¢@DM0
+;<h1/>/*Induction Melting*/@MR0@DM0
 LDB @MR000
 AND MR6112
 AND MR11515
@@ -131,7 +130,7 @@ LDP MR11600
 ORP CR2008
 ORP MR615
 RES @MR500
-;'Furnace Shutdown Countdown Display To HMI
+;Furnace Shutdown Countdown Display To HMI
 ;DM10310.D=DM282.D-T50.D
 LDB @MR500
 AND> T50 #0
@@ -182,7 +181,7 @@ CON
 AND @MR002
 SET MR3505
 MOV #20 @DM0
-;/*Temperature reached£¬Turn off furnace*/
+;/*Temperature reached,Turn off furnace*/
 LD CR2002
 AND= @DM0 #20
 MPS
@@ -214,8 +213,7 @@ LD @MR007
 AND CR2004
 RES @MR007
 SET MR10009
-;===During furnace internal cooling repair£¬Issue of air compressor still
-;running====£¨2240827£©
+;===During furnace internal cooling repair,Issue of air compressor still ru...
 LD MR11610
 RES MR21300
 RES MR3504
@@ -238,7 +236,7 @@ LDB MR611
 ANB MR610
 INV
 OUT @MR100
-;<h1/>/*Close furnace£¬Natural cooling£¬Release vacuum*/@MR100¡¢@DM1
+;<h1/>/*Close furnace,Natural cooling,Release vacuum*/@MR100@DM1
 LD MR11610
 MEP
 SET MR11601
@@ -256,9 +254,9 @@ SET MR11701
 LD MR11601
 AND<> @DM1 #0
 RES @MR102
-;V3.6.0.5Version and above£º
-;Yes-Pressure-release signal£¬Delayed lid-opening time setting£º5s
-;No-Pressure-release signal£¬Delayed lid-opening time setting£º60s
+;V3.6.0.5Version and above:
+;Yes-Pressure-release signal,Delayed lid-opening time setting:5s
+;No-Pressure-release signal,Delayed lid-opening time setting:60s
 LD<= DM420 #0
 MOV #500 DM420
 LD<= DM422 #0
@@ -316,7 +314,7 @@ ANB MR611
 ANB MR610
 INV
 OUT @MR200
-;<h1/>/*Open Lid*/@MR200¡¢@DM2
+;<h1/>/*Open Lid*/@MR200@DM2
 LD MR11611
 MEP
 RES MR11611
@@ -350,7 +348,7 @@ MOV #0 @DM2
 MCR
 ;<h1/>--------------
 ;<h1/>/*Alarm*/
-;'Cooling air-blow timeout duration,Default400s
+;Cooling air-blow timeout duration,Default400s
 LD<.D DM514 #60000
 MOV.D #60000 DM514
 LD MR11603
@@ -370,7 +368,7 @@ LDB MR611
 ANB MR610
 INV
 OUT @MR300
-;<h1/>/*Air Blow*/@MR300¡¢@DM3
+;<h1/>/*Air Blow*/@MR300@DM3
 LD MR11612
 MEP
 RES MR11612
@@ -434,7 +432,7 @@ MOV #0 @DM3
 MCR
 ;<h1/>--------------
 ;<h1/>/*Alarm*/
-;'Graphite-Crucible Station Cooling Timeout,Default900s
+;Graphite-Crucible Station Cooling Timeout,Default900s
 LD<.D DM516 #90000
 MOV.D #90000 DM516
 LD MR3804
@@ -468,13 +466,12 @@ ANB MR611
 ANB MR610
 INV
 OUT @MR400
-;<h1/>/*Induction Melting Station¡úGraphite-Crucible Station¡¢Close
-;Lid*/@MR400¡¢@DM4
+;<h1/>/*Induction Melting StationGraphite-Crucible StationClose Lid*/@MR400...
 LD MR11613
 MEP
 RES MR11613
 SET MR11604
-;'Copper-plate temperature default coefficient£º5¡æ
+;Copper-plate temperature default coefficient:5C
 LD=.S DM533 +0
 OR>.S DM533 +50
 OR<.S DM533 -50
@@ -530,9 +527,7 @@ RES MR5807
 SET MR6907
 MOV #30 @DM4
 ;/*Place tray*/
-;///Changed to£ºTurn On Water-Cooling-Head Circulation Pump at
-;Graphite-Crucible Station£¬PreventZ-Axis Gripper Alarm£¬Water pump running
-;continuously_20231113
+;///Changed to:Turn On Water-Cooling-Head Circulation Pump at Graphite-Cruc...
 LDB @MR400
 AND= @DM4 #30
 AND MR5807
@@ -631,19 +626,18 @@ ANL
 RES MR23400
 RES MR23403
 RES MR23410
-;'Copper-plate temperature default value before secondary tare£º50¡æ
+;Copper-plate temperature default value before secondary tare:50C
 LD<= DM526 #30
 OR> DM526 #70
 AND CR2003
 MOV #42 DM526
-;'HMIInput error correction
+;HMIInput error correction
 ;IF DM526<=30 OR DM526> 70 THEN
 ;   DM524=40  
 ;END IF
 ;
-;DM526=DM524      'V3.6.0.5Version and above£¬Prevent temperature rise after
-;secondary tare£¬Use the same temperature for flip and secondary tare
-;'HMIInput error correction
+;DM526=DM524      V3.6.0.5Version and above,Prevent temperature rise after...
+;HMIInput error correction
 ;
 ;IF DM526<=30 OR DM526> 70 THEN
 ;
@@ -659,8 +653,7 @@ MOV #40 DM524
 ;END IF
 ;
 LABEL #2000
-;DM526=DM524      'V3.6.0.5Version and above£¬Prevent temperature rise after
-;secondary tare£¬Use the same temperature for flip and secondary tare
+;DM526=DM524      V3.6.0.5Version and above,Prevent temperature rise after...
 LD CR2002
 MOV DM524 DM526
 ;
@@ -704,11 +697,11 @@ AND> @DM5 DM537
 SET @MR410
 SET @MR510
 RES @MR408
-;'Default copper plate temperature before flip£º40¡æ
+;Default copper plate temperature before flip:40C
 LD<= DM524 #10
 OR> DM524 #100
 MOV #40 DM524
-;/*Check temperature¡Ü40¡æ*/
+;/*Check temperature40C*/
 LD MR3804
 ANB R102
 AND @MR410

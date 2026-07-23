@@ -20,8 +20,7 @@ OR CR2008
 RES MR700
 MOV #0 @DM1
 MOV #0 @DM0
-;During single-machine debugging£¬To Host computer Running£¬Cannot send commands
-;toPLC
+;During single-machine debugging,To Host computer Running,Cannot send comma...
 LD MR601
 ANB MR615
 ANB MR614
@@ -165,63 +164,61 @@ LABEL #2003
 LABEL #2001
 ;
 ;<h1/>/*Default Configuration*/
-;DM569=0        '=0£¬Mandarin Annunciation£»=1£¬English Annunciation
-;DM570=1        '=0£¬No Voice Annunciation£»=1£¬Voice Annunciation
-;DM571=1        '=0£¬Two-Channel Temperature Module£»=1£¬Four-Channel Temperature
-;DM572=1        '=0£¬Old Chiller£¨Large Screen£©£»=1£¬New Chiller
-;DM573=0        '=0£¬Do Not Use Pure Gold¡¢K-Gold Station£»=1£¬Use
-;DM574=1        '=0£¬Do Not Use Secondary Tare£»=1£¬Use
-;DM575=0        '=0£¬Do Not Use Temperature and Humidity£»=1£¬Use Temperature and
-;Humidity
-;DM576=0        '=0£¬Do Not Use Carrier-Tray Residue Detection£»=1£¬Use
-;DM577=0        '=0£¬Chiller Has Water£»=1£¬Chiller No Water
-;'DM578=0       '
-;'DM579=0       '
-;DM580=0        '£¨PLC£©£½1£¬No Induction Melting£»=0£¬Normal Induction Melting
+;DM569=0        =0,Mandarin Annunciation;=1,English Annunciation
+;DM570=1        =0,No Voice Annunciation;=1,Voice Annunciation
+;DM571=1        =0,Two-Channel Temperature Module;=1,Four-Channel Temperature
+;DM572=1        =0,Old Chiller(Large Screen);=1,New Chiller
+;DM573=0        =0,Do Not Use Pure GoldK-Gold Station;=1,Use
+;DM574=1        =0,Do Not Use Secondary Tare;=1,Use
+;DM575=0        =0,Do Not Use Temperature and Humidity;=1,Use Temperature a...
+;DM576=0        =0,Do Not Use Carrier-Tray Residue Detection;=1,Use
+;DM577=0        =0,Chiller Has Water;=1,Chiller No Water
+;DM578=0       
+;DM579=0       
+;DM580=0        (PLC)=1,No Induction Melting;=0,Normal Induction Melting
 LDP MR4902
 NCJ #1000
-;DM569=0        '=0£¬Mandarin Annunciation£»=1£¬English Annunciation
+;DM569=0        =0,Mandarin Annunciation;=1,English Annunciation
 ;
 LD CR2002
 MOV #0 DM569
-;DM570=1        '=0£¬No Voice Annunciation£»=1£¬Voice Annunciation
+;DM570=1        =0,No Voice Annunciation;=1,Voice Annunciation
 ;
 LD CR2002
 MOV #1 DM570
-;DM571=1        '=0£¬Two-Channel Temperature Module£»=1£¬Four-Channel Temperature
+;DM571=1        =0,Two-Channel Temperature Module;=1,Four-Channel Temperature
 ;
 LD CR2002
 MOV #1 DM571
-;DM572=1        '=0£¬Old Chiller£¨Large Screen£©£»=1£¬New Chiller
+;DM572=1        =0,Old Chiller(Large Screen);=1,New Chiller
 ;
 LD CR2002
 MOV #1 DM572
-;DM573=0        '=0£¬Do Not Use Pure Gold¡¢K-Gold Station£»=1£¬Use
+;DM573=0        =0,Do Not Use Pure GoldK-Gold Station;=1,Use
 ;
 LD CR2002
 MOV #0 DM573
-;DM574=1        '=0£¬Do Not Use Secondary Tare£»=1£¬Use
+;DM574=1        =0,Do Not Use Secondary Tare;=1,Use
 ;
 LD CR2002
 MOV #1 DM574
-;DM575=0        '=0£¬Do Not Use Temperature and Humidity£»=1£¬Use Temperature and
-;Humidity
+;DM575=0        =0,Do Not Use Temperature and Humidity;=1,Use Temperature a...
 ;
 LD CR2002
 MOV #0 DM575
-;DM576=0        '=0£¬Do Not Use Carrier-Tray Residue Detection£»=1£¬Use
+;DM576=0        =0,Do Not Use Carrier-Tray Residue Detection;=1,Use
 ;
 LD CR2002
 MOV #0 DM576
-;DM577=0        '=0£¬Chiller Has Water£»=1£¬Chiller No Water
+;DM577=0        =0,Chiller Has Water;=1,Chiller No Water
 ;
 LD CR2002
 MOV #0 DM577
-;'DM578=0       '
+;DM578=0       
 ;
-;'DM579=0       '
+;DM579=0       
 ;
-;DM580=0        '£¨PLC£©£½1£¬No Induction Melting£»=0£¬Normal Induction Melting
+;DM580=0        (PLC)=1,No Induction Melting;=0,Normal Induction Melting
 LD CR2002
 MOV #0 DM580
 LABEL #1000
@@ -237,8 +234,8 @@ MPP
 AND= DM540 #0
 MOV #101 DM540
 ;<h1/>/*Program Version*/
-;DM550.T="V3.6.0.8_250702"
-;DM550.T="V3.6.0.8_250702"
+;DM550.T=V3.6.0.8_250702
+;DM550.T=V3.6.0.8_250702
 LD CR2002
 SMOV "V3.6.0.8_250702" DM550
 ;

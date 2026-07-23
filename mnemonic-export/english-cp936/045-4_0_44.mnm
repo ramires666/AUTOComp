@@ -30,7 +30,7 @@ ANB MR23401
 MOV.F +0 DM544
 MOV.F +0 DM542
 MOV.F +0 DM10200
-;<h1/>/*Read Weight¡¢Tare*/
+;<h1/>/*Read WeightTare*/
 LD CR2002
 MC
 ;CM5515 = $0
@@ -205,20 +205,20 @@ LD CR6004
 OUT MR23506
 LD CR6003
 OUT MR23507
-;'Receive Data Save
+;Receive Data Save
 ;DM10100.T=SMID(CM5259.T,0,8)
 ;
-;'Data Processing£ºRemove Spaces
-;@DM0=SFIND(DM10100.T," ",0)
+;Data Processing:Remove Spaces
+;@DM0=SFIND(DM10100.T, ,0)
 ;
 ;WHILE (@DM0<>$FFFF)
 ;DM10100.T=DELETE(DM10100.T,1,@DM0)
-;@DM0=SFIND(DM10100.T," ",0)
+;@DM0=SFIND(DM10100.T, ,0)
 ;END WHILE
 ;
-;'Save Processed Value
+;Save Processed Value
 ;DM10200.F=RFASC(DM10100.T)
-;'Completion Flag
+;Completion Flag
 ;SET(@MR002)
 ;
 ;
@@ -227,7 +227,7 @@ OUT MR23507
 ;
 LDP CR6102
 NCJ #1003
-;'Receive Data Save
+;Receive Data Save
 ;
 ;DM10100.T=SMID(CM5259.T,0,8)
 ;
@@ -239,9 +239,9 @@ LD CR2002
 SMID CM5259 *@VM0 #0 #8
 LD CR2002
 SMOV *@VM0 DM10100
-;'Data Processing£ºRemove Spaces
+;Data Processing:Remove Spaces
 ;
-;@DM0=SFIND(DM10100.T," ",0)
+;@DM0=SFIND(DM10100.T, ,0)
 ;
 LD CR2002
 ADRSET VM2 VM0
@@ -270,7 +270,7 @@ LD CR2002
 SDEL DM10100 *@VM6 @DM0 #1
 LD CR2002
 SMOV *@VM6 DM10100
-;@DM0=SFIND(DM10100.T," ",0)
+;@DM0=SFIND(DM10100.T, ,0)
 ;
 LD CR2002
 ADRSET VM2 VM0
@@ -287,7 +287,7 @@ MOV @VM5 @DM0
 LD CR2002
 CJ #2002
 LABEL #2003
-;'Save Processed Value
+;Save Processed Value
 ;
 ;DM10200.F=RFASC(DM10100.T)
 ;
@@ -296,7 +296,7 @@ MOV.F +0 @VM10
 RFASC DM10100 @VM10
 LD CR2002
 MOV.F @VM10 DM10200
-;'Completion Flag
+;Completion Flag
 ;
 ;SET(@MR002)
 ;
@@ -313,11 +313,11 @@ RES MR23510
 CON
 RES MR23511
 ;<h1/>/*Fine Weighing Residue Check*/
-;'Residual Weight Detection
+;Residual Weight Detection
 ;@DM2.F=DM10200.F-DM546.F
 LDP CR6102
 NCJ #1004
-;'Residual Weight Detection
+;Residual Weight Detection
 ;
 ;@DM2.F=DM10200.F-DM546.F
 LD CR2002
@@ -340,10 +340,9 @@ AND>.F @DM2 DM548
 SET MR1804
 RES @MR002
 RES MR23504
-;<h1/>/*First Check¡¢Second Check Weight Save*/£¨To HMIDisplay£©
-;Fine Weighing First Check Weight£®F£ºDM542  //First Check Weight Read
-;RequestFRM 8#Command
-;Fine Weighing Second Check Weight£®F£ºDM544
+;<h1/>/*First CheckSecond Check Weight Save*/(To HMIDisplay)
+;Fine Weighing First Check Weight.F:DM542  //First Check Weight Read Reques...
+;Fine Weighing Second Check Weight.F:DM544
 LD @MR002
 AND MR23502
 RES @MR002

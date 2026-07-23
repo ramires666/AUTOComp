@@ -45,7 +45,7 @@ ANB MR611
 ANB MR610
 INV
 OUT @MR000
-;<h1/>/*2#Command£ºFine Weighing Station-Tray-Pickup Station*/
+;<h1/>/*2#Command:Fine Weighing Station-Tray-Pickup Station*/
 ;/*Go to Fine Weighing Station*/
 LDB MR700
 MEP
@@ -60,7 +60,7 @@ ANB R106
 SET MR6901
 RES MR5801
 MOV #10 @DM0
-;/*Arrive£¬Grip Carrier Tray*/
+;/*Arrive,Grip Carrier Tray*/
 LDB @MR000
 AND= @DM0 #10
 AND MR5801
@@ -146,7 +146,7 @@ ANB MR1403
 ANB MR1109
 INV
 OUT @MR100
-;<h1/>/*3#Command£ºTray-Pickup Station-Gate Station*/
+;<h1/>/*3#Command:Tray-Pickup Station-Gate Station*/
 LDB @MR100
 AND MR6004
 MC

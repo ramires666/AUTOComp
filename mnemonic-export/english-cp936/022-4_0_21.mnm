@@ -48,7 +48,7 @@ SET MR6900
 RES MR5800
 SET MR3407
 MOV #10 @DM0
-;/*Arrive£¬Grip Carrier Tray*/
+;/*Arrive,Grip Carrier Tray*/
 LDB @MR000
 AND= @DM0 #10
 AND MR5800

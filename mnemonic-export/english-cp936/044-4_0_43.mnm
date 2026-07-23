@@ -1,7 +1,7 @@
 DEVICE:132
 ;MODULE:¶þ´ÎÈ¥Æ¤
 ;MODULE_TYPE:0
-;/*MR23400~MR23415*/;DM574£º=0£¬Do Not Use Secondary Tare£»=1£¬Use Secondary Tare
+;/*MR23400~MR23415*/;DM574:=0,Do Not Use Secondary Tare;=1,Use Secondary Tare
 LDP MR615
 LDB MR6404
 AND MR608
@@ -70,7 +70,7 @@ LD= DM574 #1
 AND MR23401
 ANB @MR004
 MC
-;/*Carrier-Tray Station¡úFine Weighing Station*/£¨Call  1#Command£©
+;/*Carrier-Tray StationFine Weighing Station*/(Call  1#Command)
 LDB @MR004
 AND= @DM0 #0
 MPS
@@ -93,7 +93,7 @@ MOV #0 DM201
 RES MR6001
 RES MR6000
 MOV #20 @DM0
-;/*Secondary Tare*/£¨PORT0 Communication with Fine Weighing£©
+;/*Secondary Tare*/(PORT0 Communication with Fine Weighing)
 ;Tare
 LD CR2002
 AND= @DM0 #20
@@ -133,7 +133,7 @@ ONDL DM434 @MR001
 MPP
 AND @MR001
 MOV #40 @DM0
-;After Tare£¬Weight=0£¬Confirm
+;After Tare,Weight=0,Confirm
 LD CR2002
 AND= @DM0 #40
 ANB R011
@@ -168,7 +168,7 @@ ONDL #50 @MR006
 CON
 AND @MR006
 MOV #20 @DM0
-;/*Fine Weighing Station¡úCarrier-Tray Station*/£¨Call 24#Command£©
+;/*Fine Weighing StationCarrier-Tray Station*/(Call 24#Command)
 LDB @MR004
 AND= @DM0 #60
 MPS

@@ -25,7 +25,7 @@ LDP MR615
 RES MR11701
 LDB MR601
 RES MR21200
-;<h1/>/*Default Time*/£¨Evacuate Chamber¡¢Air Replenishment£©
+;<h1/>/*Default Time*/(Evacuate ChamberAir Replenishment)
 LD<= DM410 #0
 MOV #500 DM410
 LD<= DM412 #0
@@ -34,12 +34,12 @@ LD<= DM414 #0
 MOV #50 DM414
 LD<= DM416 #0
 MOV #10000 DM416
-;<h1/>¡¾Air Tank Program¡¿//MR21200-21215
+;<h1/>Air Tank Program//MR21200-21215
 LDB MR10800
 ANB MR11600
 ANB MR11502
 ONDL #2000 @MR012
-;1¡¢Alarm
+;1Alarm
 LD R007
 AND R1512
 AND R602
@@ -56,7 +56,7 @@ RES MR3402
 RES MR3504
 RES MR11500
 RES @MR004
-;2¡¢Air Tank Automatic Air Replenishment
+;2Air Tank Automatic Air Replenishment
 LD @MR012
 ANB MR21200
 AND R007
@@ -78,7 +78,7 @@ LD @MR005
 RES MR11500
 RES MR3504
 RES @MR004
-;====Close Solenoid Valve£¬Prevent Air Pump Jamming====£¨20240928£©
+;====Close Solenoid Valve,Prevent Air Pump Jamming====(20240928)
 LDB R1512
 MPS
 ONDL #100 @MR014
@@ -86,8 +86,8 @@ MPP
 AND @MR014
 RES MR3402
 RES MR3102
-;<h1/>¡¾Vacuum Evacuation Program¡¿//MR21300-21315
-;1¡¢Alarm
+;<h1/>Vacuum Evacuation Program//MR21300-21315
+;1Alarm
 ;//Vacuum Evacuation Alarm Archived in Automatic Program
 ;/*Timeout Alarm*/
 LD MR601
@@ -100,7 +100,7 @@ ONDL DM510 @MR101
 MPP
 AND @MR101
 SET MR1012
-;2¡¢Stop
+;2Stop
 LDB MR611
 ANB MR610
 ANB MR705
@@ -112,7 +112,7 @@ CON
 RES MR21300
 CON
 RES MR3506
-;3¡¢Evacuate Chamber
+;3Evacuate Chamber
 LDB MR11600
 ANB MR11610
 AND @MR003

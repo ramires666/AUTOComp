@@ -162,9 +162,8 @@ MPP
 ANP R100
 RES MR3408
 MOV #25 @DM0
-;/*Detect completion of manual loading£»If gate is open5sno loading occurs
-;after£¬automatically close the gate
-;/*Prevent secondary loading£¬Optimization performed_20231020£¨0926-5Version£©*/
+;/*Detect completion of manual loading;If gate is open5sno loading occurs a...
+;/*Prevent secondary loading,Optimization performed_20231020(0926-5Version)*/
 LD CR2002
 AND= @DM0 #25
 MPS
@@ -197,8 +196,7 @@ ONDL #1500 @MR013
 CON
 AND @MR013
 MOV #50 @DM0
-;/*After loading£¬Obtained weight value->DM382£¬Weight value after placing*/
-;items->DM130£¬Weight value after applying magnetic field->DM132
+;/*After loading,Obtained weight value->DM382,Weight value after placing ite*/
 LDB @MR000
 AND= @DM0 #30
 AND R112
@@ -239,7 +237,7 @@ LD @MR008
 AND MR6007
 RES @MR008
 ;---------------------------------
-;/*4 Command Completed; Continue Weighing*/£¨_20231021£©
+;/*4 Command Completed; Continue Weighing*/(_20231021)
 LDB MR6010
 ANB MR6006
 AND @MR100
@@ -280,8 +278,7 @@ ZRES @MR100 @MR115
 RES MR3404
 MOV #0 @DM1
 MOV #0 @DM2
-;/*Open gate20 Seconds Without Weight Detection Triggers Voice Alert*/(First
-;alert)
+;/*Open gate20 Seconds Without Weight Detection Triggers Voice Alert*/(Firs...
 ;/*First alert10sAfter*/                         (Second alert)
 ;>>First alert
 LDB MR6010

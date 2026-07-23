@@ -111,7 +111,7 @@ FMOV #0 @DM0 #3
 LD CR2002
 MOV @DM2 DM10208
 ;<h1/>***************************************
-;<h1/>/*Carrier tray¡¢Graphite Crucible¡¢Dumping Gripper Endurance Test*/
+;<h1/>/*Carrier trayGraphite CrucibleDumping Gripper Endurance Test*/
 ;<h1/>/*Reset*/
 LDP MR615
 OR MR610

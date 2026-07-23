@@ -1,7 +1,7 @@
 DEVICE:132
 ;MODULE:【回水+真空箱】报警程序
 ;MODULE_TYPE:0
-;'Vacuum Chamber Maximum Temperature：Default90℃
+;Vacuum Chamber Maximum Temperature:Default90C
 LD<= DM508 #0
 MOV #90 DM508
 LD= DM571 #1
@@ -9,10 +9,10 @@ MC
 ;/*Vacuum Chamber Temperature*/
 LD> DM2006 DM508
 OUT MR11608
-;'Return Water Maximum Temperature：Default80℃
+;Return Water Maximum Temperature:Default80C
 LD<= DM506 #0
 MOV #80 DM506
-;'Return Water Over-Temperature Detection Start：Default180s
+;Return Water Over-Temperature Detection Start:Default180s
 LD<= DM520 #0
 OR> DM520 #0
 MOV #1800 DM520

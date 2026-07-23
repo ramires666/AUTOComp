@@ -44,7 +44,7 @@ RES @MR010
 LDB @MR000
 AND MR6102
 MC
-;/*Turn Off Light£¬Go to XRF Assay Station*/
+;/*Turn Off Light,Go to XRF Assay Station*/
 LDB @MR000
 AND= @DM0 #0
 AND MR6102
@@ -106,7 +106,7 @@ ANB MR611
 ANB MR610
 INV
 OUT @MR500
-;<h1/>/*27#XRF Assay Station¡úCarrier-Tray Station*/
+;<h1/>/*27#XRF Assay StationCarrier-Tray Station*/
 LD @MR507
 AND= DM101 #11
 LD @MR507
@@ -166,7 +166,7 @@ SET @MR506
 SET MR6900
 RES MR5800
 MOV #10 @DM5
-;/*Arrive£¬Place tray*/
+;/*Arrive,Place tray*/
 LDB @MR500
 AND= @DM5 #10
 AND MR5800
@@ -245,8 +245,7 @@ OUT MR6704
 CON
 OUT @MR100
 ;<h1/>/*11#Carrier-Tray Station Flip to Graphite-Crucible Station */
-;===Graphite-Crucible Gripper and Carrier-Tray Gripper Delayed
-;Action===£¨V3.5Version£¬20240515£©
+;===Graphite-Crucible Gripper and Carrier-Tray Gripper Delayed Action===(V3...
 LD<=.S DM438 +0
 MOV #10 DM438
 LD<=.S DM440 +0
@@ -272,8 +271,7 @@ LDB @MR100
 AND= @DM1 #70
 AND MR3612
 ONDL DM438 @MR111
-;=============================================================================
-;=================================================
+;==========================================================================...
 LDB @MR100
 AND MR6104
 MC
@@ -339,9 +337,7 @@ ANL
 RES MR3309
 SET MR3308
 MOV #60 @DM1
-;/*Second Flip from Graphite-Crucible Station to Carrier-Tray
-;Station*/_20231024£¨To Ensure Gold Is Completely Poured Out£¬0.5sChanged
-;To1.5s£¬Luqiao Start£©
+;/*Second Flip from Graphite-Crucible Station to Carrier-Tray Station*/_202...
 LDB @MR100
 AND= @DM1 #60
 ANB R006
@@ -542,7 +538,7 @@ ANB MR611
 ANB MR610
 INV
 OUT @MR200
-;<h1/>/*12#Graphite-Crucible Station¡úInduction Melting Station*/
+;<h1/>/*12#Graphite-Crucible StationInduction Melting Station*/
 LDB @MR200
 AND MR6106
 MC
@@ -733,7 +729,7 @@ ANB MR611
 ANB MR610
 INV
 OUT @MR400
-;'Vacuum Timeout Duration,Default200s
+;Vacuum Timeout Duration,Default200s
 LD<=.D DM510 #0
 MOV.D #20000 DM510
 ;/*Timeout Alarm*/
@@ -760,8 +756,8 @@ LDB @MR400
 AND MR6110
 MC
 ;/*Enable Automatic Vacuum Process*/
-;/*Fix Pre-Vacuum£¬Air Pressure Alarm Issue*/_20242009
-;£¨Adding Air CompensationMR11500£©
+;/*Fix Pre-Vacuum,Air Pressure Alarm Issue*/_20242009
+;(Adding Air CompensationMR11500)
 LDB @MR400
 AND= @DM4 #0
 AND MR6110
@@ -830,9 +826,8 @@ INV
 OUT MR6714
 CON
 OUT @MR700
-;<h1/>/*21#Graphite-Crucible Station¡úCarrier-Tray Station*/
-;===Graphite-Crucible Gripper and Carrier-Tray Gripper Delayed
-;Action===£¨V3.5Version£¬20240515£©
+;<h1/>/*21#Graphite-Crucible StationCarrier-Tray Station*/
+;===Graphite-Crucible Gripper and Carrier-Tray Gripper Delayed Action===(V3...
 LDB @MR700
 AND= @DM7 #10
 AND MR3612
@@ -849,8 +844,7 @@ LDB @MR700
 AND= @DM7 #70
 AND MR3613
 ONDL DM442 @MR711
-;=============================================================================
-;=================================================
+;==========================================================================...
 LDP MR615
 OR MR610
 OR CR2008
@@ -911,7 +905,7 @@ AND R101
 RES MR3612
 SET MR3412
 MOV #50 @DM7
-;/*Place tray*/£¨Count£©
+;/*Place tray*/(Count)
 ;-----51~53Alarm Not Implemented----
 LDB @MR700
 AND= @DM7 #50

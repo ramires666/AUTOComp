@@ -84,7 +84,7 @@ MRD
 SET MR6900
 MPP
 MOV #10 @DM1
-;/*Arrive£¬Grip Carrier Tray*/
+;/*Arrive,Grip Carrier Tray*/
 LDB @MR000
 AND= @DM1 #10
 AND MR5800
@@ -123,7 +123,7 @@ AND MR6112
 ORL
 ANL
 MOV #30 @DM1
-;///Before going to Carrier-Tray Station£¬First perform Tare
+;///Before going to Carrier-Tray Station,First perform Tare
 LD CR2002
 AND= @DM1 #24
 ANB R011
@@ -143,8 +143,7 @@ CON
 AND @MR005
 SET MR23500
 MOV #28 @DM1
-;///V3.6.0.5£¬Avoid blocking due to Tare failure£¬Online mode cancels the
-;process of retrying Tare after failure
+;///V3.6.0.5,Avoid blocking due to Tare failure,Online mode cancels the pro...
 LD CR2002
 AND= @DM1 #28
 ANB MR23500

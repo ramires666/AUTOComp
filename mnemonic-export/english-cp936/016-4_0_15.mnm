@@ -29,7 +29,7 @@ ANB MR610
 INV
 OUT @MR000
 ;<h1/>/*9#Command Detailed Procedure*/
-;/*Chiller start*/_20240514£¨V3.5Version£©
+;/*Chiller start*/_20240514(V3.5Version)
 LD R605
 AND MR6100
 MEP
@@ -59,7 +59,7 @@ SET MR6901
 SET MR3405
 RES MR5801
 MOV #10 @DM0
-;/*Arrive£¬Grip Carrier Tray*/
+;/*Arrive,Grip Carrier Tray*/
 LDB @MR000
 AND= @DM0 #10
 AND MR5801

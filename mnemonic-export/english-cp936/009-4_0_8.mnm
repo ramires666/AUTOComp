@@ -420,7 +420,7 @@ MOV #0 DM101
 MPP
 ANB MR601
 MOV #2 DM100
-;<h1/>/*15#Command*/£¨15#¡¢18#¡¢21#£©
+;<h1/>/*15#Command*/(15#18#21#)
 LDB @MR000
 LDB MR601
 AND= DM101 #15
@@ -791,7 +791,7 @@ ANL
 MOV #2 DM100
 ;<h1/>-----------
 ;<h1/>/*Combined Command*/
-;<h1/>/*50#Command*/£¨2#¡¢3#£©
+;<h1/>/*50#Command*/(2#3#)
 LDB @MR000
 LDB MR601
 AND= DM101 #50
@@ -858,7 +858,7 @@ MPP
 ANB MR601
 MOV #2 DM100
 MCR
-;<h1/>/*51#Command*/£¨6#¡¢7#¡¢8#£©
+;<h1/>/*51#Command*/(6#7#8#)
 LDB @MR000
 LDB MR601
 AND= DM101 #51
@@ -954,9 +954,8 @@ MPP
 ANB MR601
 MOV #2 DM100
 MCR
-;<h1/>/*52#Command*/£¨11#¡¢18#¡¢12#¡¢13#¡¢14#¡¢15#¡¢21#£©
-;/*New Configuration£ºSelect¡°Normal Induction Melting¡±Or¡°No Induction
-;Melting¡±*/£¨20241123£©
+;<h1/>/*52#Command*/(11#18#12#13#14#15#21#)
+;/*New Configuration:SelectNormal Induction MeltingOrNo Induction Melting*/...
 LDB MR601
 AND= DM110 #1
 MEP
@@ -1040,7 +1039,7 @@ MOV #27 DM136
 RES MR6305
 RES MR6304
 MOV #40 @DM2
-;/*Simultaneously invoke¡°11#and18#¡±Command*/
+;/*Simultaneously invoke11#and18#Command*/
 LDB MR6705
 AND= @DM2 #40
 MPS
@@ -1217,7 +1216,7 @@ MPP
 ANB MR601
 MOV #2 DM100
 MCR
-;<h1/>/*54#Command*/(24#¡¢25#)
+;<h1/>/*54#Command*/(24#25#)
 ;/*Call 24#Command*/
 LDB @MR000
 LDB MR601
@@ -1299,7 +1298,7 @@ ANB MR601
 MOV #2 DM100
 MCR
 ;<h1/>---Combined Return Command--
-;<h1/>/*53#Command*/(XRF Assay Station¡úTray-Pickup Station)
+;<h1/>/*53#Command*/(XRF Assay StationTray-Pickup Station)
 LDP MR6603
 MPS
 ANB MR601
@@ -1333,7 +1332,7 @@ MOV #53 DM136
 MPP
 ANB MR601
 MOV #2 DM100
-;<h1/>/*55#Command*/£¨Fine Weighing Station¡úTray-Pickup Station£©
+;<h1/>/*55#Command*/(Fine Weighing StationTray-Pickup Station)
 LDP MR6605
 MPS
 ANB MR601
@@ -1367,7 +1366,7 @@ MOV #55 DM136
 MPP
 ANB MR601
 MOV #2 DM100
-;<h1/>/*56#Command*/£¨Carrier-Tray Station¡úTray-Pickup Station£©
+;<h1/>/*56#Command*/(Carrier-Tray StationTray-Pickup Station)
 LDP MR6606
 MPS
 ANB MR601
@@ -1401,7 +1400,7 @@ MOV #56 DM136
 MPP
 ANB MR601
 MOV #2 DM100
-;<h1/>/*57#Command*/£¨Vision Station¡úTray-Pickup Station£©
+;<h1/>/*57#Command*/(Vision StationTray-Pickup Station)
 LDP MR6607
 MPS
 ANB MR601

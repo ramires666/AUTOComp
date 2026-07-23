@@ -36,15 +36,15 @@ ANB MR610
 INV
 OUT @MR000
 ;<h1/>/*25#Command Detailed Procedure*/
-;Default£º2Second dump
+;Default:2Second dump
 LD<= DM484 #0
 OR> DM484 #5
 MOV #2 DM484
-;Default£ºInterval0.1s
+;Default:Interval0.1s
 LD<= DM485 #0
 OR> DM484 #300
 MOV #10 DM485
-;===Dumping gripper delay action===£¨V3.5Version£¬20240515£©
+;===Dumping gripper delay action===(V3.5Version,20240515)
 LD<=.S DM446 +0
 MOV #10 DM446
 LDB @MR000
@@ -86,14 +86,14 @@ RES MR3615
 SET MR3315
 RES MR3314
 MOV #20 @DM0
-;/*Return to Home£¬Dump*/
+;/*Return to Home,Dump*/
 LDB @MR000
 AND= @DM0 #20
 AND R005
 SET MR3414
 RES MR3415
 MOV #30 @DM0
-;/*After dumping£¬Return to action position*/
+;/*After dumping,Return to action position*/
 LDB @MR000
 AND= @DM0 #30
 AND MR3614
@@ -131,7 +131,7 @@ ONDL DM485 @MR005
 CON
 AND @MR005
 MOV #20 @DM0
-;/*After placing£¬Return to Home*/
+;/*After placing,Return to Home*/
 LDB @MR000
 AND= @DM0 #50
 ANB R005

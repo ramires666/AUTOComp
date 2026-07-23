@@ -3,16 +3,15 @@ DEVICE:132
 ;MODULE_TYPE:0
 ;SCRIPT_TYPE:
 ;/*MR5000-5915*/
-;Positioning Program£º
-;1¡¢Alarm
-;2¡¢Stop
-;3¡¢Return to Home
-;4¡¢JOG£¨J_Axis1£»J_Axis2£»J_Axis3£©
-;5¡¢Teach
-;6¡¢Positioning£¨Safety Conditions¡¢Positioning£©
-;¡°Teach¡¢JOG¡±Must be in Single+Standby Mode to Proceed£»OtherHMIButtons Also
-;Require Single Mode
-;<h1/>/*£¨XYZ£©Subdivision£º6400*/
+;Positioning Program:
+;1Alarm
+;2Stop
+;3Return to Home
+;4JOG(J_Axis1;J_Axis2;J_Axis3)
+;5Teach
+;6Positioning(Safety ConditionsPositioning)
+;TeachJOGMust be in Single+Standby Mode to Proceed;OtherHMIButtons Also Req...
+;<h1/>/*(XYZ)Subdivision:6400*/
 LDP MR615
 LD MR608
 AND MR609
@@ -21,8 +20,8 @@ OR MR610
 OR CR2008
 ZRES @MR000 @MR1015
 FMOV #0 @DM0 #15
-;<h1/>1¡¢Alarm
-;//5 Channel(s)£º0 Channel-Common£»Axis1-4£ºOne Channel Each£»MR4000-MR4415
+;<h1/>1Alarm
+;//5 Channel(s):0 Channel-Common;Axis1-4:One Channel Each;MR4000-MR4415
 LD CR8400
 OR CR8500
 OR CR8600
@@ -39,8 +38,8 @@ SET MR1201
 LD CR8602
 OR R202
 SET MR1202
-;<h1/>2¡¢Error Clear
-;//Axis1Error Code£ºCM8834
+;<h1/>2Error Clear
+;//Axis1Error Code:CM8834
 ;Axis1Error Clear
 LDP MR609
 ORP MR001
@@ -68,8 +67,8 @@ OR CR8603
 ANL
 OUT CR8202
 OUT CR8203
-;<h1/>3¡¢Stop
-;1¡¢Deceleration Stop
+;<h1/>3Stop
+;1Deceleration Stop
 LDB CR8402
 INV
 AND CR8400
@@ -94,13 +93,13 @@ LD CR8202
 OR MR609
 ANB CR8600
 RES CR8201
-;2¡¢Immediate Stop
+;2Immediate Stop
 LD MR610
 OR MR1113
 OUT CR8000
 OUT CR8100
 OUT CR8200
-;3¡¢Stop
+;3Stop
 LDB MR1000
 ANB MR1001
 ANB MR1002
@@ -113,9 +112,8 @@ ANB MR1003
 ANB MR1004
 INV
 OUT @MR005
-;<h1/>4¡¢JOG
-;//4 Channel(s)£¬MR4500-4815£¬Each Axis1 Channel(s)£¨Forward¡¢Reverse¡¢High/Low
-;Speed Switch£©
+;<h1/>4JOG
+;//4 Channel(s),MR4500-4815,Each Axis1 Channel(s)(ForwardReverseHigh/Low Sp...
 LDB MR700
 AND MR601
 MC
@@ -156,14 +154,13 @@ LD MR4702
 ANB MR610
 JOG #0 #3
 MCR
-;<h1/>5¡¢Return to Home
-;//5 Channel(s)£º0-Common£»Axis1-4£ºOne Channel Each£»MR5000-MR5415
-;//Return to Home_HMI¡¢Homed
-;//Each Axis£ºAxisnHomed
-;//Z-Axis Homing£ºNo vacuum-lid memory¡¢No carrier-tray memory
+;<h1/>5Return to Home
+;//5 Channel(s):0-Common;Axis1-4:One Channel Each;MR5000-MR5415
+;//Return to Home_HMIHomed
+;//Each Axis:AxisnHomed
+;//Z-Axis Homing:No vacuum-lid memoryNo carrier-tray memory
 ;
-;---------------------------------------------------------¡¾Home-return
-;Alarm¡¿---------------------------------------------------------
+;---------------------------------------------------------Home-return Alarm...
 ;/*X-Axis Homing Failure*/
 LD MR5311
 ANB CR8400
@@ -197,8 +194,7 @@ ONDL #6000 @MR008
 CON
 AND @MR008
 SET MR1002
-;---------------------------------------------------------Home-return
-;Program---------------------------------------------------------
+;---------------------------------------------------------Home-return Progr...
 LDP MR5005
 OR MR5006
 AND= DM600 #0
@@ -214,7 +210,7 @@ SET @MR011
 RES MR5900
 LDB MR610
 MC
-;1¡¢Axis3£¨ZAxis£©Return to Home
+;1Axis3(ZAxis)Return to Home
 LD R002
 OUT CR8214
 LDP MR5005
@@ -253,7 +249,7 @@ AND CR2003
 ORL
 SET MR5311
 RES MR5005
-;2¡¢Axis1£¨XAxis£©
+;2Axis1(XAxis)
 LDP MR5311
 ORP MR5007
 MPS
@@ -271,7 +267,7 @@ AND=.L CM8830 +0
 ANB MR5111
 ORL
 SET MR5111
-;3¡¢Axis2£¨YAxis£©Return to Home
+;3Axis2(YAxis)Return to Home
 LDP MR5311
 ORP MR5007
 MPS
@@ -289,7 +285,7 @@ AND=.L CM8870 +0
 ANB MR5211
 ORL
 SET MR5211
-;4¡¢Axis1-Axis4Home-return complete
+;4Axis1-Axis4Home-return complete
 LD MR5111
 AND MR5211
 AND MR5311
@@ -309,44 +305,44 @@ LD MR5011
 AND MR5012
 OUT MR5013
 MCR
-;<h1/>6¡¢Teach
-;//1 Channel(s)£»MR5500-5515
-;'Fine Weighing Station
+;<h1/>6Teach
+;//1 Channel(s);MR5500-5515
+;Fine Weighing Station
 ;DM04008.L=2079
 ;DM04010.L=11947
-;'Tray-Pickup Station
+;Tray-Pickup Station
 ;DM04014.L=1770
 ;DM04016.L=237
-;'XRF Assay Station
+;XRF Assay Station
 ;DM04026.L=7762
 ;DM04028.L=21088
-;'Carrier-Tray Station
+;Carrier-Tray Station
 ;DM04000.L=24303
 ;DM04002.L=10775
-;'Graphite-Crucible Station
+;Graphite-Crucible Station
 ;DM04044.L=24418
 ;DM04046.L=24863
-;'Induction Melting Station
+;Induction Melting Station
 ;DM04050.L=42004
 ;DM04052.L=20539
-;'Lid-Opening Station
+;Lid-Opening Station
 ;DM04032.L=41965
 ;DM04034.L=20460
-;'Lid-Handling Station
+;Lid-Handling Station
 ;DM04038.L=41868
 ;DM04040.L=4946
-;'Vision Station
+;Vision Station
 ;DM04020.L=14102
 ;DM04022.L=160
-;''K-Gold Station
-;'DM04060.L=
-;'DM04062.L=
-;''Pure-Gold Station
-;'DM04070.L=
-;'DM04072.L=
+;K-Gold Station
+;DM04060.L=
+;DM04062.L=
+;Pure-Gold Station
+;DM04070.L=
+;DM04072.L=
 LDP MR4901
 NCJ #1003
-;'Fine Weighing Station
+;Fine Weighing Station
 ;
 ;DM04008.L=2079
 ;
@@ -356,7 +352,7 @@ MOV.L +2079 DM4008
 ;
 LD CR2002
 MOV.L +11947 DM4010
-;'Tray-Pickup Station
+;Tray-Pickup Station
 ;
 ;DM04014.L=1770
 ;
@@ -366,7 +362,7 @@ MOV.L +1770 DM4014
 ;
 LD CR2002
 MOV.L +237 DM4016
-;'XRF Assay Station
+;XRF Assay Station
 ;
 ;DM04026.L=7762
 ;
@@ -376,7 +372,7 @@ MOV.L +7762 DM4026
 ;
 LD CR2002
 MOV.L +21088 DM4028
-;'Carrier-Tray Station
+;Carrier-Tray Station
 ;
 ;DM04000.L=24303
 ;
@@ -386,7 +382,7 @@ MOV.L +24303 DM4000
 ;
 LD CR2002
 MOV.L +10775 DM4002
-;'Graphite-Crucible Station
+;Graphite-Crucible Station
 ;
 ;DM04044.L=24418
 ;
@@ -396,7 +392,7 @@ MOV.L +24418 DM4044
 ;
 LD CR2002
 MOV.L +24863 DM4046
-;'Induction Melting Station
+;Induction Melting Station
 ;
 ;DM04050.L=42004
 ;
@@ -406,7 +402,7 @@ MOV.L +42004 DM4050
 ;
 LD CR2002
 MOV.L +20539 DM4052
-;'Lid-Opening Station
+;Lid-Opening Station
 ;
 ;DM04032.L=41965
 ;
@@ -416,7 +412,7 @@ MOV.L +41965 DM4032
 ;
 LD CR2002
 MOV.L +20460 DM4034
-;'Lid-Handling Station
+;Lid-Handling Station
 ;
 ;DM04038.L=41868
 ;
@@ -426,7 +422,7 @@ MOV.L +41868 DM4038
 ;
 LD CR2002
 MOV.L +4946 DM4040
-;'Vision Station
+;Vision Station
 ;
 ;DM04020.L=14102
 ;
@@ -436,17 +432,17 @@ MOV.L +14102 DM4020
 ;
 LD CR2002
 MOV.L +160 DM4022
-;''K-Gold Station
+;K-Gold Station
 ;
-;'DM04060.L=
+;DM04060.L=
 ;
-;'DM04062.L=
+;DM04062.L=
 ;
-;''Pure-Gold Station
+;Pure-Gold Station
 ;
-;'DM04070.L=
+;DM04070.L=
 ;
-;'DM04072.L=
+;DM04072.L=
 LABEL #1003
 ;
 ;*********Coordinate Archive*********
@@ -550,10 +546,10 @@ MOV.L CM8830 DM4070
 MOV.L CM8870 DM4072
 MOV.L CM8910 DM4074
 MCR
-;<h1/>7¡¢Positioning
-;//HMIPositioning£¬1 Channel(s)£»MR5600-5615
-;//Automatic Positioning£¬1 Channel(s)£»MR5700-5715
-;//Positioning Complete£¬1 Channel(s)£»MR5800-5815
+;<h1/>7Positioning
+;//HMIPositioning,1 Channel(s);MR5600-5615
+;//Automatic Positioning,1 Channel(s);MR5700-5715
+;//Positioning Complete,1 Channel(s);MR5800-5815
 ;/*Reset*/
 LD CR2008
 ORP @MR005
@@ -644,8 +640,7 @@ LD<= DM71 #0
 MOV.L +80 DM71
 LD<=.L DM72 +0
 MOV.L +8000 DM72
-;-----------------------------------------------------------------------------
-;----------------------------------------
+;--------------------------------------------------------------------------...
 LD CR2002
 MOV DM60 CM8022
 MOV DM61 CM8023
@@ -656,7 +651,7 @@ MOV.L DM67 CM8224
 MOV DM70 CM8422
 MOV DM71 CM8423
 MOV.L DM72 CM8424
-;'XRF Analyzer Position
+;XRF Analyzer Position
 ;IF MR601 THEN
 ;   dm106=1
 ;   dm107=1
@@ -668,13 +663,13 @@ MOV.L DM72 CM8424
 ;   dm640.F=dm640.F
 ;   dm642.F=dm642.F
 ;END IF
-;'--------------
+;--------------
 ;dm640.F=(dm106.S-1)*9.5
 ;dm642.F=(dm107.S-1)*9.5
 ;
 ;dm644.F=(6400*dm640.F)/105
 ;dm646.F=(6400*dm642.F)/105
-;'XRF Analyzer Position
+;XRF Analyzer Position
 ;
 ;IF MR601 THEN
 ;
@@ -720,7 +715,7 @@ MOV.F DM642 DM642
 ;END IF
 ;
 LABEL #2001
-;'--------------
+;--------------
 ;
 ;dm640.F=(dm106.S-1)*9.5
 ;
@@ -890,7 +885,7 @@ MEP
 ORL
 ZRES MR8800 MR8810
 MOV #0 @DM14
-;<h1/>/*Z-Axis Move to 0 Position*/£¨Point Number2£©
+;<h1/>/*Z-Axis Move to 0 Position*/(Point Number2)
 LDP MR5004
 ORP @MR001
 SET @MR1000
@@ -996,7 +991,7 @@ CON
 RES MR5900
 CON
 MOV #30 @DM0
-;/*Z-Axis Homing Complete£¬XY-Axis Positioning*/
+;/*Z-Axis Homing Complete,XY-Axis Positioning*/
 LDB @MR300
 AND= @DM0 #30
 MPS
@@ -1134,7 +1129,7 @@ CON
 RES MR5900
 CON
 MOV #30 @DM1
-;/*Z-Axis Homing Complete£¬XY-Axis Positioning*/
+;/*Z-Axis Homing Complete,XY-Axis Positioning*/
 LDB @MR301
 AND= @DM1 #30
 MPS
@@ -1274,7 +1269,7 @@ CON
 RES MR5900
 CON
 MOV #30 @DM2
-;/*Z-Axis Homing Complete£¬XY-Axis Positioning*/
+;/*Z-Axis Homing Complete,XY-Axis Positioning*/
 LDB @MR302
 AND= @DM2 #30
 MPS
@@ -1410,7 +1405,7 @@ CON
 RES MR5900
 CON
 MOV #30 @DM3
-;/*Z-Axis Homing Complete£¬XY-Axis Positioning*/
+;/*Z-Axis Homing Complete,XY-Axis Positioning*/
 LDB @MR303
 AND= @DM3 #30
 MPS
@@ -1588,7 +1583,7 @@ CON
 RES MR5900
 CON
 MOV #30 @DM4
-;/*Z-Axis Homing Complete£¬XY-Axis Positioning*/
+;/*Z-Axis Homing Complete,XY-Axis Positioning*/
 LDB @MR304
 AND= @DM4 #30
 MPS
@@ -1743,7 +1738,7 @@ CON
 RES MR5900
 CON
 MOV #30 @DM5
-;/*Z-Axis Homing Complete£¬XY-Axis Positioning*/
+;/*Z-Axis Homing Complete,XY-Axis Positioning*/
 LDB @MR305
 AND= @DM5 #30
 MPS
@@ -1878,7 +1873,7 @@ CON
 RES MR5900
 CON
 MOV #30 @DM6
-;/*Z-Axis Homing Complete£¬XY-Axis Positioning*/
+;/*Z-Axis Homing Complete,XY-Axis Positioning*/
 LDB @MR306
 AND= @DM6 #30
 MPS
@@ -2015,7 +2010,7 @@ CON
 RES MR5900
 CON
 MOV #30 @DM7
-;/*Z-Axis Homing Complete£¬XY-Axis Positioning*/
+;/*Z-Axis Homing Complete,XY-Axis Positioning*/
 LDB @MR307
 AND= @DM7 #30
 MPS
@@ -2150,7 +2145,7 @@ CON
 RES MR5900
 CON
 MOV #30 @DM8
-;/*Z-Axis Homing Complete£¬XY-Axis Positioning*/
+;/*Z-Axis Homing Complete,XY-Axis Positioning*/
 LDB @MR308
 AND= @DM8 #30
 MPS
@@ -2289,7 +2284,7 @@ CON
 RES MR5900
 CON
 MOV #30 @DM9
-;/*Z-Axis Homing Complete£¬XY-Axis Positioning*/
+;/*Z-Axis Homing Complete,XY-Axis Positioning*/
 LDB @MR309
 AND= @DM9 #30
 MPS
@@ -2427,7 +2422,7 @@ CON
 RES MR5900
 CON
 MOV #30 @DM10
-;/*Z-Axis Homing Complete£¬XY-Axis Positioning*/
+;/*Z-Axis Homing Complete,XY-Axis Positioning*/
 LDB @MR310
 AND= @DM10 #30
 MPS
