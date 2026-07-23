@@ -1,6 +1,7 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.tmp/
 .test-tmp*/
 .test-*/
 .ruff_cache/
@@ -32,6 +33,7 @@ checkpoints/
 reports/*
 !reports/04-full-tree-bilingual-catalog.json
 !reports/05-remaining-cjk-report.json
+!reports/README.md
 screenshots/
 *.local.json
 *.log
@@ -45,3 +47,8 @@ screenshots/
 *.kst
 0_CARD/
 1_CPUMEM/
+
+# One-off source exports and local test input.  Reviewed English artifacts may
+# still be committed explicitly.
+mnemonic-export/AUTOComp_mnemonic_nocomment_*/
+comments-export/original-comments.csv
