@@ -31,6 +31,15 @@ def _relative(path: Path) -> str:
         return path.as_posix()
 
 
+def _device_address(subtype: int, index: int) -> str:
+    if subtype == 0x85:
+        # KV stores local MR records as a linear bit offset, while its textual
+        # address uses word + two-digit bit: 16 -> @MR100, 31 -> @MR115.
+        word, bit = divmod(index, 16)
+        return f"@MR{word}{bit:02d}"
+    return f"{ADDRESS_PREFIX[subtype]}{index}"
+
+
 def build(parsed_dir: Path, state_path: Path) -> dict[str, Any]:
     state = _load_object(state_path)
     programs = state.get("programs")
@@ -91,7 +100,7 @@ def build(parsed_dir: Path, state_path: Path) -> dict[str, Any]:
                             "subtype": subtype,
                             "subtype_hex": f"0x{subtype:02X}",
                             "index": index,
-                            "address": f"{ADDRESS_PREFIX[subtype]}{index}",
+                            "address": _device_address(subtype, index),
                             "source_text": source_text,
                             "source_file": _relative(parsed_path),
                             "source_binary_file": binary_name,
@@ -121,7 +130,10 @@ def build(parsed_dir: Path, state_path: Path) -> dict[str, Any]:
             "parsed_directory": _relative(parsed_dir),
             "capture_state": _relative(state_path),
         },
-        "address_mapping": {"0x81": "@DM", "0x85": "@MR"},
+        "address_mapping": {
+            "0x81": "@DM{index}",
+            "0x85": "@MR{index//16}{index%16:02d}",
+        },
         "summary": summary,
         "entries": entries,
     }

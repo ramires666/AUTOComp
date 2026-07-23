@@ -1,4 +1,4 @@
 @DM2,,Residual wt detect val.F,,
-@MR0,,Fine scale read weight,,
-@MR1,,Fine Scale Tare HMI,,
-@MR2,,Weight read done flag,,
+@MR000,,Fine scale read weight,,
+@MR001,,Fine Scale Tare HMI,,
+@MR002,,Weight read done flag,,

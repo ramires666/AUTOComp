@@ -1,5 +1,5 @@
 @DM0,,Cmd 2 Step,,
 @DM1,,Cmd 1 Step,,
-@MR0,,Stop,,
-@MR1,,Station Alarm,,
-@MR2,,Clamp Alarm,,
+@MR000,,Stop,,
+@MR001,,Station Alarm,,
+@MR002,,Clamp Alarm,,

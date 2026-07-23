@@ -1,4 +1,4 @@
-@MR0,,Stop,,
-@MR17,,GrtnBreakDetFilter,,
-@MR20,,MR1000~1013 Alarm,,
-@MR21,,MR1000~1015 Alarm (Excl 1112),,
+@MR000,,Stop,,
+@MR101,,GrtnBreakDetFilter,,
+@MR104,,MR1000~1013 Alarm,,
+@MR105,,MR1000~1015 Alarm (Excl 1112),,

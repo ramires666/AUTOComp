@@ -1,4 +1,4 @@
 @DM0,,Cmd 24 Step,,
-@MR0,,Stop,,
-@MR1,,Station Alarm,,
-@MR2,,Clamp Alarm,,
+@MR000,,Stop,,
+@MR001,,Station Alarm,,
+@MR002,,Clamp Alarm,,
