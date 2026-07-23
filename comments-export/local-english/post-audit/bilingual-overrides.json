@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "artifact_type": "kvstudio_local_device_comment_post_audit_bilingual_overrides",
+  "translations": [
+    {
+      "program_name": "ChillerStop:Pump off in 30s",
+      "address": "@MR000",
+      "source_zh": "退货标志",
+      "target_en": "Return Flag"
+    },
+    {
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR1001",
+      "source_zh": "播报第二段",
+      "target_en": "Play Voice Segment 2"
+    },
+    {
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR1002",
+      "source_zh": "播报第三段",
+      "target_en": "Play Voice Segment 3"
+    },
+    {
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR1004",
+      "source_zh": "开始延时播报第三段语音",
+      "target_en": "Start Delay for Voice 3"
+    },
+    {
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR1013",
+      "source_zh": "延时完成播报第二段语音",
+      "target_en": "Delay Done: Play Voice 2"
+    },
+    {
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR1014",
+      "source_zh": "延时完成播报第三段语音",
+      "target_en": "Delay Done: Play Voice 3"
+    }
+  ],
+  "clear_stale_entries": [
+    {
+      "program_name": "Positioning",
+      "address": "@MR112",
+      "reason": "stale address created by the rejected pre-fix pilot"
+    },
+    {
+      "program_name": "Positioning",
+      "address": "@MR113",
+      "reason": "stale address created by the rejected pre-fix pilot"
+    },
+    {
+      "program_name": "Positioning",
+      "address": "@MR114",
+      "reason": "stale address created by the rejected pre-fix pilot"
+    },
+    {
+      "program_name": "Positioning",
+      "address": "@MR115",
+      "reason": "stale address created by the rejected pre-fix pilot"
+    }
+  ],
+  "preserved_existing_english": [
+    {
+      "program_name": "Alarms",
+      "address": "@MR102",
+      "text": "test"
+    }
+  ]
+}

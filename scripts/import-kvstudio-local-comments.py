@@ -180,12 +180,12 @@ def dimensions(window: dict[str, Any]) -> tuple[int, int]:
 def load_manifest(path: Path) -> list[dict[str, Any]]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     modules = payload["modules"]
-    if payload.get("module_count") != 35 or len(modules) != 35:
-        raise ValueError("manifest must contain exactly 35 module CSVs")
+    if not modules or payload.get("module_count") != len(modules):
+        raise ValueError("manifest module_count must match its non-empty modules list")
     seen: set[int] = set()
     for module in modules:
         index = int(module["module_index"])
-        if not 1 <= index <= 47 or index in seen:
+        if not 1 <= index <= 48 or index in seen:
             raise ValueError(f"invalid or duplicate module index: {index}")
         seen.add(index)
         csv_path = path.parent / str(module["filename"])
@@ -330,9 +330,9 @@ def import_module(
     main_window(worker)
 
 
-def write_state(done: list[int]) -> None:
-    STATE.parent.mkdir(parents=True, exist_ok=True)
-    STATE.write_text(
+def write_state(path: Path, done: list[int]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
         json.dumps({"imported_module_indices": sorted(done)}, indent=2) + "\n",
         encoding="utf-8",
     )
@@ -342,6 +342,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--remote-dir", default=str(DEFAULT_REMOTE_DIR))
+    parser.add_argument("--state", type=Path, default=STATE)
     parser.add_argument("--pilot", default="Positioning")
     parser.add_argument("--all", action="store_true")
     parser.add_argument("--apply", action="store_true")
@@ -388,8 +389,8 @@ def main() -> int:
         )
 
     state = (
-        json.loads(STATE.read_text(encoding="utf-8"))
-        if STATE.exists()
+        json.loads(args.state.read_text(encoding="utf-8"))
+        if args.state.exists()
         else {"imported_module_indices": []}
     )
     done = [int(value) for value in state["imported_module_indices"]]
@@ -400,7 +401,7 @@ def main() -> int:
             continue
         import_module(worker, module, PureWindowsPath(args.remote_dir))
         done.append(index)
-        write_state(done)
+        write_state(args.state, done)
         print(
             f"imported module {index:02d} {module['program_name']}: "
             f"{module['row_count']} comments",

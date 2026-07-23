@@ -40,7 +40,9 @@ def _device_address(subtype: int, index: int) -> str:
     return f"{ADDRESS_PREFIX[subtype]}{index}"
 
 
-def build(parsed_dir: Path, state_path: Path) -> dict[str, Any]:
+def build(
+    parsed_dir: Path, state_path: Path, *, validate_expected: bool = True
+) -> dict[str, Any]:
     state = _load_object(state_path)
     programs = state.get("programs")
     if not isinstance(programs, dict):
@@ -119,9 +121,10 @@ def build(parsed_dir: Path, state_path: Path) -> dict[str, Any]:
         ),
         "by_subtype": dict(sorted(subtype_counts.items())),
     }
-    for key, expected in EXPECTED.items():
-        if summary[key] != expected:
-            raise ValueError(f"expected {key}={expected}, found {summary[key]}")
+    if validate_expected:
+        for key, expected in EXPECTED.items():
+            if summary[key] != expected:
+                raise ValueError(f"expected {key}={expected}, found {summary[key]}")
 
     return {
         "schema_version": 1,
@@ -144,9 +147,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--parsed-dir", type=Path, default=DEFAULT_PARSED_DIR)
     parser.add_argument("--state", type=Path, default=DEFAULT_STATE)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--no-expected",
+        action="store_true",
+        help="write an audit inventory without enforcing the original 618/550/35 counts",
+    )
     args = parser.parse_args(argv)
 
-    result = build(args.parsed_dir, args.state)
+    result = build(
+        args.parsed_dir,
+        args.state,
+        validate_expected=not args.no_expected,
+    )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
         json.dumps(result, ensure_ascii=False, indent=2) + "\n",

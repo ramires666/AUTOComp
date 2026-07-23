@@ -25,8 +25,10 @@ from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-PROGRAM_CHILD_MARKERS = frozenset({"局部标号", "书签"})
-EDIT_LIST_TITLE_PREFIX = "编辑列"
+PROGRAM_CHILD_MARKERS = frozenset(
+    {"局部标号", "书签", "Local label", "Bookmark"}
+)
+EDIT_LIST_TITLE_PREFIX = ("编辑列", "List Edit", "Edit List")
 REQUIRED_ACTIONS = frozenset(
     {
         "inventory_project_tree",

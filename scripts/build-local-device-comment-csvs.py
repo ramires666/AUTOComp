@@ -29,20 +29,36 @@ def current_programs(tree: dict[str, Any]) -> list[str]:
     every_scan = next(
         child for child in program_root["children"] if child.get("locator") == [4, 0]
     )
-    programs = [str(child["name"]) for child in every_scan["children"]]
-    if len(programs) != 47:
-        raise ValueError(f"expected 47 every-scan programs, found {len(programs)}")
+    backup = next(
+        child for child in program_root["children"] if child.get("locator") == [4, 2]
+    )
+    every_scan_programs = [str(child["name"]) for child in every_scan["children"]]
+    backup_programs = [str(child["name"]) for child in backup["children"]]
+    if len(every_scan_programs) != 47 or backup_programs != ["Update_Log1_EN"]:
+        raise ValueError("unexpected current KV module layout")
+    # Verified directly in KV STUDIO's module selector.  The translated
+    # replacement Init program was appended, while the backup Update module
+    # appears immediately before Gripper and Init.
+    programs = (
+        every_scan_programs[:-2] + backup_programs + every_scan_programs[-2:]
+    )
+    if len(programs) != 48:
+        raise ValueError(f"expected 48 selectable programs, found {len(programs)}")
     return programs
 
 
 def module_index(raw_index: int) -> int:
-    # The translated replacement of original program 1 was appended after the
-    # other 46 every-scan programs.  KV's module combo follows this current order:
-    # Global=0, Main_EN=1, ..., GripperCylinderEndurance=46, Init...=47.
+    # Current verified combo order:
+    # Global=0, raw programs 2..46 at 1..45, Update_Log1_EN=46,
+    # GripperCylinderEndurance (raw 47)=47, appended Init (raw 1)=48.
     if raw_index == 1:
-        return 47
-    if 2 <= raw_index <= 47:
+        return 48
+    if 2 <= raw_index <= 46:
         return raw_index - 1
+    if raw_index == 47:
+        return 47
+    if raw_index == 48:
+        return 46
     raise ValueError(f"unsupported local-comment program raw index: {raw_index}")
 
 

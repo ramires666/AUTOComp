@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "artifact_type": "kvstudio_local_device_comment_post_audit_corrections",
+  "encoding": "CP936",
+  "column_count": 5,
+  "module_count": 3,
+  "row_count": 10,
+  "modules": [
+    {
+      "module_index": 3,
+      "program_name": "ChillerStop:Pump off in 30s",
+      "filename": "003-ChillerStop.csv",
+      "row_count": 1
+    },
+    {
+      "module_index": 6,
+      "program_name": "Positioning",
+      "filename": "006-Positioning-clear-stale.csv",
+      "row_count": 4
+    },
+    {
+      "module_index": 33,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "filename": "033-CommunicationProgram.csv",
+      "row_count": 5
+    }
+  ]
+}
