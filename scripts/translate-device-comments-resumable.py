@@ -34,6 +34,8 @@ LENGTH_ABBREVIATIONS = (
     (r"Carrier-Tray", "Tray"),
     (r"Cooling-Water", "Cool-Water"),
     (r"Communication", "Comm"),
+    (r"Pressurize", "Press"),
+    (r"Solenoid", "Sol"),
     (r"Initialization", "Init"),
     (r"Temperature", "Temp"),
     (r"Confirmation", "Confirm"),
@@ -73,7 +75,12 @@ def _valid_target(target: str) -> bool:
 
 def _shorten_ascii_target(target: str) -> str:
     """Deterministically abbreviate an otherwise valid overlength PLC label."""
-    candidate = target.strip()
+    candidate = (
+        target.strip()
+        .replace(",", " -")
+        .replace('"', "")
+        .replace("'", "")
+    )
     if (
         len(candidate) <= MAX_COMMENT_LENGTH
         or not candidate.isascii()
