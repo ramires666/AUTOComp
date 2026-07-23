@@ -238,6 +238,36 @@ def test_atomic_sequence_keeps_keyboard_on_clicked_child() -> None:
     assert adapter.sent_keys == ["^a"]
 
 
+def test_atomic_sequence_keeps_key_on_owned_modal_opened_by_click() -> None:
+    main = _Window(101, "Any App", 11, (0, 0, 800, 600))
+    modal = _Window(102, "Result", 11, (250, 200, 550, 400))
+    modal.owner = main
+    adapter = _Adapter(main, modal)
+    adapter.native_owners[modal.handle] = main.handle
+
+    original_click = main.click_input
+
+    def click_and_open_modal(**kwargs: object) -> None:
+        original_click(**kwargs)
+        adapter.foreground_handle = modal.handle
+        adapter.focused_handle = modal.handle
+
+    main.click_input = click_and_open_modal  # type: ignore[method-assign]
+
+    completed = adapter.input_sequence(
+        handle=main.handle,
+        expected_pid=main.pid,
+        expected_title=main.title,
+        operations=(
+            {"operation": "click", "x": 100, "y": 150},
+            {"operation": "key_enter"},
+        ),
+    )
+
+    assert completed == 2
+    assert adapter.sent_keys == ["{ENTER}"]
+
+
 def test_atomic_sequence_stops_if_keyboard_focus_leaves_selected_process() -> None:
     app = _Window(101, "Any App", 11, (0, 0, 800, 600))
     other = _Window(202, "Other App", 22, (0, 0, 800, 600))
@@ -415,6 +445,20 @@ def test_keyboard_operations_are_a_fixed_enum(
     )
 
     assert window.calls[-1] == ("type_keys", encoded, False)
+
+
+def test_escape_accepts_dialog_destroyed_by_the_key() -> None:
+    window = _Window(101, "Transient Dialog", 11, (0, 0, 100, 100))
+    adapter = _Adapter(window)
+    adapter._native_window_exists = lambda _handle: False  # type: ignore[method-assign]
+
+    assert adapter.input(
+        handle=101,
+        expected_pid=11,
+        expected_title="Transient Dialog",
+        operation=DesktopInputOperation.KEY_ESCAPE,
+    )
+    assert window.calls[-1] == ("type_keys", "{ESC}", False)
 
 
 def test_clipboard_text_requires_pinned_process_foreground_and_focus() -> None:

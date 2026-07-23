@@ -240,6 +240,18 @@ class UniversalDesktopAdapter:
         allowed_foreground = self._allowed_foreground_handles(
             window, handle=handle, expected_pid=expected_pid
         )
+        # A click can synchronously open an owned modal dialog between two
+        # steps of one atomic sequence.  Keep routing the following key to
+        # that dialog when (and only when) it belongs to the pinned HWND's
+        # owner chain and the same pinned process.
+        if _preserve_child_focus:
+            foreground = self._foreground_window_handle()
+            if (
+                foreground
+                and self._window_process_id(foreground) == expected_pid
+                and self._is_native_owned_by(foreground, handle)
+            ):
+                allowed_foreground.add(foreground)
         # Re-focusing a modal before every key can reset its active child
         # control. Preserve child focus when the pinned HWND or same-process
         # owner is already foreground.
@@ -299,6 +311,14 @@ class UniversalDesktopAdapter:
                 self._send_keys(key)
             else:
                 window.type_keys(key, set_foreground=False)
+        # Escape commonly destroys a modal immediately.  Avoid asking pywinauto
+        # to resolve an HWND that Windows already removed; callers still verify
+        # the exact popup disappearance independently.
+        if (
+            selected_operation is DesktopInputOperation.KEY_ESCAPE
+            and not self._native_window_exists(handle)
+        ):
+            return True
         self._select_window(handle, expected_pid, expected_title)
         return True
 
@@ -351,6 +371,13 @@ class UniversalDesktopAdapter:
         if not window.is_visible():
             raise RuntimeError("selected window is not visible")
         return window
+
+    @staticmethod
+    def _native_window_exists(handle: int) -> bool:
+        try:
+            return bool(ctypes.windll.user32.IsWindow(handle))
+        except (AttributeError, OSError):
+            return True
 
     def _is_owned_dialog(self, window, *, owner=None) -> bool:  # type: ignore[no-untyped-def]
         """Return true for a bounded visible native window owned by the same app."""
@@ -828,6 +855,17 @@ class UniversalDesktopAdapter:
     @staticmethod
     def _native_owner_handle(handle: int) -> int:
         return int(ctypes.windll.user32.GetWindow(handle, 4) or 0)  # GW_OWNER
+
+    def _is_native_owned_by(self, handle: int, expected_owner: int) -> bool:
+        """Return whether ``handle`` is in the bounded native owner chain."""
+        current = handle
+        for _ in range(8):
+            current = self._native_owner_handle(current)
+            if not current:
+                return False
+            if current == expected_owner:
+                return True
+        return False
 
     def _allowed_foreground_handles(
         self, window, *, handle: int, expected_pid: int
