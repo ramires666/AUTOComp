@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import base64
+import hashlib
 import importlib.util
+import json
 from pathlib import Path
 from types import ModuleType
 
@@ -73,3 +76,59 @@ def test_edit_list_popup_requires_new_same_pid_title_prefix() -> None:
     assert popup is not None
     assert popup["handle"] == 104
 
+
+def test_saves_selected_kv_studio_clipboard_format_as_resumable_binary(
+    tmp_path: Path,
+) -> None:
+    raw = b"\x00KV-STUDIO\xff\x10"
+    digest = hashlib.sha256(raw).hexdigest()
+    clipboard_format = {
+        "format_id": 49155,
+        "name": "CF_KV_STUDIO_2",
+        "data_type": "bytes",
+        "data_base64": base64.b64encode(raw).decode("ascii"),
+        "byte_length": len(raw),
+        "sha256": digest,
+        "error": "",
+    }
+
+    attempt = SCRIPT._save_kv_studio_format_attempt(
+        tmp_path,
+        stem="001-4_0_0-Main",
+        clipboard_format=clipboard_format,
+    )
+
+    binary_path = tmp_path / attempt["binary_file"]
+    metadata = json.loads((tmp_path / attempt["metadata_file"]).read_text("utf-8"))
+    assert binary_path.read_bytes() == raw
+    assert metadata["name"] == "CF_KV_STUDIO_2"
+    assert metadata["decoded_sha256"] == digest
+    assert "data_base64" not in metadata
+    assert SCRIPT._completed_record_valid(
+        tmp_path,
+        {"status": "complete", "selected_attempt": 0, "attempts": [attempt]},
+    )
+
+
+def test_preflight_marks_clipboard_snapshot_as_optional_fast_path() -> None:
+    class _Client:
+        snapshot_available = True
+
+        def get(self, path: str) -> dict[str, object]:
+            if path == "/health":
+                return {"status": "ok", "build_id": "build-1"}
+            actions = set(SCRIPT.REQUIRED_ACTIONS)
+            if self.snapshot_available:
+                actions.add("desktop_clipboard_snapshot")
+            return {
+                "mode": "offline",
+                "actions": sorted(actions),
+                "desktop_input_operations": sorted(SCRIPT.REQUIRED_INPUT_OPERATIONS),
+                "post_action_audit": {"configured": True},
+                "build_id": "build-1",
+            }
+
+    client = _Client()
+    assert SCRIPT._preflight(client)["desktop_clipboard_snapshot_available"] is True
+    client.snapshot_available = False
+    assert SCRIPT._preflight(client)["desktop_clipboard_snapshot_available"] is False

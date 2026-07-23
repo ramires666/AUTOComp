@@ -9,6 +9,8 @@ typed or otherwise modified by this script.
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
 import hashlib
 import json
 import os
@@ -141,6 +143,9 @@ def _preflight(client: WorkerClient) -> dict[str, Any]:
         "boot_id": capabilities.get("boot_id") or health.get("boot_id"),
         "started_at": capabilities.get("started_at") or health.get("started_at"),
         "operation_limits": capabilities.get("operation_limits", {}),
+        "desktop_clipboard_snapshot_available": (
+            "desktop_clipboard_snapshot" in actions
+        ),
     }
 
 
@@ -301,6 +306,22 @@ def _clipboard(client: WorkerClient, window: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(clipboard, dict) or not isinstance(clipboard.get("text"), str):
         raise RuntimeError("worker returned no Unicode clipboard text")
     return clipboard
+
+
+def _clipboard_snapshot(client: WorkerClient, window: dict[str, Any]) -> dict[str, Any]:
+    identity = _identity(window)
+    response = client.action(
+        {
+            "action": "desktop_clipboard_snapshot",
+            "window_handle": identity["handle"],
+            "expected_pid": identity["process_id"],
+            "expected_title": identity["title"],
+        }
+    )
+    snapshot = response.get("desktop_clipboard_snapshot")
+    if not isinstance(snapshot, dict) or not isinstance(snapshot.get("formats"), list):
+        raise RuntimeError("worker returned no clipboard format snapshot")
+    return snapshot
 
 
 def _clipboard_hash(clipboard: dict[str, Any]) -> str:
@@ -488,6 +509,68 @@ def _save_text_attempt(
     }
 
 
+def _save_kv_studio_format_attempt(
+    output_dir: Path,
+    *,
+    stem: str,
+    clipboard_format: dict[str, Any],
+) -> dict[str, Any]:
+    if clipboard_format.get("name") != "CF_KV_STUDIO_2":
+        raise ValueError("clipboard format is not CF_KV_STUDIO_2")
+    encoded = clipboard_format.get("data_base64")
+    if not isinstance(encoded, str) or not encoded:
+        raise ValueError("CF_KV_STUDIO_2 has no base64 payload")
+    try:
+        raw = base64.b64decode(encoded, validate=True)
+    except (ValueError, binascii.Error):
+        raise ValueError("CF_KV_STUDIO_2 payload is not valid base64") from None
+    digest = hashlib.sha256(raw).hexdigest()
+    worker_length = clipboard_format.get("byte_length")
+    if isinstance(worker_length, int) and worker_length != len(raw):
+        raise ValueError("CF_KV_STUDIO_2 byte length does not match worker metadata")
+    worker_sha256 = str(clipboard_format.get("sha256", ""))
+    if worker_sha256 and worker_sha256 != digest:
+        raise ValueError("CF_KV_STUDIO_2 SHA-256 does not match worker metadata")
+
+    relative = Path("programs") / f"{stem}.CF_KV_STUDIO_2.bin"
+    metadata_relative = Path("programs") / f"{stem}.CF_KV_STUDIO_2.json"
+    _atomic_write_bytes(output_dir / relative, raw)
+    metadata = {
+        key: value
+        for key, value in clipboard_format.items()
+        if key not in {"data_base64", "text"}
+    }
+    metadata.update(
+        binary_file=relative.as_posix(),
+        decoded_bytes=len(raw),
+        decoded_sha256=digest,
+        captured_at=_now(),
+    )
+    _atomic_write_json(output_dir / metadata_relative, metadata)
+    return {
+        "method": "whole-program-CF_KV_STUDIO_2",
+        "format_id": clipboard_format.get("format_id"),
+        "format_name": "CF_KV_STUDIO_2",
+        "binary_file": relative.as_posix(),
+        "metadata_file": metadata_relative.as_posix(),
+        "byte_length": len(raw),
+        "sha256": digest,
+        "worker_sha256": worker_sha256,
+        "captured_at": metadata["captured_at"],
+    }
+
+
+def _kv_studio_format(snapshot: dict[str, Any]) -> dict[str, Any] | None:
+    return next(
+        (
+            item
+            for item in snapshot.get("formats", [])
+            if isinstance(item, dict) and item.get("name") == "CF_KV_STUDIO_2"
+        ),
+        None,
+    )
+
+
 def _join_block_texts(texts: list[str]) -> str:
     """Join blocks without changing their content or merging adjacent lines."""
     joined = ""
@@ -571,7 +654,8 @@ def _completed_record_valid(output_dir: Path, record: dict[str, Any]) -> bool:
     if not 0 <= selected < len(attempts) or not isinstance(attempts[selected], dict):
         return False
     attempt = attempts[selected]
-    path = output_dir / str(attempt.get("text_file", ""))
+    captured_file = attempt.get("text_file") or attempt.get("binary_file")
+    path = output_dir / str(captured_file or "")
     if not path.is_file():
         return False
     return hashlib.sha256(path.read_bytes()).hexdigest() == attempt.get("sha256")
@@ -595,6 +679,7 @@ def _extract_one(
     pause_ms: int,
     popup_wait_seconds: float,
     max_blocks: int,
+    clipboard_snapshot_available: bool,
 ) -> dict[str, Any]:
     record: dict[str, Any] = {
         **program,
@@ -647,6 +732,30 @@ def _extract_one(
                 {"operation": "key_ctrl_c", "pause_ms": pause_ms},
             ],
         )
+        if clipboard_snapshot_available:
+            try:
+                clipboard_formats = _clipboard_snapshot(client, main)
+                custom_format = _kv_studio_format(clipboard_formats)
+                if custom_format is not None:
+                    attempt = _save_kv_studio_format_attempt(
+                        output_dir,
+                        stem=stem,
+                        clipboard_format=custom_format,
+                    )
+                    record["attempts"].append(attempt)
+                    record.update(
+                        status="complete",
+                        selected_attempt=0,
+                        completed_at=_now(),
+                    )
+                    return record
+                record["warnings"].append(
+                    "whole-program clipboard has no CF_KV_STUDIO_2 format"
+                )
+            except Exception as exc:
+                record["warnings"].append(
+                    f"CF_KV_STUDIO_2 snapshot capture: {str(exc)[:500]}"
+                )
         plain_clipboard = _clipboard(client, main)
         _require_changed_clipboard(
             plain_clipboard,
@@ -959,6 +1068,9 @@ def run(args: argparse.Namespace) -> int:
                 pause_ms=args.pause_ms,
                 popup_wait_seconds=args.popup_wait_seconds,
                 max_blocks=args.max_blocks,
+                clipboard_snapshot_available=bool(
+                    preflight["desktop_clipboard_snapshot_available"]
+                ),
             )
         except Exception as exc:
             record = {
