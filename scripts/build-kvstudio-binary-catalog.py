@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import json
 import re
@@ -85,8 +86,11 @@ def _decoded_records(parsed: dict[str, Any]) -> tuple[list[dict[str, Any]], Coun
 def build(tree_path: Path, state_path: Path, parsed_dir: Path) -> dict[str, Any]:
     tree = _load(tree_path)
     state = _load(state_path)
+    current_tree_path = state_path.parent / "tree-inventory.raw.json"
+    current_tree = _load(current_tree_path)
     tree_records = tree.get("records")
     state_programs = state.get("programs")
+    current_tree_inventory = current_tree.get("project_tree_inventory")
     if not isinstance(tree_records, list) or not all(
         isinstance(item, dict) for item in tree_records
     ):
@@ -95,6 +99,12 @@ def build(tree_path: Path, state_path: Path, parsed_dir: Path) -> dict[str, Any]
         isinstance(item, dict) for item in state_programs.values()
     ):
         raise ValueError("capture state has no programs object")
+    if (
+        not isinstance(current_tree_inventory, dict)
+        or current_tree_inventory.get("complete") is not True
+        or current_tree_inventory.get("item_count") != len(tree_records)
+    ):
+        raise ValueError("current tree capture is incomplete or does not match tree catalog")
 
     tree_by_locator = _index_unique(tree_records, "tree")
     programs = sorted(state_programs.values(), key=lambda item: _locator(item.get("locator")))
@@ -176,6 +186,10 @@ def build(tree_path: Path, state_path: Path, parsed_dir: Path) -> dict[str, Any]
                     "selected_attempt": attempt,
                     "binary_path": binary_path.relative_to(ROOT).as_posix(),
                     "parsed_path": parsed_path.relative_to(ROOT).as_posix(),
+                    "binary_byte_length": binary_path.stat().st_size,
+                    "binary_base64": base64.b64encode(binary_path.read_bytes()).decode(
+                        "ascii"
+                    ),
                     "verified_binary_sha256": binary_sha256,
                 },
                 "parsed_binary": parsed,
@@ -210,6 +224,10 @@ def build(tree_path: Path, state_path: Path, parsed_dir: Path) -> dict[str, Any]
                 "path": state_path.relative_to(ROOT).as_posix(),
                 "sha256": _sha256(state_path),
             },
+            "current_tree_capture": {
+                "path": current_tree_path.relative_to(ROOT).as_posix(),
+                "sha256": _sha256(current_tree_path),
+            },
             "parsed_directory": parsed_dir.relative_to(ROOT).as_posix(),
         },
         "capture_provenance": {
@@ -218,6 +236,7 @@ def build(tree_path: Path, state_path: Path, parsed_dir: Path) -> dict[str, Any]
             "inventory": state.get("inventory"),
         },
         "summary": {
+            "tree_node_count": len(tree_records),
             "program_count": len(output_programs),
             "decoded_text_record_count": total_decoded,
             "cjk_occurrence_count": total_cjk_occurrences,
@@ -232,6 +251,8 @@ def build(tree_path: Path, state_path: Path, parsed_dir: Path) -> dict[str, Any]
                 {"text": text, "occurrences": count} for text, count in sorted(global_cjk.items())
             ],
         },
+        "project_tree": tree,
+        "current_project_tree_capture": current_tree,
         "programs": output_programs,
     }
 

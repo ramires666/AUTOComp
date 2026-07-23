@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "artifact_type": "kvstudio_final_local_device_comments_audit",
+  "status": "ok",
+  "captured_at": "2026-07-23",
+  "saved_project": "V3-6-0-8-finall",
+  "capture": {
+    "programs": 48,
+    "failures": 0,
+    "state": ".autocomp/final-confirmed-capture/state.json",
+    "inventory": ".autocomp/final-confirmed-capture/local-device-comment-inventory.json"
+  },
+  "expected": {
+    "source": "comments-export/local-english/bilingual.json",
+    "entries": 618
+  },
+  "actual": {
+    "entries": 618,
+    "unique_english_texts": 549,
+    "programs_with_local_comments": 35,
+    "dm_entries": 98,
+    "mr_entries": 520
+  },
+  "comparison": {
+    "matched": 618,
+    "missing": 0,
+    "mismatched": 0,
+    "extras": 0,
+    "remaining_cjk": 0
+  },
+  "notes": [
+    "Four stale Positioning comments at @MR112 through @MR115 were removed.",
+    "Six additional editor-visible CJK records were translated during review, but KV STUDIO pruned those non-persistent records when the project was saved; they are absent from the saved binary capture.",
+    "The final result describes the saved project, not transient editor state."
+  ]
+}

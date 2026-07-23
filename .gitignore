@@ -33,6 +33,8 @@ checkpoints/
 reports/*
 !reports/04-full-tree-bilingual-catalog.json
 !reports/05-remaining-cjk-report.json
+!reports/18-final-local-device-comments-audit.json
+!reports/20-final-offline-validation.json
 !reports/README.md
 screenshots/
 *.local.json

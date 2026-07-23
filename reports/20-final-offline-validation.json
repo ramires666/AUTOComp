@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "artifact_type": "kvstudio_final_offline_validation",
+  "captured_at": "2026-07-23",
+  "project": {
+    "name": "V3-6-0-8-finall",
+    "remote_path": "C:\\Program-ZLM\\new\\V3-6-0-8-finall",
+    "offline_only": true,
+    "plc_connection_or_transfer_performed": false,
+    "saved_title_observed_without_unsaved_asterisk": true
+  },
+  "translation": {
+    "tree_nodes": 520,
+    "tree_remaining_cjk": 0,
+    "programs": 48,
+    "global_device_comments_imported": 4904,
+    "rung_and_st_text_batch": 577,
+    "persistent_local_device_comments": {
+      "expected": 618,
+      "actual": 618,
+      "matched": 618,
+      "missing": 0,
+      "mismatched": 0,
+      "extras": 0,
+      "remaining_cjk": 0
+    },
+    "whole_project_rung_search": {
+      "pattern": "[一-龥]",
+      "result": "No rung matched with search conditions."
+    }
+  },
+  "offline_convert": {
+    "status": "success",
+    "message": "Conversion successful.",
+    "program_capacity": {
+      "used_kb": 396.292,
+      "available_kb": 1126.4,
+      "percent": 35.18
+    },
+    "object_size": {
+      "used_kb": 150.994,
+      "available_kb": 393.216,
+      "percent": 38.4
+    },
+    "steps": {
+      "used": 16022,
+      "available": 16384,
+      "total_instructions": 14757
+    },
+    "evidence": {
+      "path": ".autocomp/final-convert-result.png",
+      "sha256": "e70203121eb1822ed3c351771f1b15b2b99d95bd26f9bc77548adc46e919d9e7"
+    },
+    "note": "The success dialog does not display separate warning and error counts."
+  },
+  "full_external_catalog": {
+    "path": "reports/19-final-full-project-english.json",
+    "sha256": "49b45f6afef004bc26c6a6e51f817324b411b5bd5c4dfbfa250f64468ce770bd",
+    "byte_length": 17904772,
+    "tree_nodes": 520,
+    "programs": 48,
+    "decoded_text_records": 4662,
+    "embedded_lossless_program_binaries": 48,
+    "missing_programs": 0,
+    "remaining_cjk_in_decoded_program_text": 0,
+    "self_contained": true
+  },
+  "native_mnemonic_export": {
+    "status": "saved_and_visually_inventoried",
+    "remote_directory": "C:\\AUTOComp_final_mnemonic_20260723",
+    "save_confirmation": {
+      "message": "Mnemonics list is saved.",
+      "evidence": ".autocomp/current-modal.png",
+      "sha256": "46640e3015c305e323ac3fff93acecba8ce505cb839c1564cff7f864033b0520"
+    },
+    "expected_basenames_visually_present": 48,
+    "expected_basenames_missing": 0,
+    "unexpected_visible_files": 0,
+    "evidence_pages": [
+      ".autocomp/final-export-list-home.png",
+      ".autocomp/final-export-list-mid.png",
+      ".autocomp/final-export-list-mid2.png",
+      ".autocomp/final-export-list-page2.png",
+      ".autocomp/final-export-list-end.png"
+    ],
+    "limitations": [
+      "The generic worker intentionally has no arbitrary remote-filesystem read API, so an exact local file count and SHA-256 manifest were not collected.",
+      "KV STUDIO displayed its standard notice that mnemonic files containing ST/script or data-packet programs cannot be read back through the mnemonic reader. This does not negate the later save-success confirmation."
+    ]
+  },
+  "logic_preservation": {
+    "pre_import_mnemonic_check": {
+      "programs": 48,
+      "logic_lines_unchanged": true,
+      "source": "reports/16-kvstudio-mnemonic-compatibility.json"
+    },
+    "post_save_binary_check": {
+      "normalization": "Exclude COMMENT sections and compare ordered raw non-text MODULE records.",
+      "programs_exact": 46,
+      "programs_requiring_format_aware_review": 2,
+      "exceptions": [
+        {
+          "program": "Init_Fix_Z_Axis_Drop",
+          "reason": "MODULE subtype 7 and 27 record counts changed from 343 to 350; the current parser cannot distinguish translated row wrapping from logic structure."
+        },
+        {
+          "program": "CommunicationProgram",
+          "reason": "One of 750 subtype-7 records differs; it is consistent with the translated string block, but the current parser cannot safely mask only string bytes."
+        }
+      ]
+    },
+    "status": "46_strictly_proved_2_require_fresh_export_diff_for_independent_48_of_48_proof"
+  },
+  "overall": {
+    "translation_and_offline_convert": "pass",
+    "external_lossless_capture": "pass",
+    "native_mnemonic_export": "pass_with_remote_manifest_limit",
+    "independent_post_save_logic_equivalence": "partial_46_of_48"
+  }
+}
