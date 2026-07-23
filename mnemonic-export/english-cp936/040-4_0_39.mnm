@@ -1,7 +1,6 @@
 DEVICE:132
 ;MODULE:»ù¶÷Ê¿HMI
 ;MODULE_TYPE:0
-;SCRIPT_TYPE:
 ;<h1/>/*Command Debugging*/
 ;Command Mapping:MR21800~MR22415  DM201=0~100
 ;FOR @DM0=0 TO 100 STEP 1

@@ -1,7 +1,6 @@
 DEVICE:132
 ;MODULE:±¨¾¯³ÌÐò
 ;MODULE_TYPE:0
-;SCRIPT_TYPE:
 ;/*MR1000-MR2915*/
 ;<h1/>/*Alarm Summary*/
 LDB MR1000

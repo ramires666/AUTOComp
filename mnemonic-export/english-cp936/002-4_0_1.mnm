@@ -1,7 +1,6 @@
 DEVICE:132
 ;MODULE:Main
 ;MODULE_TYPE:0
-;SCRIPT_TYPE:
 ;/*MR600-MR715*/
 ;<h1/>/*Manual/Automatic*/
 LD CR2008
