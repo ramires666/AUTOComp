@@ -1,0 +1,8 @@
+@DM0,,Cmd 25 Step,,
+@DM1,,Pour count current,,
+@MR0,,Stop,,
+@MR1,,Station Alarm,,
+@MR2,,Clamp Alarm,,
+@MR5,,2nd pour interval delay,,
+@MR10,,Tray Stn Pour Clamp Delay Close,,
+@MR11,,Tray Stn Pour Clamp Delay Open,,

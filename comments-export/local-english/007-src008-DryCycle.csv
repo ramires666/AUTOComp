@@ -1,0 +1,5 @@
+@DM0,,Tray Pos_Positioning Step,,
+@MR0,,Stop,,
+@MR1,,Z Axis Homing_Pre-Axis Pos,,
+@MR5,,Stop_Axis Pos,,
+@MR8,,Global Alarm,,

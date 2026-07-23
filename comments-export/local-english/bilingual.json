@@ -1,0 +1,5504 @@
+{
+  "schema_version": 1,
+  "artifact_type": "kvstudio_local_device_comments_bilingual",
+  "entry_count": 618,
+  "unique_source_count": 550,
+  "translations": {
+    "1#指令Step": "Cmd 1 Step",
+    "10#指令Step": "Cmd 10 Step",
+    "10s计时_第二次语音提醒": "10s Timer 2nd Voice Alert",
+    "10秒到达": "10s Arrival",
+    "10秒时间器": "10s timer",
+    "11#指令Step": "Cmd 11 Step",
+    "12#指令Step": "Cmd 12 Step",
+    "13#指令Step": "Cmd 13 Step",
+    "14#指令Step": "Cmd 14 Step",
+    "18#指令Step": "Cmd 18 Step",
+    "2#指令Step": "Cmd 2 Step",
+    "21#指令Step": "Cmd 21 Step",
+    "22#指令Step": "Cmd 22 Step",
+    "23#指令Step": "Cmd 23 Step",
+    "24#指令Step": "Cmd 24 Step",
+    "25#指令Step": "Cmd 25 Step",
+    "26#指令Step": "Cmd 26 Step",
+    "27#指令Step": "Cmd 27 Step",
+    "27#指令_运行完成标志": "Cmd 27 Run Done Flag",
+    "27#指令载盘位有盘标志": "Cmd 27 Tray Has Item Flag",
+    "28#指令Step": "Cmd 28 Step",
+    "3#、4#站通信启动": "Stn 3/4 Comm Start",
+    "3#、4#站通信延时启动": "Stn 3/4 Comm Delay Start",
+    "3#、4#站通信开始": "Stn 3/4 Comm Begin",
+    "3#指令Step": "Cmd 3 Step",
+    "4#指令Step": "Cmd 4 Step",
+    "4#指令完成标志": "Cmd 4 Done Flag",
+    "4#指令完成标志TO语音提醒": "Cmd 4 Done To Voice Alert",
+    "400℃防误碰滤波延时": "400C Anti Touch Filter Delay",
+    "4号指令完成后测重量延时": "Post Cmd 4 Weight Delay",
+    "4号指令完成后继续测重量": "Post Cmd 4 Weight Measure",
+    "50#指令Step": "Cmd 50 Step",
+    "51#指令Step": "Cmd 51 Step",
+    "52#指令Step": "Cmd 52 Step",
+    "53#指令Step": "Cmd 53 Step",
+    "54#指令Step": "Cmd 54 Step",
+    "55#指令Step": "Cmd 55 Step",
+    "56#指令Step": "Cmd 56 Step",
+    "57#指令Step": "Cmd 57 Step",
+    "5秒计数器": "5s Counter",
+    "6#指令Step": "Cmd 6 Step",
+    "600℃防误碰滤波延时": "600C Anti-Touch Filter Delay",
+    "7#指令Step": "Cmd 7 Step",
+    "8#指令Step": "Cmd 8 Step",
+    "8秒内去皮不成功，就开闸门": "Tare Fail 8s Open Gate",
+    "9#指令Step": "Cmd 9 Step",
+    "HMI定位按钮输入计时": "HMI Pos Button Input Timer",
+    "HMI有定位标志": "HMI Pos Flag",
+    "K金位_X轴定位中": "K-Gold X-Axis Positioning",
+    "K金位_X轴定位完成": "K-gold X-Axis Posn Done",
+    "K金位_Y轴定位中": "K-Gold Y-Axis Positioning",
+    "K金位_Y轴定位完成": "K-gold Y-Axis Posn Done",
+    "K金位_Z轴定位中": "K-Gold Z-Axis Positioning",
+    "K金位_Z轴定位完成": "K-gold Z-Axis Posn Done",
+    "K金位_定位Step": "K-Gold Pos_Positioning Step",
+    "K金位_定位停止": "K-gold Posn Stop",
+    "K金位_定位启动": "K-gold Posn Start",
+    "K金位_流程运行": "K-gold Run",
+    "MR1000~1013报警": "MR1000~1013 Alarm",
+    "MR1000~1015报警（除1112外）": "MR1000~1015 Alarm (Excl 1112)",
+    "Prot2忙，不能读取当前重量": "Prot2 Busy - No Read Wt",
+    "Prot2报警": "Prot2 Alarm",
+    "XYZ在开盖位/摆盖位": "XYZ At Lid Open/Place Pos",
+    "XYZ当前位置在K金位": "XYZ at K-gold pos",
+    "XYZ当前位置在开盖位": "XYZ At Lid Open Pos",
+    "XYZ当前位置在摆盖位": "XYZ At Lid Place Pos",
+    "XYZ当前位置在熔炼位": "XYZ At Smelting Pos",
+    "XYZ当前位置在石墨位": "XYZ at graphite pos",
+    "XYZ当前位置在纯金位": "XYZ at pure gold pos",
+    "XYZ当前位置都在0位置": "XYZ all at pos 0",
+    "XYZ当前位置都在开盖位上方": "XYZ all above lid-open pos",
+    "XYZ都在原点": "XYZ all at origin",
+    "X轴回原超时": "X Axis Homing Timeout",
+    "Y轴回原超时": "Y Axis Homing Timeout",
+    "Z轴去0位置标志": "Z-Axis Homing Flag",
+    "Z轴回原_轴定位前": "Z Axis Homing_Pre-Axis Pos",
+    "Z轴回原开始": "Z Axis Homing Start",
+    "Z轴回原超时": "Z Axis Homing Timeout",
+    "Z轴夹子上盘子处理Step": "Z Axis Clamp Tray Proc Step",
+    "Z轴夹子人工确认安全＿HMI": "ZClampManSafe2HMI",
+    "Z轴夹子原点动作条件": "Z Axis Clamp Homing Condition",
+    "Z轴夹子当前老化次数": "Z-gripper current aging count",
+    "Z轴夹子老化Step": "Z-gripper aging Step",
+    "Z轴夹子老化启动": "Z-gripper aging start",
+    "Z轴夹子老化启动中": "Z Gripper Endurance Running",
+    "Z轴夹子老化条件满足": "Z-gripper aging cond met",
+    "≤40℃，温度判断延时": "<=40C temp check delay",
+    "二次倾倒-间隔延时": "2nd pour interval delay",
+    "二次去皮STEP": "2nd Tare STEP",
+    "二次去皮启动条件_单机": "2nd Tare start cond_Single",
+    "二次去皮启动条件_自动": "2nd Tare start cond_Auto",
+    "二次去相机位标志": "2nd Camera Pos Flag",
+    "二次称重主轴启动延时": "2nd weigh spindle start delay",
+    "二次翻转石墨位到位延时": "2nd Flip Graphite Pos Delay",
+    "倒黄金时，石墨夹子延时动作": "Graphite Grip Delay Dump",
+    "倒黄金时，载盘夹子延时动作": "Carrier Grip Delay Dump",
+    "倾倒当前次数": "Pour count current",
+    "倾倒电机初始化Step": "Pour Motor Init Step",
+    "倾倒电机初始化完成": "Pour Motor Init Done",
+    "倾倒电机初始化开始": "Pour Motor Init Start",
+    "倾倒电机动作": "Dumping Motor Actuation",
+    "倾倒电机动作_HMI": "Dump Motor Actuate HMI",
+    "倾倒电机回零": "Dumping Motor Home",
+    "倾倒电机回零_HM": "Pour Motor Homing_HM",
+    "停止": "Stop",
+    "停止_10#指令": "Stop Cmd 10",
+    "停止_11#指令": "Stop Cmd 11",
+    "停止_12#指令": "Stop Cmd 12",
+    "停止_13#指令": "Stop Cmd 13",
+    "停止_14#指令": "Stop Cmd 14",
+    "停止_18#指令": "Stop Cmd 18",
+    "停止_21#指令": "Stop Cmd 21",
+    "停止_27#指令": "Stop Cmd 27",
+    "停止_6#指令": "Stop Cmd 6",
+    "停止_7#指令": "Stop Cmd 7",
+    "停止_8#指令": "Stop Cmd 8",
+    "停止_Z轴夹子老化": "Stop_Z-gripper aging",
+    "停止_冷却排空部分": "Stop Cooling Drain Part",
+    "停止_去石墨位部分": "Stop Graphite Pos Section",
+    "停止_吹气部分": "Stop Blow Air Part",
+    "停止_开盖部分": "Stop Lid Open Part",
+    "停止_抽真空": "Stop_Vacuum",
+    "停止_熔炼部分": "Stop Melting Part",
+    "停止_载石倾夹子老化": "Stop CarrierGraphPour Aging",
+    "停止吹气1s": "Stop Blow Air 1s",
+    "停止吹气3s": "Stop air blow 3s",
+    "停止标志TｏZ轴夹子": "Stop flag Z-gripper",
+    "停止标志Tｏ载石倾": "Stop Flag CarrierGraphPour",
+    "停止＿2#指令": "Stop Cmd 2",
+    "停止＿3#指令": "Stop Cmd 3",
+    "停止＿轴定位": "Stop_Axis Pos",
+    "光栅断开滤波延时": "Light Curtain Break Filter Delay",
+    "光栅断线检测滤波": "GrtnBreakDetFilter",
+    "光栅滤波延时": "Light Curtain Filter Delay",
+    "关炉时间到": "Furnace off time up",
+    "关门语音播报_自动播报完成标志": "Gate Close Voice Done Flag",
+    "关闭写保护": "disable write protection",
+    "关闭写保护延时": "Disable Write Protect Delay",
+    "关闭写保护＿FRM other": "Disable Write Protect - FRM",
+    "关闭电磁阀，防止气泵堵转": "Close Sol to prevent pump stall",
+    "其他3个位置的退货": "Other 3 Posn Return",
+    "冷却到排空温度": "Cool To Drain Temp",
+    "冷却完后翻转计数": "Cooling Flip Count",
+    "冷却排空Step": "Cooling Drain Step",
+    "冷却温度到达延时确认": "Cool temp reached delay confirm",
+    "冷却温度达到": "Cool temp reached",
+    "冷水机上下限报警温度设定": "Chiller Alarm Temperature Limits",
+    "冷水机关闭标志": "Chiller off flag",
+    "冷水机和温控表Step": "Chlr & Temp Ctrl Step",
+    "冷水机回差设置": "Chlr Hysteresis Set",
+    "冷水机循环水泵开启标志": "Chiller Pump Run Flag",
+    "冷水机数据发送请求": "Chiller data send request",
+    "冷水机水温设置": "Chlr Water Temp Set",
+    "初始化Step": "Init Step",
+    "初始化_HMI": "Init_HMI",
+    "初始化标志": "Init Flag",
+    "初始化点动次数_HMI": "Init Jog Count_HMI",
+    "初检含金量From 上位机": "Initial Au Content From Host PC",
+    "初检重量From 上位机": "Initial Weight From Host PC",
+    "到载盘位放盘To载盘": "To Tray Pos Place To Tray",
+    "到载盘工位后，倾倒夹子延时张开": "Tray Stn Pour Clamp Delay Open",
+    "到载盘工位后，倾倒夹子延时闭合": "Tray Stn Pour Clamp Delay Close",
+    "加压完成，电磁阀关闭标志": "Pressurize done Sol off flag",
+    "去K金位_HMI": "HMI Move to K-Gold Station",
+    "去取盘电机取盘位_HMI": "HMI Move To Tray Pick Pos",
+    "去开盖位_HMI": "HMI Move to Lid Open Station",
+    "去摆盖位_HMI": "HMI Move to Lid Place Station",
+    "去测金仪_HMI": "HMI Move to XRF Analyzer",
+    "去熔炼位_HMI": "HMI Move to Melting Station",
+    "去皮_自动": "Tare Auto",
+    "去皮不成功，再次去皮": "Tare Fail Retry",
+    "去皮完成": "Tare Complete",
+    "去相机位_HMI": "HMI Move to Vision Station",
+    "去石墨位Step": "Go Graphite Pos Step",
+    "去石墨位_HMI": "HMI Move to Graphite Station",
+    "去精称位_HMI": "HMI Move to Fine Scale Station",
+    "去纯金位_HMI": "HMI Move to Pure Gold Station",
+    "去载盘位_HMI": "HMI Move to Carrier Station",
+    "去载盘位_初始化": "Init Move to Carrier Station",
+    "去载盘位_初始化启动": "Tray Pos Init Start",
+    "取消粗称去皮": "Cancel Coarse Tare",
+    "取盘电机初始化Step": "Tray Pick Motor Init Step",
+    "取盘电机初始化完成": "Tray Pick Motor Init Done",
+    "取盘电机初始化开始": "Tray Pick Motor Init Start",
+    "取盘电机取盘位": "Tray Pick Motor Pick Pos",
+    "取盘电机取盘位_HMI": "Tray Pickup Motor Pickup Stn HMI",
+    "取盘电机取盘位_X轴定位中": "Tray Pick X-Axis Positioning",
+    "取盘电机取盘位_X轴定位完成": "Tray Pick X-Axis Posn Done",
+    "取盘电机取盘位_Y轴定位中": "Tray Pick Y-Axis Positioning",
+    "取盘电机取盘位_Y轴定位完成": "Tray Pick Y-Axis Posn Done",
+    "取盘电机取盘位_Z轴定位中": "Tray Pick Z-Axis Positioning",
+    "取盘电机取盘位_Z轴定位完成": "Tray Pick Z-Axis Posn Done",
+    "取盘电机取盘位_定位Step": "Tray Pick Pos_Positioning Step",
+    "取盘电机取盘位_定位停止": "Tray Pick Posn Stop",
+    "取盘电机取盘位_定位启动": "Tray Pick Pos_Pos Start",
+    "取盘电机闸门位": "Tray Pick Motor Gate Pos",
+    "取盘电机闸门位_HMI": "Tray Pickup Motor Gate Stn HMI",
+    "可以倾倒到载盘位 To HMI": "Ready To Pour To Tray Pos To HMI",
+    "可以翻转到石墨位 To HMI": "Flip2GraphPos2HMI",
+    "可以翻转到载盘位 To HMI": "Ready To Flip To Tray Pos To HMI",
+    "启动延时": "Start Delay",
+    "启动点动计数": "Start Jog Count",
+    "吹气3S": "Blow Air 3s",
+    "吹气Step": "Blow Air Step",
+    "回原_初始化标志": "Homing_Init Flag",
+    "回水长时间（≥5S）超过设定温度": "CW return > set temp for >=5s",
+    "增加磁场后读取粗称值延时": "Magnet On Delay Coarse Read",
+    "增加磁场后重量延时_4#指令完成后": "Weight Delay Post Cmd 4",
+    "夹子有报警": "Clamp Alarm",
+    "夹子有报警＿2#指令": "Clamp Alarm Cmd 2",
+    "夹子有报警＿3#指令": "Clamp Alarm Cmd 3",
+    "已泄压信号标志": "Depressurized Signal Flag",
+    "延时关闭电磁铁_4#指令完成后": "Magnet Off Delay Post Cmd 4",
+    "延时判断是否退货": "Delay Return Check",
+    "延时复位碰到光栅闸门开": "DelayRstGrtnGateOpen",
+    "延时开右门＿HMI": "Delay Open Right Door_HMI",
+    "延时开启抽真空": "Delay start vacuum",
+    "延时开启补气阀": "Delay open air valve",
+    "延时开左门＿HMI": "Delay Open Left Door_HMI",
+    "延时断开手动吹气": "Delay Off Manual Air Blow",
+    "延时时间到": "Delay time elapsed",
+    "延时检测已泄压信号": "DelayDeprSigDet",
+    "开右门": "Open Right Door",
+    "开右门标志＿HMI": "Open Right Door Flag_HMI",
+    "开启抽真空": "Start vacuum",
+    "开启条件_测金校正": "XRF Cal Enable Condition",
+    "开始延时播报第二段语音": "StartDelayVoice2",
+    "开左门": "Open Left Door",
+    "开左门标志＿HMI": "Open Left Door Flag_HMI",
+    "开机标志": "Power-On Flag",
+    "开机自动初始化": "Power-On Auto Init",
+    "开盖Step": "Lid Open Step",
+    "开盖位_X轴定位中": "Open Lid X-Axis Positioning",
+    "开盖位_X轴定位完成": "Open Lid X-Axis Posn Done",
+    "开盖位_Y轴定位中": "Open Lid Y-Axis Positioning",
+    "开盖位_Y轴定位完成": "Open Lid Y-Axis Posn Done",
+    "开盖位_Z轴定位中": "Open Lid Z-Axis Positioning",
+    "开盖位_Z轴定位完成": "Open Lid Z-Axis Posn Done",
+    "开盖位_定位Step": "Lid Open Pos_Positioning Step",
+    "开盖位_定位停止": "Open Lid Posn Stop",
+    "开盖位_定位启动": "Lid Open Pos_Pos Start",
+    "开门标志": "Gate Open Flag",
+    "开门计时": "Gate Open Timer",
+    "总报警": "Global Alarm",
+    "打开写保护": "enable write protection",
+    "打开写保护延时": "Enable Write Protect Delay",
+    "打开写保护＿FRM other": "Enable Write Protect - FRM",
+    "报警播报Step": "Alarm broadcast Step",
+    "报警播报次数记录": "Alarm broadcast count record",
+    "报警语音播报": "Alarm Voice Broadcast",
+    "抽真空关闭后，延时打开正压补气": "Vac off delay open pos air",
+    "摆盖位_X轴定位中": "Lid X-Axis Positioning",
+    "摆盖位_X轴定位完成": "Lid X-Axis Posn Done",
+    "摆盖位_Y轴定位中": "Lid Y-Axis Positioning",
+    "摆盖位_Y轴定位完成": "Lid Y-Axis Posn Done",
+    "摆盖位_Z轴定位中": "Lid Z-Axis Positioning",
+    "摆盖位_Z轴定位完成": "Lid Z-Axis Posn Done",
+    "摆盖位_定位Step": "Lid Place Pos_Positioning Step",
+    "摆盖位_定位停止": "Lid Posn Stop",
+    "摆盖位_定位启动": "Lid Place Pos_Pos Start",
+    "播报的文件地址_@MR对应的位序号": "Broadcast file addr_MR bit no",
+    "播报的文件地址_黑色款语音播报": "Voice File Addr (Black)",
+    "播报第二段延时时间": "2nd Msg Delay",
+    "播放完成＿To黑色款语音模块": "PlayDone_ToBlackModule",
+    "放入物品后读取粗称值延时": "Load Delay Coarse Read",
+    "故障复位延时": "Fault Reset Delay",
+    "故障复位标志延时复位": "Fault Reset Flag Delay Reset",
+    "数据发送请求＿3#/4#站": "Data Send Req - Stn 3/4",
+    "数据发送请求＿粗称": "Data Send Req - Coarse",
+    "文件地址发送的次数_黑色款": "File addr send count_black model",
+    "最低水温": "Min Water Temp",
+    "最高设定温度已到": "Max Set Temp Reached",
+    "有故障标志To语音播报": "Fault Flag To Voice",
+    "本工位报警": "Station Alarm",
+    "本工位报警_6#指令": "Station Alarm Cmd 6",
+    "本工位报警_7#指令": "Station Alarm Cmd 7",
+    "本工位有报警": "Station Alarm",
+    "本工位有报警_10#指令": "Station Alarm Cmd 10",
+    "本工位有报警_11#指令": "Station Alarm Cmd 11",
+    "本工位有报警_12#指令": "Station Alarm Cmd 12",
+    "本工位有报警_13#指令": "Station Alarm Cmd 13",
+    "本工位有报警_14#指令": "Station Alarm Cmd 14",
+    "本工位有报警_18#指令": "Station Alarm Cmd 18",
+    "本工位有报警_21#指令": "Station Alarm Cmd 21",
+    "本工位有报警_27#指令": "Station Alarm Cmd 27",
+    "本工位有报警_冷却排空部分": "Station Alarm Cooling Drain Part",
+    "本工位有报警_去石墨位部分": "Station Alarm Graphite Section",
+    "本工位有报警_吹气部分": "Station Alarm Blow Air Part",
+    "本工位有报警_开盖部分": "Station Alarm Lid Open Part",
+    "本工位有报警_熔炼部分": "Station Alarm Melting Part",
+    "本工位有报警＿2#指令": "Station Alarm Cmd 2",
+    "本工位有报警＿3#指令": "Station Alarm Cmd 3",
+    "模拟语音选择（循环用）": "Sim voice select (loop)",
+    "残留重量检测值.F": "Residual wt detect val.F",
+    "水泵开启后冷水机延时开启": "Chiller Delay Post Pump On",
+    "泄压延时": "Depressurization Delay",
+    "泄压阀打开后延时开盖": "Vent Open Delay Lid Open",
+    "测金不符合的退货": "XRF Fail Return",
+    "测金仪_X轴定位中": "XRF X-Axis Positioning",
+    "测金仪_X轴定位完成": "XRF X-Axis Posn Done",
+    "测金仪_Y轴定位中": "XRF Y-Axis Positioning",
+    "测金仪_Y轴定位完成": "XRF Y-Axis Posn Done",
+    "测金仪_Z轴定位中": "XRF Z-Axis Positioning",
+    "测金仪_Z轴定位完成": "XRF Z-Axis Posn Done",
+    "测金仪_定位Step": "XRF Pos_Positioning Step",
+    "测金仪_定位停止": "XRF Posn Stop",
+    "测金仪_定位启动": "XRF Pos_Pos Start",
+    "清零+校准Step": "Zero+Calibrate Step",
+    "清零+校准＿卡顿检测": "Zero+Calib - Hang Detect",
+    "温度下降状态": "Temp dropping status",
+    "温度下降状态Tｏ二次去皮": "Temp Falling To 2nd Tare",
+    "温度冷却到40℃标志": "Cool to 40C flag",
+    "温度对比开始": "Temp diff start",
+    "温度对比开始延时到": "Temp Compare Start Delay",
+    "温度通信＿卡顿检测": "Temp Comm - Hang Detect",
+    "温度通信＿卡顿检测延时": "Temp Comm - Hang Delay",
+    "温度通信＿卡顿检测确认": "Temp Comm - Hang Confirm",
+    "炉内冷却开始": "Furnace cool start",
+    "点对点定位标志": "Point-to-Point Pos Flag",
+    "点对点时只受本工位的报警影响": "PP Only Local Alarm",
+    "点对点记忆": "Point-to-Point Memory",
+    "熔炉关闭标志To语音10": "Furnace Close To Voice 10",
+    "熔炉报警后延时启动": "Furnace Alarm Delay Start",
+    "熔炉报警标志": "Furnace Alarm Flag",
+    "熔炼Step": "Melting Step",
+    "熔炼位_X轴定位中": "Melting X-Axis Positioning",
+    "熔炼位_X轴定位完成": "Melting X-Axis Posn Done",
+    "熔炼位_Y轴定位中": "Melting Y-Axis Positioning",
+    "熔炼位_Y轴定位完成": "Melting Y-Axis Posn Done",
+    "熔炼位_Z轴定位中": "Melting Z-Axis Positioning",
+    "熔炼位_Z轴定位完成": "Melting Z-Axis Posn Done",
+    "熔炼位_定位Step": "Smelting Pos_Positioning Step",
+    "熔炼位_定位停止": "Melting Posn Stop",
+    "熔炼位_定位启动": "Smelting Pos_Pos Start",
+    "熔炼前冷水温度不超温": "Pre-Melt Cool Water OK",
+    "熔炼启动标志": "Melting start flag",
+    "熔炼完成，关闭抽真空": "Melting done - close vacuum",
+    "熔炼温度到达延时停止": "Temp Reached Delay Stop",
+    "熔炼温度未达到960": "Temp Not 960",
+    "熔炼温度达到": "Melting Temp Reached",
+    "熔炼温度达到960标志": "Temp 960 Flag",
+    "熔炼电源打开后5s后，启动信号on": "Start Signal 5s After Power",
+    "熔炼电源正常运行": "Melting Power Normal",
+    "相机位_X轴定位中": "Camera X-Axis Positioning",
+    "相机位_X轴定位完成": "Camera X-Axis Posn Done",
+    "相机位_Y轴定位中": "Camera Y-Axis Positioning",
+    "相机位_Y轴定位完成": "Camera Y-Axis Posn Done",
+    "相机位_Z轴定位中": "Camera Z-Axis Positioning",
+    "相机位_Z轴定位完成": "Camera Z-Axis Posn Done",
+    "相机位_定位Step": "Camera Pos_Positioning Step",
+    "相机位_定位停止": "Camera Posn Stop",
+    "相机位_定位启动": "Camera Pos_Pos Start",
+    "真空度达到，延时关闭气泵": "Vacuum reached - delay pump off",
+    "真空度达到，电磁阀关闭标志": "Vacuum reached - Sol off flag",
+    "真空超时报警": "Vacuum timeout alarm",
+    "石墨位_X轴定位中": "Graphite X-Axis Positioning",
+    "石墨位_X轴定位完成": "Graphite X-Axis Posn Done",
+    "石墨位_Y轴定位中": "Graphite Y-Axis Positioning",
+    "石墨位_Y轴定位完成": "Graphite Y-Axis Posn Done",
+    "石墨位_Z轴定位中": "Graphite Z-Axis Positioning",
+    "石墨位_Z轴定位完成": "Graphite Z-Axis Posn Done",
+    "石墨位_定位Step": "Graphite Pos_Positioning Step",
+    "石墨位_定位停止": "Graphite Posn Stop",
+    "石墨位_定位启动": "Graphite Pos_Pos Start",
+    "石墨位冷却温度到达": "Graphite pos cool temp reached",
+    "石墨位冷却温度延时判断": "Graphite Cool Temp Delay",
+    "石墨位冷却设备已关闭": "Graphite pos cool equip off",
+    "石墨盘放回原位准备中": "Graphite Tray Return Prep",
+    "砝码校准": "Weight Calibration",
+    "砝码校准延时": "Weight Calib Delay",
+    "碰到光栅闸门开": "Light Curtain Hit Gate Open",
+    "第一条提醒语音已播报": "1st Voice Alert Played",
+    "第一条提醒语音的延时_4#指令完成": "1st Voice Alert Delay Post Cmd 4",
+    "第一次测金": "1st Gold Measure",
+    "第二次测金": "Second XRF Assay",
+    "粗称位载盘复位Step": "Coarse Weigh Tray Reset Step",
+    "粗称卡顿1": "Coarse Weigh Hang 1",
+    "粗称卡顿2": "Coarse Weigh Hang 2",
+    "粗称去皮": "coarse weighing tare",
+    "粗称去皮Step": "Coarse weigh tare Step",
+    "粗称去皮延时": "Coarse Tare Delay",
+    "粗称去皮＿卡顿检测": "Coarse Tare - Hang Detect",
+    "粗称取消去皮Step": "Coarse weigh cancel tare Step",
+    "粗称取消去皮延时": "Coarse Untare Delay",
+    "粗称取消去皮＿卡顿检测": "Coarse Tare Cancel - Hang",
+    "粗称清零": "coarse weighing zeroing",
+    "粗称清零延时": "Coarse Zero Delay",
+    "粗称电磁铁可接通_4#指令完成后": "Coarse Magnet Enable Post Cmd 4",
+    "粗称电磁铁延时_4#指令完成后": "Coarse Magnet Delay Post Cmd 4",
+    "粗称读取当前值Step": "Coarse weigh read current Step",
+    "粗称读取当前值启动": "Coarse Weigh Read Start",
+    "粗称读取＿卡顿检测": "Coarse Read - Hang Detect",
+    "粗称通信＿卡顿检测": "Coarse Comm - Hang Detect",
+    "粗称通信＿卡顿检测延时": "Coarse Comm - Hang Delay",
+    "粗称通信＿卡顿检测确认": "Coarse Comm - Hang Confirm",
+    "精称位_X轴定位中": "Fine Scale X-Axis Positioning",
+    "精称位_X轴定位完成": "Fine Scale X-Axis Posn Done",
+    "精称位_Y轴定位中": "Fine Scale Y-Axis Positioning",
+    "精称位_Y轴定位完成": "Fine Scale Y-Axis Posn Done",
+    "精称位_Z轴定位中": "Fine Scale Z-Axis Positioning",
+    "精称位_Z轴定位完成": "Fine Scale Z-Axis Posn Done",
+    "精称位_定位Step": "Fine Weigh Pos_Positioning Step",
+    "精称位_定位停止": "Fine Scale Posn Stop",
+    "精称位_定位启动": "Fine Weigh Pos_Pos Start",
+    "精称位载盘复位Step": "Fine Weigh Tray Reset Step",
+    "精称去皮_HMI": "Fine Scale Tare HMI",
+    "精称读取重量": "Fine scale read weight",
+    "系统初始化复位": "System Init Reset",
+    "纯金位_X轴定位中": "Pure Gold X-Axis Positioning",
+    "纯金位_X轴定位完成": "Pure Gold X-Axis Posn Done",
+    "纯金位_Y轴定位中": "Pure Gold Y-Axis Positioning",
+    "纯金位_Y轴定位完成": "Pure Gold Y-Axis Posn Done",
+    "纯金位_Z轴定位中": "Pure Gold Z-Axis Positioning",
+    "纯金位_Z轴定位完成": "Pure Gold Z-Axis Posn Done",
+    "纯金位_定位Step": "Pure Gold Pos_Positioning Step",
+    "纯金位_定位停止": "Pure Gold Posn Stop",
+    "纯金位_定位启动": "Pure Gold Posn Start",
+    "纯金位_流程运行": "Pure Gold Run",
+    "组合1STEP": "Combo 1 STEP",
+    "组合1启动": "Combo 1 Start",
+    "组合2STEP": "Combo 2 STEP",
+    "组合2启动": "Combo 2 Start",
+    "终检含金量From 上位机": "Final Au Content From Host PC",
+    "终检重量From 上位机": "Final Weight From Host PC",
+    "翻转电机初始化Step": "Flip Motor Init Step",
+    "翻转电机初始化完成": "Flip Motor Init Done",
+    "翻转电机初始化开始": "Flip Motor Init Start",
+    "翻转电机启动_HMI": "Flip Motor Start_HMI",
+    "翻转电机回原点": "Flip Motor Homing",
+    "翻转电机回零STEP": "Flip Motor Homing STEP",
+    "翻转电机方向_HMI": "Flip Motor Direction_HMI",
+    "翻转电机石墨位": "Flip Motor Graphite Pos",
+    "翻转电机石墨位_HMI": "Flip Motor Graphite Station HMI",
+    "翻转电机载盘位": "Flip Motor Carrier-Tray Position",
+    "翻转电机载盘位_HMI": "Flip Motor Carrier Station HMI",
+    "自动流程-抽真空": "Auto process - Vacuum",
+    "补气完成，延时关闭气泵": "Air fill done - delay pump off",
+    "补气超时延时计时": "Air fill timeout timer",
+    "计时": "Timer",
+    "语音指令发送": "Voice Cmd Send",
+    "语音指令已发出标志": "Voice Cmd Sent Flag",
+    "语音提醒的计数_闸门打开后": "Voice Alert Count Post-Gate Open",
+    "语音播报13_自动已播报": "Voice 13 Auto Broadcast",
+    "语音播报8_自动已播放": "Voice 8 Auto Played",
+    "语音播报9_自动标志": "Voice 9 Auto Flag",
+    "语音播报For循环用": "Voice broadcast For loop",
+    "语音播报Step(黑色款)": "Voice Step (Black)",
+    "语音播报_1": "Voice 1",
+    "语音播报_10": "VoiceAnnounce_10",
+    "语音播报_11": "VoiceAnnounce_11",
+    "语音播报_12": "VoiceAnnounce_12",
+    "语音播报_13": "VoiceAnnounce_13",
+    "语音播报_14": "VoiceAnnounce_14",
+    "语音播报_15": "VoiceAnnounce_15",
+    "语音播报_16": "VoiceAnnounce_16",
+    "语音播报_17": "VoiceAnnounce_17",
+    "语音播报_18": "VoiceAnnounce_18",
+    "语音播报_19": "VoiceAnnounce_19",
+    "语音播报_2": "Voice 2",
+    "语音播报_20": "VoiceAnnounce_20",
+    "语音播报_21": "VoiceAnnounce_21",
+    "语音播报_22": "VoiceAnnounce_22",
+    "语音播报_23": "VoiceAnnounce_23",
+    "语音播报_24": "VoiceAnnounce_24",
+    "语音播报_25": "VoiceAnnounce_25",
+    "语音播报_26": "VoiceAnnounce_26",
+    "语音播报_27": "VoiceAnnounce_27",
+    "语音播报_28": "VoiceAnnounce_28",
+    "语音播报_29": "VoiceAnnounce_29",
+    "语音播报_3": "VoiceAnnounce_3",
+    "语音播报_30": "VoiceAnnounce_30",
+    "语音播报_31": "VoiceAnnounce_31",
+    "语音播报_32": "VoiceAnnounce_32",
+    "语音播报_33": "VoiceAnnounce_33",
+    "语音播报_34": "VoiceAnnounce_34",
+    "语音播报_35": "VoiceAnnounce_35",
+    "语音播报_36": "VoiceAnnounce_36",
+    "语音播报_37": "VoiceAnnounce_37",
+    "语音播报_38": "VoiceAnnounce_38",
+    "语音播报_39": "VoiceAnnounce_39",
+    "语音播报_4": "VoiceAnnounce_4",
+    "语音播报_40": "VoiceAnnounce_40",
+    "语音播报_41": "VoiceAnnounce_41",
+    "语音播报_42": "VoiceAnnounce_42",
+    "语音播报_43": "VoiceAnnounce_43",
+    "语音播报_44": "VoiceAnnounce_44",
+    "语音播报_45": "VoiceAnnounce_45",
+    "语音播报_46": "VoiceAnnounce_46",
+    "语音播报_47": "VoiceAnnounce_47",
+    "语音播报_48": "VoiceAnnounce_48",
+    "语音播报_49": "VoiceAnnounce_49",
+    "语音播报_5": "VoiceAnnounce_5",
+    "语音播报_50": "VoiceAnnounce_50",
+    "语音播报_6": "VoiceAnnounce_6",
+    "语音播报_7": "VoiceAnnounce_7",
+    "语音播报_8": "VoiceAnnounce_8",
+    "语音播报_9": "VoiceAnnounce_9",
+    "语音播报_卡顿检测": "Voice - Hang Detect",
+    "语音播报_卡顿检测延时": "Voice - Hang Delay",
+    "语音播报_卡顿检测确认": "Voice - Hang Confirm",
+    "语音播报中": "Voice Playback Active",
+    "语音播报发送": "Voice Broadcast Send",
+    "语音播报启动": "Voice Start",
+    "语音播报启动延时": "Voice Start Delay",
+    "语音播报启动＿黑色版": "Voice Start - Black Ver",
+    "读取铜板温度": "Read copper plate temp",
+    "读取铜板温度延时到": "Copper Plate Temp Read Delay",
+    "轴1-3有轴运行中": "Axis 1-3 Running",
+    "轴1~3点1位置已清零": "Axis 1-3 Pos 1 Cleared",
+    "轴1～3最后延时回原": "Axis 1-3 Last Delay Homing",
+    "载盘位_X轴定位中": "Tray X-Axis Positioning",
+    "载盘位_X轴定位完成": "Tray X-Axis Posn Done",
+    "载盘位_Y轴定位中": "Tray Y-Axis Positioning",
+    "载盘位_Y轴定位完成": "Tray Y-Axis Posn Done",
+    "载盘位_Z轴定位中": "Tray Z-Axis Positioning",
+    "载盘位_Z轴定位完成": "Tray Z-Axis Posn Done",
+    "载盘位_定位Step": "Tray Pos_Positioning Step",
+    "载盘位_定位停止": "Tray Posn Stop",
+    "载盘位_定位启动": "Tray Pos_Pos Start",
+    "载盘位已放盘标志To石墨盘": "Tray Placed To Graphite",
+    "载石倾夹子当前老化次数": "CarrierGraphPour Grip Count",
+    "载石倾夹子老化Step": "CarrierGraphPour Grip Aging",
+    "载石倾夹子老化启动": "Start CarrierGraphPour Aging",
+    "载石倾夹子老化启动中": "CarrierGraphPour Aging Run",
+    "载石倾夹子老化条件满足": "CarrierGraphPour Grip Ready",
+    "退货标志": "Return Flag",
+    "通信报警自动复位": "Comm Alarm Auto Reset",
+    "通信错误次数定时清零": "Comm Err Count Timer Clear",
+    "通信错误累计": "Comm error count",
+    "重量读取完成标志": "Weight read done flag",
+    "铜板冷却完成标志": "Copper Plate Cooling Done Flag",
+    "铜板冷却完成标志TO 冷水头泵": "CuCoolDone2ChillPmp",
+    "铜板石墨盘已停留5s": "Copper Plate Graphite Tray 5s",
+    "长按导入默认延时时间": "Long press imp def delay",
+    "长按清除默认延时时间": "Long press clr def delay",
+    "闸门关": "Gate Close",
+    "闸门关_HMI": "Gate Close HMI",
+    "闸门和粗称传感器正常": "Gate & Coarse Scale OK",
+    "闸门开": "Gate Open",
+    "闸门开_HMI": "Gate Open HMI",
+    "闸门电机初始化Step": "Gate Motor Init Step",
+    "闸门电机初始化完成": "Gate Motor Init Done",
+    "闸门电机初始化开始": "Gate Motor Init Start",
+    "防止气泵过热计时": "Prevent pump overheating timer",
+    "零漂设定Step": "Zero drift set Step",
+    "零漂设定中": "Zero Drift Setting",
+    "非倒黄金时，石墨夹子延时动作": "Graphite Grip Delay No Dump",
+    "非倒黄金时，载盘夹子延时动作": "Carrier Grip Delay No Dump",
+    "非点对点时使用停止标志": "Stop Flag Non-PP",
+    "黑色版语音播报启动": "Black Ver Voice Start"
+  },
+  "entries": [
+    {
+      "module_index": 1,
+      "source_raw_index": 2,
+      "program_name": "Main_EN",
+      "address": "@DM0",
+      "source_zh": "5秒计数器",
+      "target_en": "5s Counter"
+    },
+    {
+      "module_index": 1,
+      "source_raw_index": 2,
+      "program_name": "Main_EN",
+      "address": "@DM1",
+      "source_zh": "启动点动计数",
+      "target_en": "Start Jog Count"
+    },
+    {
+      "module_index": 1,
+      "source_raw_index": 2,
+      "program_name": "Main_EN",
+      "address": "@MR1",
+      "source_zh": "启动延时",
+      "target_en": "Start Delay"
+    },
+    {
+      "module_index": 1,
+      "source_raw_index": 2,
+      "program_name": "Main_EN",
+      "address": "@MR11",
+      "source_zh": "XYZ当前位置在熔炼位",
+      "target_en": "XYZ At Smelting Pos"
+    },
+    {
+      "module_index": 1,
+      "source_raw_index": 2,
+      "program_name": "Main_EN",
+      "address": "@MR12",
+      "source_zh": "XYZ当前位置在开盖位",
+      "target_en": "XYZ At Lid Open Pos"
+    },
+    {
+      "module_index": 1,
+      "source_raw_index": 2,
+      "program_name": "Main_EN",
+      "address": "@MR13",
+      "source_zh": "XYZ当前位置在摆盖位",
+      "target_en": "XYZ At Lid Place Pos"
+    },
+    {
+      "module_index": 1,
+      "source_raw_index": 2,
+      "program_name": "Main_EN",
+      "address": "@MR14",
+      "source_zh": "XYZ在开盖位/摆盖位",
+      "target_en": "XYZ At Lid Open/Place Pos"
+    },
+    {
+      "module_index": 1,
+      "source_raw_index": 2,
+      "program_name": "Main_EN",
+      "address": "@MR2",
+      "source_zh": "故障复位延时",
+      "target_en": "Fault Reset Delay"
+    },
+    {
+      "module_index": 1,
+      "source_raw_index": 2,
+      "program_name": "Main_EN",
+      "address": "@MR3",
+      "source_zh": "故障复位标志延时复位",
+      "target_en": "Fault Reset Flag Delay Reset"
+    },
+    {
+      "module_index": 3,
+      "source_raw_index": 4,
+      "program_name": "ChillerStop:Pump off in 30s",
+      "address": "@MR1",
+      "source_zh": "初始化标志",
+      "target_en": "Init Flag"
+    },
+    {
+      "module_index": 3,
+      "source_raw_index": 4,
+      "program_name": "ChillerStop:Pump off in 30s",
+      "address": "@MR2",
+      "source_zh": "铜板冷却完成标志",
+      "target_en": "Copper Plate Cooling Done Flag"
+    },
+    {
+      "module_index": 3,
+      "source_raw_index": 4,
+      "program_name": "ChillerStop:Pump off in 30s",
+      "address": "@MR3",
+      "source_zh": "铜板冷却完成标志TO 冷水头泵",
+      "target_en": "CuCoolDone2ChillPmp"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@DM2",
+      "source_zh": "最低水温",
+      "target_en": "Min Water Temp"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@DM3",
+      "source_zh": "翻转电机回零STEP",
+      "target_en": "Flip Motor Homing STEP"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR0",
+      "source_zh": "闸门开",
+      "target_en": "Gate Open"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR1",
+      "source_zh": "闸门关",
+      "target_en": "Gate Close"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR10",
+      "source_zh": "取盘电机闸门位_HMI",
+      "target_en": "Tray Pickup Motor Gate Stn HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR11",
+      "source_zh": "取盘电机取盘位_HMI",
+      "target_en": "Tray Pickup Motor Pickup Stn HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR12",
+      "source_zh": "翻转电机载盘位_HMI",
+      "target_en": "Flip Motor Carrier Station HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR13",
+      "source_zh": "翻转电机石墨位_HMI",
+      "target_en": "Flip Motor Graphite Station HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR14",
+      "source_zh": "倾倒电机回零_HM",
+      "target_en": "Pour Motor Homing_HM"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR15",
+      "source_zh": "倾倒电机动作_HMI",
+      "target_en": "Dump Motor Actuate HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR16",
+      "source_zh": "翻转电机回原点",
+      "target_en": "Flip Motor Homing"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR17",
+      "source_zh": "系统初始化复位",
+      "target_en": "System Init Reset"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR19",
+      "source_zh": "延时断开手动吹气",
+      "target_en": "Delay Off Manual Air Blow"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR2",
+      "source_zh": "取盘电机闸门位",
+      "target_en": "Tray Pick Motor Gate Pos"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR20",
+      "source_zh": "已泄压信号标志",
+      "target_en": "Depressurized Signal Flag"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR21",
+      "source_zh": "碰到光栅闸门开",
+      "target_en": "Light Curtain Hit Gate Open"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR22",
+      "source_zh": "开左门",
+      "target_en": "Open Left Door"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR23",
+      "source_zh": "开右门",
+      "target_en": "Open Right Door"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR24",
+      "source_zh": "光栅滤波延时",
+      "target_en": "Light Curtain Filter Delay"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR25",
+      "source_zh": "延时复位碰到光栅闸门开",
+      "target_en": "DelayRstGrtnGateOpen"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR26",
+      "source_zh": "点对点记忆",
+      "target_en": "Point-to-Point Memory"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR3",
+      "source_zh": "取盘电机取盘位",
+      "target_en": "Tray Pick Motor Pick Pos"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR30",
+      "source_zh": "翻转电机启动_HMI",
+      "target_en": "Flip Motor Start_HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR31",
+      "source_zh": "翻转电机方向_HMI",
+      "target_en": "Flip Motor Direction_HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR35",
+      "source_zh": "熔炉报警后延时启动",
+      "target_en": "Furnace Alarm Delay Start"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR36",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR37",
+      "source_zh": "熔炉报警标志",
+      "target_en": "Furnace Alarm Flag"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR38",
+      "source_zh": "可以翻转到石墨位 To HMI",
+      "target_en": "Flip2GraphPos2HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR39",
+      "source_zh": "可以翻转到载盘位 To HMI",
+      "target_en": "Ready To Flip To Tray Pos To HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR4",
+      "source_zh": "翻转电机载盘位",
+      "target_en": "Flip Motor Carrier-Tray Position"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR40",
+      "source_zh": "可以倾倒到载盘位 To HMI",
+      "target_en": "Ready To Pour To Tray Pos To HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR43",
+      "source_zh": "Z轴夹子人工确认安全＿HMI",
+      "target_en": "ZClampManSafe2HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR44",
+      "source_zh": "Z轴夹子原点动作条件",
+      "target_en": "Z Axis Clamp Homing Condition"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR49",
+      "source_zh": "延时开左门＿HMI",
+      "target_en": "Delay Open Left Door_HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR5",
+      "source_zh": "翻转电机石墨位",
+      "target_en": "Flip Motor Graphite Pos"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR50",
+      "source_zh": "延时开右门＿HMI",
+      "target_en": "Delay Open Right Door_HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR59",
+      "source_zh": "开左门标志＿HMI",
+      "target_en": "Open Left Door Flag_HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR6",
+      "source_zh": "倾倒电机回零",
+      "target_en": "Dumping Motor Home"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR60",
+      "source_zh": "开右门标志＿HMI",
+      "target_en": "Open Right Door Flag_HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR7",
+      "source_zh": "倾倒电机动作",
+      "target_en": "Dumping Motor Actuation"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR8",
+      "source_zh": "闸门开_HMI",
+      "target_en": "Gate Open HMI"
+    },
+    {
+      "module_index": 4,
+      "source_raw_index": 5,
+      "program_name": "Outputs",
+      "address": "@MR9",
+      "source_zh": "闸门关_HMI",
+      "target_en": "Gate Close HMI"
+    },
+    {
+      "module_index": 5,
+      "source_raw_index": 6,
+      "program_name": "Alarms",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 5,
+      "source_raw_index": 6,
+      "program_name": "Alarms",
+      "address": "@MR17",
+      "source_zh": "光栅断线检测滤波",
+      "target_en": "GrtnBreakDetFilter"
+    },
+    {
+      "module_index": 5,
+      "source_raw_index": 6,
+      "program_name": "Alarms",
+      "address": "@MR20",
+      "source_zh": "MR1000~1013报警",
+      "target_en": "MR1000~1013 Alarm"
+    },
+    {
+      "module_index": 5,
+      "source_raw_index": 6,
+      "program_name": "Alarms",
+      "address": "@MR21",
+      "source_zh": "MR1000~1015报警（除1112外）",
+      "target_en": "MR1000~1015 Alarm (Excl 1112)"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@DM0",
+      "source_zh": "载盘位_定位Step",
+      "target_en": "Tray Pos_Positioning Step"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@DM1",
+      "source_zh": "精称位_定位Step",
+      "target_en": "Fine Weigh Pos_Positioning Step"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@DM10",
+      "source_zh": "纯金位_定位Step",
+      "target_en": "Pure Gold Pos_Positioning Step"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@DM14",
+      "source_zh": "HMI定位按钮输入计时",
+      "target_en": "HMI Pos Button Input Timer"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@DM2",
+      "source_zh": "取盘电机取盘位_定位Step",
+      "target_en": "Tray Pick Pos_Positioning Step"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@DM3",
+      "source_zh": "相机位_定位Step",
+      "target_en": "Camera Pos_Positioning Step"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@DM4",
+      "source_zh": "测金仪_定位Step",
+      "target_en": "XRF Pos_Positioning Step"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@DM5",
+      "source_zh": "摆盖位_定位Step",
+      "target_en": "Lid Place Pos_Positioning Step"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@DM6",
+      "source_zh": "开盖位_定位Step",
+      "target_en": "Lid Open Pos_Positioning Step"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@DM7",
+      "source_zh": "石墨位_定位Step",
+      "target_en": "Graphite Pos_Positioning Step"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@DM8",
+      "source_zh": "熔炼位_定位Step",
+      "target_en": "Smelting Pos_Positioning Step"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@DM9",
+      "source_zh": "K金位_定位Step",
+      "target_en": "K-Gold Pos_Positioning Step"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR0",
+      "source_zh": "Z轴回原开始",
+      "target_en": "Z Axis Homing Start"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR1",
+      "source_zh": "Z轴回原_轴定位前",
+      "target_en": "Z Axis Homing_Pre-Axis Pos"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR10",
+      "source_zh": "HMI有定位标志",
+      "target_en": "HMI Pos Flag"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR100",
+      "source_zh": "测金仪_Z轴定位中",
+      "target_en": "XRF Z-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR101",
+      "source_zh": "摆盖位_Z轴定位中",
+      "target_en": "Lid Z-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR102",
+      "source_zh": "开盖位_Z轴定位中",
+      "target_en": "Open Lid Z-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR103",
+      "source_zh": "石墨位_Z轴定位中",
+      "target_en": "Graphite Z-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR104",
+      "source_zh": "熔炼位_Z轴定位中",
+      "target_en": "Melting Z-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR105",
+      "source_zh": "K金位_Z轴定位中",
+      "target_en": "K-Gold Z-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR106",
+      "source_zh": "纯金位_Z轴定位中",
+      "target_en": "Pure Gold Z-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR11",
+      "source_zh": "回原_初始化标志",
+      "target_en": "Homing_Init Flag"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR112",
+      "source_zh": "载盘位_X轴定位完成",
+      "target_en": "Tray X-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR113",
+      "source_zh": "精称位_X轴定位完成",
+      "target_en": "Fine Scale X-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR114",
+      "source_zh": "取盘电机取盘位_X轴定位完成",
+      "target_en": "Tray Pick X-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR115",
+      "source_zh": "相机位_X轴定位完成",
+      "target_en": "Camera X-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR116",
+      "source_zh": "测金仪_X轴定位完成",
+      "target_en": "XRF X-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR117",
+      "source_zh": "摆盖位_X轴定位完成",
+      "target_en": "Lid X-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR118",
+      "source_zh": "开盖位_X轴定位完成",
+      "target_en": "Open Lid X-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR119",
+      "source_zh": "石墨位_X轴定位完成",
+      "target_en": "Graphite X-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR120",
+      "source_zh": "熔炼位_X轴定位完成",
+      "target_en": "Melting X-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR121",
+      "source_zh": "K金位_X轴定位完成",
+      "target_en": "K-gold X-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR122",
+      "source_zh": "纯金位_X轴定位完成",
+      "target_en": "Pure Gold X-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR128",
+      "source_zh": "载盘位_Y轴定位完成",
+      "target_en": "Tray Y-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR129",
+      "source_zh": "精称位_Y轴定位完成",
+      "target_en": "Fine Scale Y-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR130",
+      "source_zh": "取盘电机取盘位_Y轴定位完成",
+      "target_en": "Tray Pick Y-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR131",
+      "source_zh": "相机位_Y轴定位完成",
+      "target_en": "Camera Y-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR132",
+      "source_zh": "测金仪_Y轴定位完成",
+      "target_en": "XRF Y-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR133",
+      "source_zh": "摆盖位_Y轴定位完成",
+      "target_en": "Lid Y-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR134",
+      "source_zh": "开盖位_Y轴定位完成",
+      "target_en": "Open Lid Y-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR135",
+      "source_zh": "石墨位_Y轴定位完成",
+      "target_en": "Graphite Y-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR136",
+      "source_zh": "熔炼位_Y轴定位完成",
+      "target_en": "Melting Y-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR137",
+      "source_zh": "K金位_Y轴定位完成",
+      "target_en": "K-gold Y-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR138",
+      "source_zh": "纯金位_Y轴定位完成",
+      "target_en": "Pure Gold Y-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR144",
+      "source_zh": "载盘位_Z轴定位完成",
+      "target_en": "Tray Z-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR145",
+      "source_zh": "精称位_Z轴定位完成",
+      "target_en": "Fine Scale Z-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR146",
+      "source_zh": "取盘电机取盘位_Z轴定位完成",
+      "target_en": "Tray Pick Z-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR147",
+      "source_zh": "相机位_Z轴定位完成",
+      "target_en": "Camera Z-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR148",
+      "source_zh": "测金仪_Z轴定位完成",
+      "target_en": "XRF Z-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR149",
+      "source_zh": "摆盖位_Z轴定位完成",
+      "target_en": "Lid Z-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR15",
+      "source_zh": "点对点定位标志",
+      "target_en": "Point-to-Point Pos Flag"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR150",
+      "source_zh": "开盖位_Z轴定位完成",
+      "target_en": "Open Lid Z-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR151",
+      "source_zh": "石墨位_Z轴定位完成",
+      "target_en": "Graphite Z-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR152",
+      "source_zh": "熔炼位_Z轴定位完成",
+      "target_en": "Melting Z-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR153",
+      "source_zh": "K金位_Z轴定位完成",
+      "target_en": "K-gold Z-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR154",
+      "source_zh": "纯金位_Z轴定位完成",
+      "target_en": "Pure Gold Z-Axis Posn Done"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR16",
+      "source_zh": "去载盘位_HMI",
+      "target_en": "HMI Move to Carrier Station"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR160",
+      "source_zh": "Z轴去0位置标志",
+      "target_en": "Z-Axis Homing Flag"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR161",
+      "source_zh": "去载盘位_初始化",
+      "target_en": "Init Move to Carrier Station"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR162",
+      "source_zh": "去载盘位_初始化启动",
+      "target_en": "Tray Pos Init Start"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR17",
+      "source_zh": "去精称位_HMI",
+      "target_en": "HMI Move to Fine Scale Station"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR18",
+      "source_zh": "去取盘电机取盘位_HMI",
+      "target_en": "HMI Move To Tray Pick Pos"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR19",
+      "source_zh": "去相机位_HMI",
+      "target_en": "HMI Move to Vision Station"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR20",
+      "source_zh": "去测金仪_HMI",
+      "target_en": "HMI Move to XRF Analyzer"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR21",
+      "source_zh": "去摆盖位_HMI",
+      "target_en": "HMI Move to Lid Place Station"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR22",
+      "source_zh": "去开盖位_HMI",
+      "target_en": "HMI Move to Lid Open Station"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR23",
+      "source_zh": "去石墨位_HMI",
+      "target_en": "HMI Move to Graphite Station"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR24",
+      "source_zh": "去熔炼位_HMI",
+      "target_en": "HMI Move to Melting Station"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR25",
+      "source_zh": "去K金位_HMI",
+      "target_en": "HMI Move to K-Gold Station"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR26",
+      "source_zh": "去纯金位_HMI",
+      "target_en": "HMI Move to Pure Gold Station"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR32",
+      "source_zh": "载盘位_定位启动",
+      "target_en": "Tray Pos_Pos Start"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR33",
+      "source_zh": "精称位_定位启动",
+      "target_en": "Fine Weigh Pos_Pos Start"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR34",
+      "source_zh": "取盘电机取盘位_定位启动",
+      "target_en": "Tray Pick Pos_Pos Start"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR35",
+      "source_zh": "相机位_定位启动",
+      "target_en": "Camera Pos_Pos Start"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR36",
+      "source_zh": "测金仪_定位启动",
+      "target_en": "XRF Pos_Pos Start"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR37",
+      "source_zh": "摆盖位_定位启动",
+      "target_en": "Lid Place Pos_Pos Start"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR38",
+      "source_zh": "开盖位_定位启动",
+      "target_en": "Lid Open Pos_Pos Start"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR39",
+      "source_zh": "石墨位_定位启动",
+      "target_en": "Graphite Pos_Pos Start"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR4",
+      "source_zh": "轴1-3有轴运行中",
+      "target_en": "Axis 1-3 Running"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR40",
+      "source_zh": "熔炼位_定位启动",
+      "target_en": "Smelting Pos_Pos Start"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR41",
+      "source_zh": "K金位_定位启动",
+      "target_en": "K-gold Posn Start"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR42",
+      "source_zh": "纯金位_定位启动",
+      "target_en": "Pure Gold Posn Start"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR43",
+      "source_zh": "K金位_流程运行",
+      "target_en": "K-gold Run"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR44",
+      "source_zh": "纯金位_流程运行",
+      "target_en": "Pure Gold Run"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR48",
+      "source_zh": "载盘位_定位停止",
+      "target_en": "Tray Posn Stop"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR49",
+      "source_zh": "精称位_定位停止",
+      "target_en": "Fine Scale Posn Stop"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR5",
+      "source_zh": "停止＿轴定位",
+      "target_en": "Stop_Axis Pos"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR50",
+      "source_zh": "取盘电机取盘位_定位停止",
+      "target_en": "Tray Pick Posn Stop"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR51",
+      "source_zh": "相机位_定位停止",
+      "target_en": "Camera Posn Stop"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR52",
+      "source_zh": "测金仪_定位停止",
+      "target_en": "XRF Posn Stop"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR53",
+      "source_zh": "摆盖位_定位停止",
+      "target_en": "Lid Posn Stop"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR54",
+      "source_zh": "开盖位_定位停止",
+      "target_en": "Open Lid Posn Stop"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR55",
+      "source_zh": "石墨位_定位停止",
+      "target_en": "Graphite Posn Stop"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR56",
+      "source_zh": "熔炼位_定位停止",
+      "target_en": "Melting Posn Stop"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR57",
+      "source_zh": "K金位_定位停止",
+      "target_en": "K-gold Posn Stop"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR58",
+      "source_zh": "纯金位_定位停止",
+      "target_en": "Pure Gold Posn Stop"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR6",
+      "source_zh": "X轴回原超时",
+      "target_en": "X Axis Homing Timeout"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR64",
+      "source_zh": "载盘位_X轴定位中",
+      "target_en": "Tray X-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR65",
+      "source_zh": "精称位_X轴定位中",
+      "target_en": "Fine Scale X-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR66",
+      "source_zh": "取盘电机取盘位_X轴定位中",
+      "target_en": "Tray Pick X-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR67",
+      "source_zh": "相机位_X轴定位中",
+      "target_en": "Camera X-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR68",
+      "source_zh": "测金仪_X轴定位中",
+      "target_en": "XRF X-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR69",
+      "source_zh": "摆盖位_X轴定位中",
+      "target_en": "Lid X-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR7",
+      "source_zh": "Y轴回原超时",
+      "target_en": "Y Axis Homing Timeout"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR70",
+      "source_zh": "开盖位_X轴定位中",
+      "target_en": "Open Lid X-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR71",
+      "source_zh": "石墨位_X轴定位中",
+      "target_en": "Graphite X-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR72",
+      "source_zh": "熔炼位_X轴定位中",
+      "target_en": "Melting X-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR73",
+      "source_zh": "K金位_X轴定位中",
+      "target_en": "K-Gold X-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR74",
+      "source_zh": "纯金位_X轴定位中",
+      "target_en": "Pure Gold X-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR8",
+      "source_zh": "Z轴回原超时",
+      "target_en": "Z Axis Homing Timeout"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR80",
+      "source_zh": "载盘位_Y轴定位中",
+      "target_en": "Tray Y-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR81",
+      "source_zh": "精称位_Y轴定位中",
+      "target_en": "Fine Scale Y-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR82",
+      "source_zh": "取盘电机取盘位_Y轴定位中",
+      "target_en": "Tray Pick Y-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR83",
+      "source_zh": "相机位_Y轴定位中",
+      "target_en": "Camera Y-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR84",
+      "source_zh": "测金仪_Y轴定位中",
+      "target_en": "XRF Y-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR85",
+      "source_zh": "摆盖位_Y轴定位中",
+      "target_en": "Lid Y-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR86",
+      "source_zh": "开盖位_Y轴定位中",
+      "target_en": "Open Lid Y-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR87",
+      "source_zh": "石墨位_Y轴定位中",
+      "target_en": "Graphite Y-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR88",
+      "source_zh": "熔炼位_Y轴定位中",
+      "target_en": "Melting Y-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR89",
+      "source_zh": "K金位_Y轴定位中",
+      "target_en": "K-Gold Y-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR90",
+      "source_zh": "纯金位_Y轴定位中",
+      "target_en": "Pure Gold Y-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR96",
+      "source_zh": "载盘位_Z轴定位中",
+      "target_en": "Tray Z-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR97",
+      "source_zh": "精称位_Z轴定位中",
+      "target_en": "Fine Scale Z-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR98",
+      "source_zh": "取盘电机取盘位_Z轴定位中",
+      "target_en": "Tray Pick Z-Axis Positioning"
+    },
+    {
+      "module_index": 6,
+      "source_raw_index": 7,
+      "program_name": "Positioning",
+      "address": "@MR99",
+      "source_zh": "相机位_Z轴定位中",
+      "target_en": "Camera Z-Axis Positioning"
+    },
+    {
+      "module_index": 7,
+      "source_raw_index": 8,
+      "program_name": "DryCycle",
+      "address": "@DM0",
+      "source_zh": "载盘位_定位Step",
+      "target_en": "Tray Pos_Positioning Step"
+    },
+    {
+      "module_index": 7,
+      "source_raw_index": 8,
+      "program_name": "DryCycle",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 7,
+      "source_raw_index": 8,
+      "program_name": "DryCycle",
+      "address": "@MR1",
+      "source_zh": "Z轴回原_轴定位前",
+      "target_en": "Z Axis Homing_Pre-Axis Pos"
+    },
+    {
+      "module_index": 7,
+      "source_raw_index": 8,
+      "program_name": "DryCycle",
+      "address": "@MR5",
+      "source_zh": "停止＿轴定位",
+      "target_en": "Stop_Axis Pos"
+    },
+    {
+      "module_index": 7,
+      "source_raw_index": 8,
+      "program_name": "DryCycle",
+      "address": "@MR8",
+      "source_zh": "总报警",
+      "target_en": "Global Alarm"
+    },
+    {
+      "module_index": 8,
+      "source_raw_index": 9,
+      "program_name": "IPCCommands",
+      "address": "@DM0",
+      "source_zh": "50#指令Step",
+      "target_en": "Cmd 50 Step"
+    },
+    {
+      "module_index": 8,
+      "source_raw_index": 9,
+      "program_name": "IPCCommands",
+      "address": "@DM1",
+      "source_zh": "51#指令Step",
+      "target_en": "Cmd 51 Step"
+    },
+    {
+      "module_index": 8,
+      "source_raw_index": 9,
+      "program_name": "IPCCommands",
+      "address": "@DM2",
+      "source_zh": "52#指令Step",
+      "target_en": "Cmd 52 Step"
+    },
+    {
+      "module_index": 8,
+      "source_raw_index": 9,
+      "program_name": "IPCCommands",
+      "address": "@DM3",
+      "source_zh": "54#指令Step",
+      "target_en": "Cmd 54 Step"
+    },
+    {
+      "module_index": 8,
+      "source_raw_index": 9,
+      "program_name": "IPCCommands",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 8,
+      "source_raw_index": 9,
+      "program_name": "IPCCommands",
+      "address": "@MR1",
+      "source_zh": "本工位有报警",
+      "target_en": "Station Alarm"
+    },
+    {
+      "module_index": 8,
+      "source_raw_index": 9,
+      "program_name": "IPCCommands",
+      "address": "@MR2",
+      "source_zh": "夹子有报警",
+      "target_en": "Clamp Alarm"
+    },
+    {
+      "module_index": 8,
+      "source_raw_index": 9,
+      "program_name": "IPCCommands",
+      "address": "@MR5",
+      "source_zh": "停止＿轴定位",
+      "target_en": "Stop_Axis Pos"
+    },
+    {
+      "module_index": 8,
+      "source_raw_index": 9,
+      "program_name": "IPCCommands",
+      "address": "@MR8",
+      "source_zh": "总报警",
+      "target_en": "Global Alarm"
+    },
+    {
+      "module_index": 11,
+      "source_raw_index": 12,
+      "program_name": "A1Command:Tray to fine scale",
+      "address": "@DM0",
+      "source_zh": "2#指令Step",
+      "target_en": "Cmd 2 Step"
+    },
+    {
+      "module_index": 11,
+      "source_raw_index": 12,
+      "program_name": "A1Command:Tray to fine scale",
+      "address": "@DM1",
+      "source_zh": "1#指令Step",
+      "target_en": "Cmd 1 Step"
+    },
+    {
+      "module_index": 11,
+      "source_raw_index": 12,
+      "program_name": "A1Command:Tray to fine scale",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 11,
+      "source_raw_index": 12,
+      "program_name": "A1Command:Tray to fine scale",
+      "address": "@MR1",
+      "source_zh": "本工位有报警",
+      "target_en": "Station Alarm"
+    },
+    {
+      "module_index": 11,
+      "source_raw_index": 12,
+      "program_name": "A1Command:Tray to fine scale",
+      "address": "@MR2",
+      "source_zh": "夹子有报警",
+      "target_en": "Clamp Alarm"
+    },
+    {
+      "module_index": 12,
+      "source_raw_index": 13,
+      "program_name": "A50Command:(2#: Tray Pickup; 3#: Gate)",
+      "address": "@DM0",
+      "source_zh": "2#指令Step",
+      "target_en": "Cmd 2 Step"
+    },
+    {
+      "module_index": 12,
+      "source_raw_index": 13,
+      "program_name": "A50Command:(2#: Tray Pickup; 3#: Gate)",
+      "address": "@DM1",
+      "source_zh": "3#指令Step",
+      "target_en": "Cmd 3 Step"
+    },
+    {
+      "module_index": 12,
+      "source_raw_index": 13,
+      "program_name": "A50Command:(2#: Tray Pickup; 3#: Gate)",
+      "address": "@MR0",
+      "source_zh": "停止＿2#指令",
+      "target_en": "Stop Cmd 2"
+    },
+    {
+      "module_index": 12,
+      "source_raw_index": 13,
+      "program_name": "A50Command:(2#: Tray Pickup; 3#: Gate)",
+      "address": "@MR1",
+      "source_zh": "本工位有报警＿2#指令",
+      "target_en": "Station Alarm Cmd 2"
+    },
+    {
+      "module_index": 12,
+      "source_raw_index": 13,
+      "program_name": "A50Command:(2#: Tray Pickup; 3#: Gate)",
+      "address": "@MR14",
+      "source_zh": "测金不符合的退货",
+      "target_en": "XRF Fail Return"
+    },
+    {
+      "module_index": 12,
+      "source_raw_index": 13,
+      "program_name": "A50Command:(2#: Tray Pickup; 3#: Gate)",
+      "address": "@MR15",
+      "source_zh": "其他3个位置的退货",
+      "target_en": "Other 3 Posn Return"
+    },
+    {
+      "module_index": 12,
+      "source_raw_index": 13,
+      "program_name": "A50Command:(2#: Tray Pickup; 3#: Gate)",
+      "address": "@MR16",
+      "source_zh": "停止＿3#指令",
+      "target_en": "Stop Cmd 3"
+    },
+    {
+      "module_index": 12,
+      "source_raw_index": 13,
+      "program_name": "A50Command:(2#: Tray Pickup; 3#: Gate)",
+      "address": "@MR17",
+      "source_zh": "本工位有报警＿3#指令",
+      "target_en": "Station Alarm Cmd 3"
+    },
+    {
+      "module_index": 12,
+      "source_raw_index": 13,
+      "program_name": "A50Command:(2#: Tray Pickup; 3#: Gate)",
+      "address": "@MR18",
+      "source_zh": "夹子有报警＿3#指令",
+      "target_en": "Clamp Alarm Cmd 3"
+    },
+    {
+      "module_index": 12,
+      "source_raw_index": 13,
+      "program_name": "A50Command:(2#: Tray Pickup; 3#: Gate)",
+      "address": "@MR2",
+      "source_zh": "夹子有报警＿2#指令",
+      "target_en": "Clamp Alarm Cmd 2"
+    },
+    {
+      "module_index": 12,
+      "source_raw_index": 13,
+      "program_name": "A50Command:(2#: Tray Pickup; 3#: Gate)",
+      "address": "@MR8",
+      "source_zh": "退货标志",
+      "target_en": "Return Flag"
+    },
+    {
+      "module_index": 12,
+      "source_raw_index": 13,
+      "program_name": "A50Command:(2#: Tray Pickup; 3#: Gate)",
+      "address": "@MR9",
+      "source_zh": "延时判断是否退货",
+      "target_en": "Delay Return Check"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@DM0",
+      "source_zh": "4#指令Step",
+      "target_en": "Cmd 4 Step"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@DM1",
+      "source_zh": "语音提醒的计数_闸门打开后",
+      "target_en": "Voice Alert Count Post-Gate Open"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@DM2",
+      "source_zh": "10s计时_第二次语音提醒",
+      "target_en": "10s Timer 2nd Voice Alert"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR1",
+      "source_zh": "本工位报警",
+      "target_en": "Station Alarm"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR10",
+      "source_zh": "放入物品后读取粗称值延时",
+      "target_en": "Load Delay Coarse Read"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR11",
+      "source_zh": "增加磁场后读取粗称值延时",
+      "target_en": "Magnet On Delay Coarse Read"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR14",
+      "source_zh": "测金不符合的退货",
+      "target_en": "XRF Fail Return"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR15",
+      "source_zh": "其他3个位置的退货",
+      "target_en": "Other 3 Posn Return"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR16",
+      "source_zh": "4号指令完成后继续测重量",
+      "target_en": "Post Cmd 4 Weight Measure"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR18",
+      "source_zh": "粗称电磁铁延时_4#指令完成后",
+      "target_en": "Coarse Magnet Delay Post Cmd 4"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR19",
+      "source_zh": "粗称电磁铁可接通_4#指令完成后",
+      "target_en": "Coarse Magnet Enable Post Cmd 4"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR2",
+      "source_zh": "去皮_自动",
+      "target_en": "Tare Auto"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR20",
+      "source_zh": "增加磁场后重量延时_4#指令完成后",
+      "target_en": "Weight Delay Post Cmd 4"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR21",
+      "source_zh": "延时关闭电磁铁_4#指令完成后",
+      "target_en": "Magnet Off Delay Post Cmd 4"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR23",
+      "source_zh": "第一条提醒语音的延时_4#指令完成",
+      "target_en": "1st Voice Alert Delay Post Cmd 4"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR24",
+      "source_zh": "第一条提醒语音已播报",
+      "target_en": "1st Voice Alert Played"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR27",
+      "source_zh": "4#指令完成标志TO语音提醒",
+      "target_en": "Cmd 4 Done To Voice Alert"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR28",
+      "source_zh": "4号指令完成后测重量延时",
+      "target_en": "Post Cmd 4 Weight Delay"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR3",
+      "source_zh": "去皮完成",
+      "target_en": "Tare Complete"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR5",
+      "source_zh": "去皮不成功，再次去皮",
+      "target_en": "Tare Fail Retry"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR6",
+      "source_zh": "闸门和粗称传感器正常",
+      "target_en": "Gate & Coarse Scale OK"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR7",
+      "source_zh": "4#指令完成标志",
+      "target_en": "Cmd 4 Done Flag"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR8",
+      "source_zh": "退货标志",
+      "target_en": "Return Flag"
+    },
+    {
+      "module_index": 13,
+      "source_raw_index": 14,
+      "program_name": "A4Command:Tare; open gate",
+      "address": "@MR9",
+      "source_zh": "8秒内去皮不成功，就开闸门",
+      "target_en": "Tare Fail 8s Open Gate"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@DM0",
+      "source_zh": "6#指令Step",
+      "target_en": "Cmd 6 Step"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@DM1",
+      "source_zh": "7#指令Step",
+      "target_en": "Cmd 7 Step"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@DM2",
+      "source_zh": "8#指令Step",
+      "target_en": "Cmd 8 Step"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@DM3",
+      "source_zh": "开门计时",
+      "target_en": "Gate Open Timer"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@MR0",
+      "source_zh": "停止_6#指令",
+      "target_en": "Stop Cmd 6"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@MR1",
+      "source_zh": "本工位报警_6#指令",
+      "target_en": "Station Alarm Cmd 6"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@MR10",
+      "source_zh": "开门标志",
+      "target_en": "Gate Open Flag"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@MR16",
+      "source_zh": "停止_7#指令",
+      "target_en": "Stop Cmd 7"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@MR17",
+      "source_zh": "本工位报警_7#指令",
+      "target_en": "Station Alarm Cmd 7"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@MR2",
+      "source_zh": "去皮_自动",
+      "target_en": "Tare Auto"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@MR3",
+      "source_zh": "去皮完成",
+      "target_en": "Tare Complete"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@MR32",
+      "source_zh": "停止_8#指令",
+      "target_en": "Stop Cmd 8"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@MR4",
+      "source_zh": "退货标志",
+      "target_en": "Return Flag"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@MR7",
+      "source_zh": "关门语音播报_自动播报完成标志",
+      "target_en": "Gate Close Voice Done Flag"
+    },
+    {
+      "module_index": 14,
+      "source_raw_index": 15,
+      "program_name": "A51Command:6:close;7:pick;8:fine",
+      "address": "@MR8",
+      "source_zh": "延时判断是否退货",
+      "target_en": "Delay Return Check"
+    },
+    {
+      "module_index": 15,
+      "source_raw_index": 16,
+      "program_name": "A9Command:Fine scale to camera",
+      "address": "@DM0",
+      "source_zh": "9#指令Step",
+      "target_en": "Cmd 9 Step"
+    },
+    {
+      "module_index": 15,
+      "source_raw_index": 16,
+      "program_name": "A9Command:Fine scale to camera",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 15,
+      "source_raw_index": 16,
+      "program_name": "A9Command:Fine scale to camera",
+      "address": "@MR1",
+      "source_zh": "本工位有报警",
+      "target_en": "Station Alarm"
+    },
+    {
+      "module_index": 15,
+      "source_raw_index": 16,
+      "program_name": "A9Command:Fine scale to camera",
+      "address": "@MR2",
+      "source_zh": "夹子有报警＿2#指令",
+      "target_en": "Clamp Alarm Cmd 2"
+    },
+    {
+      "module_index": 15,
+      "source_raw_index": 16,
+      "program_name": "A9Command:Fine scale to camera",
+      "address": "@MR5",
+      "source_zh": "冷水机循环水泵开启标志",
+      "target_en": "Chiller Pump Run Flag"
+    },
+    {
+      "module_index": 15,
+      "source_raw_index": 16,
+      "program_name": "A9Command:Fine scale to camera",
+      "address": "@MR6",
+      "source_zh": "水泵开启后冷水机延时开启",
+      "target_en": "Chiller Delay Post Pump On"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@DM0",
+      "source_zh": "10#指令Step",
+      "target_en": "Cmd 10 Step"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@DM1",
+      "source_zh": "11#指令Step",
+      "target_en": "Cmd 11 Step"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@DM2",
+      "source_zh": "12#指令Step",
+      "target_en": "Cmd 12 Step"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@DM3",
+      "source_zh": "13#指令Step",
+      "target_en": "Cmd 13 Step"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@DM4",
+      "source_zh": "14#指令Step",
+      "target_en": "Cmd 14 Step"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@DM5",
+      "source_zh": "27#指令Step",
+      "target_en": "Cmd 27 Step"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@DM6",
+      "source_zh": "18#指令Step",
+      "target_en": "Cmd 18 Step"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@DM7",
+      "source_zh": "21#指令Step",
+      "target_en": "Cmd 21 Step"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@DM8",
+      "source_zh": "冷却完后翻转计数",
+      "target_en": "Cooling Flip Count"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR0",
+      "source_zh": "停止_10#指令",
+      "target_en": "Stop Cmd 10"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR1",
+      "source_zh": "本工位有报警_10#指令",
+      "target_en": "Station Alarm Cmd 10"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR10",
+      "source_zh": "二次去相机位标志",
+      "target_en": "2nd Camera Pos Flag"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR100",
+      "source_zh": "非点对点时使用停止标志",
+      "target_en": "Stop Flag Non-PP"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR101",
+      "source_zh": "点对点时只受本工位的报警影响",
+      "target_en": "PP Only Local Alarm"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR102",
+      "source_zh": "泄压阀打开后延时开盖",
+      "target_en": "Vent Open Delay Lid Open"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR11",
+      "source_zh": "第一次测金",
+      "target_en": "1st Gold Measure"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR112",
+      "source_zh": "停止_21#指令",
+      "target_en": "Stop Cmd 21"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR113",
+      "source_zh": "本工位有报警_21#指令",
+      "target_en": "Station Alarm Cmd 21"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR117",
+      "source_zh": "非倒黄金时，载盘夹子延时动作",
+      "target_en": "Carrier Grip Delay No Dump"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR118",
+      "source_zh": "倒黄金时，载盘夹子延时动作",
+      "target_en": "Carrier Grip Delay Dump"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR12",
+      "source_zh": "第二次测金",
+      "target_en": "Second XRF Assay"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR122",
+      "source_zh": "非倒黄金时，石墨夹子延时动作",
+      "target_en": "Graphite Grip Delay No Dump"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR123",
+      "source_zh": "非倒黄金时，石墨夹子延时动作",
+      "target_en": "Graphite Grip Delay No Dump"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR125",
+      "source_zh": "二次翻转石墨位到位延时",
+      "target_en": "2nd Flip Graphite Pos Delay"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR16",
+      "source_zh": "停止_11#指令",
+      "target_en": "Stop Cmd 11"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR17",
+      "source_zh": "本工位有报警_11#指令",
+      "target_en": "Station Alarm Cmd 11"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR18",
+      "source_zh": "语音播报9_自动标志",
+      "target_en": "Voice 9 Auto Flag"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR21",
+      "source_zh": "非倒黄金时，石墨夹子延时动作",
+      "target_en": "Graphite Grip Delay No Dump"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR22",
+      "source_zh": "倒黄金时，石墨夹子延时动作",
+      "target_en": "Graphite Grip Delay Dump"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR26",
+      "source_zh": "非倒黄金时，载盘夹子延时动作",
+      "target_en": "Carrier Grip Delay No Dump"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR27",
+      "source_zh": "非倒黄金时，载盘夹子延时动作",
+      "target_en": "Carrier Grip Delay No Dump"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR32",
+      "source_zh": "停止_12#指令",
+      "target_en": "Stop Cmd 12"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR33",
+      "source_zh": "本工位有报警_12#指令",
+      "target_en": "Station Alarm Cmd 12"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR48",
+      "source_zh": "停止_13#指令",
+      "target_en": "Stop Cmd 13"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR49",
+      "source_zh": "本工位有报警_13#指令",
+      "target_en": "Station Alarm Cmd 13"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR64",
+      "source_zh": "停止_14#指令",
+      "target_en": "Stop Cmd 14"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR65",
+      "source_zh": "本工位有报警_14#指令",
+      "target_en": "Station Alarm Cmd 14"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR80",
+      "source_zh": "停止_27#指令",
+      "target_en": "Stop Cmd 27"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR81",
+      "source_zh": "本工位有报警_27#指令",
+      "target_en": "Station Alarm Cmd 27"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR85",
+      "source_zh": "冷水机循环水泵开启标志",
+      "target_en": "Chiller Pump Run Flag"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR86",
+      "source_zh": "27#指令载盘位有盘标志",
+      "target_en": "Cmd 27 Tray Has Item Flag"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR87",
+      "source_zh": "27#指令_运行完成标志",
+      "target_en": "Cmd 27 Run Done Flag"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR96",
+      "source_zh": "停止_18#指令",
+      "target_en": "Stop Cmd 18"
+    },
+    {
+      "module_index": 18,
+      "source_raw_index": 19,
+      "program_name": "A_52Command:10#-21#: XRF/Graphite/Tray Ops",
+      "address": "@MR97",
+      "source_zh": "本工位有报警_18#指令",
+      "target_en": "Station Alarm Cmd 18"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@DM0",
+      "source_zh": "熔炼Step",
+      "target_en": "Melting Step"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@DM1",
+      "source_zh": "冷却排空Step",
+      "target_en": "Cooling Drain Step"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@DM2",
+      "source_zh": "开盖Step",
+      "target_en": "Lid Open Step"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@DM3",
+      "source_zh": "吹气Step",
+      "target_en": "Blow Air Step"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@DM4",
+      "source_zh": "去石墨位Step",
+      "target_en": "Go Graphite Pos Step"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@DM6",
+      "source_zh": "计时",
+      "target_en": "Timer"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR0",
+      "source_zh": "停止_熔炼部分",
+      "target_en": "Stop Melting Part"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR1",
+      "source_zh": "本工位有报警_熔炼部分",
+      "target_en": "Station Alarm Melting Part"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR10",
+      "source_zh": "熔炼温度到达延时停止",
+      "target_en": "Temp Reached Delay Stop"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR12",
+      "source_zh": "熔炼电源正常运行",
+      "target_en": "Melting Power Normal"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR13",
+      "source_zh": "熔炼温度未达到960",
+      "target_en": "Temp Not 960"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR14",
+      "source_zh": "熔炼温度达到960标志",
+      "target_en": "Temp 960 Flag"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR16",
+      "source_zh": "停止_冷却排空部分",
+      "target_en": "Stop Cooling Drain Part"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR17",
+      "source_zh": "本工位有报警_冷却排空部分",
+      "target_en": "Station Alarm Cooling Drain Part"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR18",
+      "source_zh": "冷却到排空温度",
+      "target_en": "Cool To Drain Temp"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR2",
+      "source_zh": "熔炼电源打开后5s后，启动信号on",
+      "target_en": "Start Signal 5s After Power"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR20",
+      "source_zh": "600℃防误碰滤波延时",
+      "target_en": "600C Anti-Touch Filter Delay"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR3",
+      "source_zh": "熔炼温度达到",
+      "target_en": "Melting Temp Reached"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR32",
+      "source_zh": "停止_开盖部分",
+      "target_en": "Stop Lid Open Part"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR33",
+      "source_zh": "本工位有报警_开盖部分",
+      "target_en": "Station Alarm Lid Open Part"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR4",
+      "source_zh": "最高设定温度已到",
+      "target_en": "Max Set Temp Reached"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR48",
+      "source_zh": "停止_吹气部分",
+      "target_en": "Stop Blow Air Part"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR49",
+      "source_zh": "本工位有报警_吹气部分",
+      "target_en": "Station Alarm Blow Air Part"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR50",
+      "source_zh": "吹气3S",
+      "target_en": "Blow Air 3s"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR51",
+      "source_zh": "停止吹气1s",
+      "target_en": "Stop Blow Air 1s"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR52",
+      "source_zh": "冷却温度达到",
+      "target_en": "Cool temp reached"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR54",
+      "source_zh": "400℃防误碰滤波延时",
+      "target_en": "400C Anti Touch Filter Delay"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR63",
+      "source_zh": "开机标志",
+      "target_en": "Power-On Flag"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR64",
+      "source_zh": "停止_去石墨位部分",
+      "target_en": "Stop Graphite Pos Section"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR65",
+      "source_zh": "本工位有报警_去石墨位部分",
+      "target_en": "Station Alarm Graphite Section"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR66",
+      "source_zh": "石墨位冷却温度到达",
+      "target_en": "Graphite pos cool temp reached"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR67",
+      "source_zh": "石墨位冷却温度延时判断",
+      "target_en": "Graphite Cool Temp Delay"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR68",
+      "source_zh": "石墨位冷却设备已关闭",
+      "target_en": "Graphite pos cool equip off"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR7",
+      "source_zh": "熔炉关闭标志To语音10",
+      "target_en": "Furnace Close To Voice 10"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR71",
+      "source_zh": "温度对比开始延时到",
+      "target_en": "Temp Compare Start Delay"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR72",
+      "source_zh": "温度对比开始",
+      "target_en": "Temp diff start"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR73",
+      "source_zh": "铜板石墨盘已停留5s",
+      "target_en": "Copper Plate Graphite Tray 5s"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR74",
+      "source_zh": "温度下降状态",
+      "target_en": "Temp dropping status"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR75",
+      "source_zh": "读取铜板温度延时到",
+      "target_en": "Copper Plate Temp Read Delay"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR76",
+      "source_zh": "读取铜板温度",
+      "target_en": "Read copper plate temp"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR77",
+      "source_zh": "温度冷却到40℃标志",
+      "target_en": "Cool to 40C flag"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR79",
+      "source_zh": "冷水机关闭标志",
+      "target_en": "Chiller off flag"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR80",
+      "source_zh": "关炉时间到",
+      "target_en": "Furnace off time up"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR85",
+      "source_zh": "≤40℃，温度判断延时",
+      "target_en": "<=40C temp check delay"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR9",
+      "source_zh": "熔炼前冷水温度不超温",
+      "target_en": "Pre-Melt Cool Water OK"
+    },
+    {
+      "module_index": 19,
+      "source_raw_index": 20,
+      "program_name": "A_15Command:Gold-Melting Program",
+      "address": "@MR90",
+      "source_zh": "温度下降状态Tｏ二次去皮",
+      "target_en": "Temp Falling To 2nd Tare"
+    },
+    {
+      "module_index": 21,
+      "source_raw_index": 22,
+      "program_name": "A_22Command:Carrier Tray to Vision Station",
+      "address": "@DM0",
+      "source_zh": "22#指令Step",
+      "target_en": "Cmd 22 Step"
+    },
+    {
+      "module_index": 21,
+      "source_raw_index": 22,
+      "program_name": "A_22Command:Carrier Tray to Vision Station",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 21,
+      "source_raw_index": 22,
+      "program_name": "A_22Command:Carrier Tray to Vision Station",
+      "address": "@MR1",
+      "source_zh": "本工位有报警",
+      "target_en": "Station Alarm"
+    },
+    {
+      "module_index": 21,
+      "source_raw_index": 22,
+      "program_name": "A_22Command:Carrier Tray to Vision Station",
+      "address": "@MR2",
+      "source_zh": "夹子有报警",
+      "target_en": "Clamp Alarm"
+    },
+    {
+      "module_index": 22,
+      "source_raw_index": 23,
+      "program_name": "A_23Command:XRF Station to Fine Scale",
+      "address": "@DM0",
+      "source_zh": "23#指令Step",
+      "target_en": "Cmd 23 Step"
+    },
+    {
+      "module_index": 22,
+      "source_raw_index": 23,
+      "program_name": "A_23Command:XRF Station to Fine Scale",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 22,
+      "source_raw_index": 23,
+      "program_name": "A_23Command:XRF Station to Fine Scale",
+      "address": "@MR1",
+      "source_zh": "本工位有报警",
+      "target_en": "Station Alarm"
+    },
+    {
+      "module_index": 22,
+      "source_raw_index": 23,
+      "program_name": "A_23Command:XRF Station to Fine Scale",
+      "address": "@MR2",
+      "source_zh": "夹子有报警",
+      "target_en": "Clamp Alarm"
+    },
+    {
+      "module_index": 22,
+      "source_raw_index": 23,
+      "program_name": "A_23Command:XRF Station to Fine Scale",
+      "address": "@MR6",
+      "source_zh": "二次称重主轴启动延时",
+      "target_en": "2nd weigh spindle start delay"
+    },
+    {
+      "module_index": 23,
+      "source_raw_index": 24,
+      "program_name": "A_24Command:Fine Scale to Carrier Tray",
+      "address": "@DM0",
+      "source_zh": "24#指令Step",
+      "target_en": "Cmd 24 Step"
+    },
+    {
+      "module_index": 23,
+      "source_raw_index": 24,
+      "program_name": "A_24Command:Fine Scale to Carrier Tray",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 23,
+      "source_raw_index": 24,
+      "program_name": "A_24Command:Fine Scale to Carrier Tray",
+      "address": "@MR1",
+      "source_zh": "本工位有报警",
+      "target_en": "Station Alarm"
+    },
+    {
+      "module_index": 23,
+      "source_raw_index": 24,
+      "program_name": "A_24Command:Fine Scale to Carrier Tray",
+      "address": "@MR2",
+      "source_zh": "夹子有报警",
+      "target_en": "Clamp Alarm"
+    },
+    {
+      "module_index": 24,
+      "source_raw_index": 25,
+      "program_name": "A_25Command:Tip Carrier Tray",
+      "address": "@DM0",
+      "source_zh": "25#指令Step",
+      "target_en": "Cmd 25 Step"
+    },
+    {
+      "module_index": 24,
+      "source_raw_index": 25,
+      "program_name": "A_25Command:Tip Carrier Tray",
+      "address": "@DM1",
+      "source_zh": "倾倒当前次数",
+      "target_en": "Pour count current"
+    },
+    {
+      "module_index": 24,
+      "source_raw_index": 25,
+      "program_name": "A_25Command:Tip Carrier Tray",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 24,
+      "source_raw_index": 25,
+      "program_name": "A_25Command:Tip Carrier Tray",
+      "address": "@MR1",
+      "source_zh": "本工位有报警",
+      "target_en": "Station Alarm"
+    },
+    {
+      "module_index": 24,
+      "source_raw_index": 25,
+      "program_name": "A_25Command:Tip Carrier Tray",
+      "address": "@MR10",
+      "source_zh": "到载盘工位后，倾倒夹子延时闭合",
+      "target_en": "Tray Stn Pour Clamp Delay Close"
+    },
+    {
+      "module_index": 24,
+      "source_raw_index": 25,
+      "program_name": "A_25Command:Tip Carrier Tray",
+      "address": "@MR11",
+      "source_zh": "到载盘工位后，倾倒夹子延时张开",
+      "target_en": "Tray Stn Pour Clamp Delay Open"
+    },
+    {
+      "module_index": 24,
+      "source_raw_index": 25,
+      "program_name": "A_25Command:Tip Carrier Tray",
+      "address": "@MR2",
+      "source_zh": "夹子有报警",
+      "target_en": "Clamp Alarm"
+    },
+    {
+      "module_index": 24,
+      "source_raw_index": 25,
+      "program_name": "A_25Command:Tip Carrier Tray",
+      "address": "@MR5",
+      "source_zh": "二次倾倒-间隔延时",
+      "target_en": "2nd pour interval delay"
+    },
+    {
+      "module_index": 25,
+      "source_raw_index": 26,
+      "program_name": "A_26Command:XRF Station One-Step XY Move",
+      "address": "@DM0",
+      "source_zh": "26#指令Step",
+      "target_en": "Cmd 26 Step"
+    },
+    {
+      "module_index": 25,
+      "source_raw_index": 26,
+      "program_name": "A_26Command:XRF Station One-Step XY Move",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 25,
+      "source_raw_index": 26,
+      "program_name": "A_26Command:XRF Station One-Step XY Move",
+      "address": "@MR1",
+      "source_zh": "本工位有报警",
+      "target_en": "Station Alarm"
+    },
+    {
+      "module_index": 25,
+      "source_raw_index": 26,
+      "program_name": "A_26Command:XRF Station One-Step XY Move",
+      "address": "@MR2",
+      "source_zh": "夹子有报警",
+      "target_en": "Clamp Alarm"
+    },
+    {
+      "module_index": 26,
+      "source_raw_index": 27,
+      "program_name": "A_28Command:Tray Pickup to Carrier Tray",
+      "address": "@DM0",
+      "source_zh": "28#指令Step",
+      "target_en": "Cmd 28 Step"
+    },
+    {
+      "module_index": 26,
+      "source_raw_index": 27,
+      "program_name": "A_28Command:Tray Pickup to Carrier Tray",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 26,
+      "source_raw_index": 27,
+      "program_name": "A_28Command:Tray Pickup to Carrier Tray",
+      "address": "@MR1",
+      "source_zh": "本工位有报警",
+      "target_en": "Station Alarm"
+    },
+    {
+      "module_index": 26,
+      "source_raw_index": 27,
+      "program_name": "A_28Command:Tray Pickup to Carrier Tray",
+      "address": "@MR2",
+      "source_zh": "夹子有报警",
+      "target_en": "Clamp Alarm"
+    },
+    {
+      "module_index": 27,
+      "source_raw_index": 28,
+      "program_name": "A_53Command:XRF Station to Tray Pickup",
+      "address": "@DM0",
+      "source_zh": "53#指令Step",
+      "target_en": "Cmd 53 Step"
+    },
+    {
+      "module_index": 27,
+      "source_raw_index": 28,
+      "program_name": "A_53Command:XRF Station to Tray Pickup",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 29,
+      "source_raw_index": 30,
+      "program_name": "A_55Command:Fine Scale to Tray Pickup",
+      "address": "@DM0",
+      "source_zh": "55#指令Step",
+      "target_en": "Cmd 55 Step"
+    },
+    {
+      "module_index": 29,
+      "source_raw_index": 30,
+      "program_name": "A_55Command:Fine Scale to Tray Pickup",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 30,
+      "source_raw_index": 31,
+      "program_name": "A_56Command:Carrier Tray to Tray Pickup",
+      "address": "@DM0",
+      "source_zh": "56#指令Step",
+      "target_en": "Cmd 56 Step"
+    },
+    {
+      "module_index": 30,
+      "source_raw_index": 31,
+      "program_name": "A_56Command:Carrier Tray to Tray Pickup",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 30,
+      "source_raw_index": 31,
+      "program_name": "A_56Command:Carrier Tray to Tray Pickup",
+      "address": "@MR10",
+      "source_zh": "点对点记忆",
+      "target_en": "Point-to-Point Memory"
+    },
+    {
+      "module_index": 31,
+      "source_raw_index": 32,
+      "program_name": "A_57Command:Vision Station to Tray Pickup",
+      "address": "@DM0",
+      "source_zh": "57#指令Step",
+      "target_en": "Cmd 57 Step"
+    },
+    {
+      "module_index": 31,
+      "source_raw_index": 32,
+      "program_name": "A_57Command:Vision Station to Tray Pickup",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM0",
+      "source_zh": "粗称读取当前值Step",
+      "target_en": "Coarse weigh read current Step"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM1",
+      "source_zh": "粗称取消去皮Step",
+      "target_en": "Coarse weigh cancel tare Step"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM10",
+      "source_zh": "初检重量From 上位机",
+      "target_en": "Initial Weight From Host PC"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM12",
+      "source_zh": "初检含金量From 上位机",
+      "target_en": "Initial Au Content From Host PC"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM14",
+      "source_zh": "终检重量From 上位机",
+      "target_en": "Final Weight From Host PC"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM16",
+      "source_zh": "终检含金量From 上位机",
+      "target_en": "Final Au Content From Host PC"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM2",
+      "source_zh": "粗称去皮Step",
+      "target_en": "Coarse weigh tare Step"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM20",
+      "source_zh": "播报的文件地址_@MR对应的位序号",
+      "target_en": "Broadcast file addr_MR bit no"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM21",
+      "source_zh": "模拟语音选择（循环用）",
+      "target_en": "Sim voice select (loop)"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM22",
+      "source_zh": "文件地址发送的次数_黑色款",
+      "target_en": "File addr send count_black model"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM23",
+      "source_zh": "语音播报Step(黑色款)",
+      "target_en": "Voice Step (Black)"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM24",
+      "source_zh": "播报第二段延时时间",
+      "target_en": "2nd Msg Delay"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM25",
+      "source_zh": "播报的文件地址_黑色款语音播报",
+      "target_en": "Voice File Addr (Black)"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM3",
+      "source_zh": "清零+校准Step",
+      "target_en": "Zero+Calibrate Step"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM30",
+      "source_zh": "冷水机和温控表Step",
+      "target_en": "Chlr & Temp Ctrl Step"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM4",
+      "source_zh": "通信错误累计",
+      "target_en": "Comm error count"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM5",
+      "source_zh": "语音播报For循环用",
+      "target_en": "Voice broadcast For loop"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM6",
+      "source_zh": "报警播报次数记录",
+      "target_en": "Alarm broadcast count record"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM7",
+      "source_zh": "报警播报Step",
+      "target_en": "Alarm broadcast Step"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM8",
+      "source_zh": "10秒时间器",
+      "target_en": "10s timer"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@DM9",
+      "source_zh": "零漂设定Step",
+      "target_en": "Zero drift set Step"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR1",
+      "source_zh": "Prot2报警",
+      "target_en": "Prot2 Alarm"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR10",
+      "source_zh": "语音播报中",
+      "target_en": "Voice Playback Active"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR100",
+      "source_zh": "语音播报_5",
+      "target_en": "VoiceAnnounce_5"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR101",
+      "source_zh": "语音播报_6",
+      "target_en": "VoiceAnnounce_6"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR102",
+      "source_zh": "语音播报_7",
+      "target_en": "VoiceAnnounce_7"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR103",
+      "source_zh": "语音播报_8",
+      "target_en": "VoiceAnnounce_8"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR104",
+      "source_zh": "语音播报_9",
+      "target_en": "VoiceAnnounce_9"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR105",
+      "source_zh": "语音播报_10",
+      "target_en": "VoiceAnnounce_10"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR106",
+      "source_zh": "语音播报_11",
+      "target_en": "VoiceAnnounce_11"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR107",
+      "source_zh": "语音播报_12",
+      "target_en": "VoiceAnnounce_12"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR108",
+      "source_zh": "语音播报_13",
+      "target_en": "VoiceAnnounce_13"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR109",
+      "source_zh": "语音播报_14",
+      "target_en": "VoiceAnnounce_14"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR110",
+      "source_zh": "语音播报_15",
+      "target_en": "VoiceAnnounce_15"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR111",
+      "source_zh": "语音播报_16",
+      "target_en": "VoiceAnnounce_16"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR112",
+      "source_zh": "语音播报_17",
+      "target_en": "VoiceAnnounce_17"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR113",
+      "source_zh": "语音播报_18",
+      "target_en": "VoiceAnnounce_18"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR114",
+      "source_zh": "语音播报_19",
+      "target_en": "VoiceAnnounce_19"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR115",
+      "source_zh": "语音播报_20",
+      "target_en": "VoiceAnnounce_20"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR116",
+      "source_zh": "语音播报_21",
+      "target_en": "VoiceAnnounce_21"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR117",
+      "source_zh": "语音播报_22",
+      "target_en": "VoiceAnnounce_22"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR118",
+      "source_zh": "语音播报_23",
+      "target_en": "VoiceAnnounce_23"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR119",
+      "source_zh": "语音播报_24",
+      "target_en": "VoiceAnnounce_24"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR12",
+      "source_zh": "零漂设定中",
+      "target_en": "Zero Drift Setting"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR120",
+      "source_zh": "语音播报_25",
+      "target_en": "VoiceAnnounce_25"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR121",
+      "source_zh": "语音播报_26",
+      "target_en": "VoiceAnnounce_26"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR122",
+      "source_zh": "语音播报_27",
+      "target_en": "VoiceAnnounce_27"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR123",
+      "source_zh": "语音播报_28",
+      "target_en": "VoiceAnnounce_28"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR124",
+      "source_zh": "语音播报_29",
+      "target_en": "VoiceAnnounce_29"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR125",
+      "source_zh": "语音播报_30",
+      "target_en": "VoiceAnnounce_30"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR126",
+      "source_zh": "语音播报_31",
+      "target_en": "VoiceAnnounce_31"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR127",
+      "source_zh": "语音播报_32",
+      "target_en": "VoiceAnnounce_32"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR128",
+      "source_zh": "语音播报_33",
+      "target_en": "VoiceAnnounce_33"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR129",
+      "source_zh": "语音播报_34",
+      "target_en": "VoiceAnnounce_34"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR130",
+      "source_zh": "语音播报_35",
+      "target_en": "VoiceAnnounce_35"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR131",
+      "source_zh": "语音播报_36",
+      "target_en": "VoiceAnnounce_36"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR132",
+      "source_zh": "语音播报_37",
+      "target_en": "VoiceAnnounce_37"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR133",
+      "source_zh": "语音播报_38",
+      "target_en": "VoiceAnnounce_38"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR134",
+      "source_zh": "语音播报_39",
+      "target_en": "VoiceAnnounce_39"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR135",
+      "source_zh": "语音播报_40",
+      "target_en": "VoiceAnnounce_40"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR136",
+      "source_zh": "语音播报_41",
+      "target_en": "VoiceAnnounce_41"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR137",
+      "source_zh": "语音播报_42",
+      "target_en": "VoiceAnnounce_42"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR138",
+      "source_zh": "语音播报_43",
+      "target_en": "VoiceAnnounce_43"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR139",
+      "source_zh": "语音播报_44",
+      "target_en": "VoiceAnnounce_44"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR140",
+      "source_zh": "语音播报_45",
+      "target_en": "VoiceAnnounce_45"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR141",
+      "source_zh": "语音播报_46",
+      "target_en": "VoiceAnnounce_46"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR142",
+      "source_zh": "语音播报_47",
+      "target_en": "VoiceAnnounce_47"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR143",
+      "source_zh": "语音播报_48",
+      "target_en": "VoiceAnnounce_48"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR144",
+      "source_zh": "语音播报_49",
+      "target_en": "VoiceAnnounce_49"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR145",
+      "source_zh": "语音播报_50",
+      "target_en": "VoiceAnnounce_50"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR16",
+      "source_zh": "数据发送请求＿粗称",
+      "target_en": "Data Send Req - Coarse"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR160",
+      "source_zh": "播放完成＿To黑色款语音模块",
+      "target_en": "PlayDone_ToBlackModule"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR163",
+      "source_zh": "开始延时播报第二段语音",
+      "target_en": "StartDelayVoice2"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR165",
+      "source_zh": "延时时间到",
+      "target_en": "Delay time elapsed"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR166",
+      "source_zh": "延时时间到",
+      "target_en": "Delay time elapsed"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR17",
+      "source_zh": "关闭写保护＿FRM other",
+      "target_en": "Disable Write Protect - FRM"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR170",
+      "source_zh": "长按清除默认延时时间",
+      "target_en": "Long press clr def delay"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR171",
+      "source_zh": "长按导入默认延时时间",
+      "target_en": "Long press imp def delay"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR18",
+      "source_zh": "打开写保护＿FRM other",
+      "target_en": "Enable Write Protect - FRM"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR19",
+      "source_zh": "Prot2忙，不能读取当前重量",
+      "target_en": "Prot2 Busy - No Read Wt"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR2",
+      "source_zh": "通信报警自动复位",
+      "target_en": "Comm Alarm Auto Reset"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR21",
+      "source_zh": "粗称读取＿卡顿检测",
+      "target_en": "Coarse Read - Hang Detect"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR22",
+      "source_zh": "粗称取消去皮＿卡顿检测",
+      "target_en": "Coarse Tare Cancel - Hang"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR23",
+      "source_zh": "粗称去皮＿卡顿检测",
+      "target_en": "Coarse Tare - Hang Detect"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR24",
+      "source_zh": "清零+校准＿卡顿检测",
+      "target_en": "Zero+Calib - Hang Detect"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR26",
+      "source_zh": "粗称通信＿卡顿检测",
+      "target_en": "Coarse Comm - Hang Detect"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR27",
+      "source_zh": "粗称通信＿卡顿检测延时",
+      "target_en": "Coarse Comm - Hang Delay"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR28",
+      "source_zh": "粗称通信＿卡顿检测确认",
+      "target_en": "Coarse Comm - Hang Confirm"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR3",
+      "source_zh": "通信错误次数定时清零",
+      "target_en": "Comm Err Count Timer Clear"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR30",
+      "source_zh": "语音指令已发出标志",
+      "target_en": "Voice Cmd Sent Flag"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR31",
+      "source_zh": "语音指令发送",
+      "target_en": "Voice Cmd Send"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR32",
+      "source_zh": "语音播报发送",
+      "target_en": "Voice Broadcast Send"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR33",
+      "source_zh": "关闭写保护",
+      "target_en": "disable write protection"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR34",
+      "source_zh": "打开写保护",
+      "target_en": "enable write protection"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR35",
+      "source_zh": "取消粗称去皮",
+      "target_en": "Cancel Coarse Tare"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR36",
+      "source_zh": "粗称去皮",
+      "target_en": "coarse weighing tare"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR37",
+      "source_zh": "粗称清零",
+      "target_en": "coarse weighing zeroing"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR38",
+      "source_zh": "砝码校准",
+      "target_en": "Weight Calibration"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR40",
+      "source_zh": "10秒到达",
+      "target_en": "10s Arrival"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR41",
+      "source_zh": "有故障标志To语音播报",
+      "target_en": "Fault Flag To Voice"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR42",
+      "source_zh": "报警语音播报",
+      "target_en": "Alarm Voice Broadcast"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR43",
+      "source_zh": "语音播报8_自动已播放",
+      "target_en": "Voice 8 Auto Played"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR45",
+      "source_zh": "语音播报13_自动已播报",
+      "target_en": "Voice 13 Auto Broadcast"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR47",
+      "source_zh": "语音播报启动延时",
+      "target_en": "Voice Start Delay"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR48",
+      "source_zh": "粗称取消去皮延时",
+      "target_en": "Coarse Untare Delay"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR49",
+      "source_zh": "粗称去皮延时",
+      "target_en": "Coarse Tare Delay"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR50",
+      "source_zh": "关闭写保护延时",
+      "target_en": "Disable Write Protect Delay"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR51",
+      "source_zh": "打开写保护延时",
+      "target_en": "Enable Write Protect Delay"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR52",
+      "source_zh": "粗称清零延时",
+      "target_en": "Coarse Zero Delay"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR53",
+      "source_zh": "砝码校准延时",
+      "target_en": "Weight Calib Delay"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR54",
+      "source_zh": "语音播报启动",
+      "target_en": "Voice Start"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR55",
+      "source_zh": "黑色版语音播报启动",
+      "target_en": "Black Ver Voice Start"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR56",
+      "source_zh": "语音播报启动＿黑色版",
+      "target_en": "Voice Start - Black Ver"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR6",
+      "source_zh": "粗称读取当前值启动",
+      "target_en": "Coarse Weigh Read Start"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR64",
+      "source_zh": "3#、4#站通信延时启动",
+      "target_en": "Stn 3/4 Comm Delay Start"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR65",
+      "source_zh": "3#、4#站通信启动",
+      "target_en": "Stn 3/4 Comm Start"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR66",
+      "source_zh": "3#、4#站通信开始",
+      "target_en": "Stn 3/4 Comm Begin"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR8",
+      "source_zh": "粗称卡顿1",
+      "target_en": "Coarse Weigh Hang 1"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR80",
+      "source_zh": "数据发送请求＿3#/4#站",
+      "target_en": "Data Send Req - Stn 3/4"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR81",
+      "source_zh": "冷水机水温设置",
+      "target_en": "Chlr Water Temp Set"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR82",
+      "source_zh": "冷水机回差设置",
+      "target_en": "Chlr Hysteresis Set"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR9",
+      "source_zh": "粗称卡顿2",
+      "target_en": "Coarse Weigh Hang 2"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR90",
+      "source_zh": "温度通信＿卡顿检测",
+      "target_en": "Temp Comm - Hang Detect"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR91",
+      "source_zh": "温度通信＿卡顿检测延时",
+      "target_en": "Temp Comm - Hang Delay"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR92",
+      "source_zh": "温度通信＿卡顿检测确认",
+      "target_en": "Temp Comm - Hang Confirm"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR93",
+      "source_zh": "语音播报_卡顿检测",
+      "target_en": "Voice - Hang Detect"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR94",
+      "source_zh": "语音播报_卡顿检测延时",
+      "target_en": "Voice - Hang Delay"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR95",
+      "source_zh": "语音播报_卡顿检测确认",
+      "target_en": "Voice - Hang Confirm"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR96",
+      "source_zh": "语音播报_1",
+      "target_en": "Voice 1"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR97",
+      "source_zh": "语音播报_2",
+      "target_en": "Voice 2"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR98",
+      "source_zh": "语音播报_3",
+      "target_en": "VoiceAnnounce_3"
+    },
+    {
+      "module_index": 33,
+      "source_raw_index": 34,
+      "program_name": "CommunicationProgram:1#Scale;3#Chlr;4#Temp;9#Voice",
+      "address": "@MR99",
+      "source_zh": "语音播报_4",
+      "target_en": "VoiceAnnounce_4"
+    },
+    {
+      "module_index": 34,
+      "source_raw_index": 35,
+      "program_name": "WaterVacuumAlarmProgram:CW Return + Vacuum Chamber",
+      "address": "@MR0",
+      "source_zh": "回水长时间（≥5S）超过设定温度",
+      "target_en": "CW return > set temp for >=5s"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR0",
+      "source_zh": "延时开启补气阀",
+      "target_en": "Delay open air valve"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR1",
+      "source_zh": "自动流程-抽真空",
+      "target_en": "Auto process - Vacuum"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR10",
+      "source_zh": "真空度达到，电磁阀关闭标志",
+      "target_en": "Vacuum reached - Sol off flag"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR11",
+      "source_zh": "真空度达到，延时关闭气泵",
+      "target_en": "Vacuum reached - delay pump off"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR12",
+      "source_zh": "抽真空关闭后，延时打开正压补气",
+      "target_en": "Vac off delay open pos air"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR14",
+      "source_zh": "关闭电磁阀，防止气泵堵转",
+      "target_en": "Close Sol to prevent pump stall"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR16",
+      "source_zh": "停止_抽真空",
+      "target_en": "Stop_Vacuum"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR17",
+      "source_zh": "真空超时报警",
+      "target_en": "Vacuum timeout alarm"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR26",
+      "source_zh": "防止气泵过热计时",
+      "target_en": "Prevent pump overheating timer"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR3",
+      "source_zh": "熔炼完成，关闭抽真空",
+      "target_en": "Melting done - close vacuum"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR4",
+      "source_zh": "加压完成，电磁阀关闭标志",
+      "target_en": "Pressurize done Sol off flag"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR5",
+      "source_zh": "补气完成，延时关闭气泵",
+      "target_en": "Air fill done - delay pump off"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR7",
+      "source_zh": "补气超时延时计时",
+      "target_en": "Air fill timeout timer"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR8",
+      "source_zh": "开启抽真空",
+      "target_en": "Start vacuum"
+    },
+    {
+      "module_index": 35,
+      "source_raw_index": 36,
+      "program_name": "AirTankVacuumProgram:20240806 Optimization",
+      "address": "@MR9",
+      "source_zh": "延时开启抽真空",
+      "target_en": "Delay start vacuum"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@DM0",
+      "source_zh": "组合1STEP",
+      "target_en": "Combo 1 STEP"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@DM1",
+      "source_zh": "组合2STEP",
+      "target_en": "Combo 2 STEP"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR0",
+      "source_zh": "XYZ当前位置在石墨位",
+      "target_en": "XYZ at graphite pos"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR1",
+      "source_zh": "XYZ当前位置在熔炼位",
+      "target_en": "XYZ At Smelting Pos"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR14",
+      "source_zh": "XYZ当前位置都在开盖位上方",
+      "target_en": "XYZ all above lid-open pos"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR15",
+      "source_zh": "XYZ当前位置都在0位置",
+      "target_en": "XYZ all at pos 0"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR16",
+      "source_zh": "组合1启动",
+      "target_en": "Combo 1 Start"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR17",
+      "source_zh": "冷却温度达到",
+      "target_en": "Cool temp reached"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR18",
+      "source_zh": "吹气3S",
+      "target_en": "Blow Air 3s"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR19",
+      "source_zh": "停止吹气3s",
+      "target_en": "Stop air blow 3s"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR2",
+      "source_zh": "XYZ当前位置在开盖位",
+      "target_en": "XYZ At Lid Open Pos"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR20",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR21",
+      "source_zh": "冷却温度到达延时确认",
+      "target_en": "Cool temp reached delay confirm"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR3",
+      "source_zh": "XYZ当前位置在摆盖位",
+      "target_en": "XYZ At Lid Place Pos"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR32",
+      "source_zh": "组合2启动",
+      "target_en": "Combo 2 Start"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR37",
+      "source_zh": "非倒黄金时，载盘夹子延时动作",
+      "target_en": "Carrier Grip Delay No Dump"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR38",
+      "source_zh": "倒黄金时，载盘夹子延时动作",
+      "target_en": "Carrier Grip Delay Dump"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR4",
+      "source_zh": "XYZ当前位置在K金位",
+      "target_en": "XYZ at K-gold pos"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR42",
+      "source_zh": "非倒黄金时，石墨夹子延时动作",
+      "target_en": "Graphite Grip Delay No Dump"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR43",
+      "source_zh": "非倒黄金时，石墨夹子延时动作",
+      "target_en": "Graphite Grip Delay No Dump"
+    },
+    {
+      "module_index": 37,
+      "source_raw_index": 38,
+      "program_name": "AfterSalesPointToPoint",
+      "address": "@MR5",
+      "source_zh": "XYZ当前位置在纯金位",
+      "target_en": "XYZ at pure gold pos"
+    },
+    {
+      "module_index": 38,
+      "source_raw_index": 39,
+      "program_name": "OneTouchProgram",
+      "address": "@MR0",
+      "source_zh": "XYZ都在原点",
+      "target_en": "XYZ all at origin"
+    },
+    {
+      "module_index": 38,
+      "source_raw_index": 39,
+      "program_name": "OneTouchProgram",
+      "address": "@MR1",
+      "source_zh": "开启条件_测金校正",
+      "target_en": "XRF Cal Enable Condition"
+    },
+    {
+      "module_index": 38,
+      "source_raw_index": 39,
+      "program_name": "OneTouchProgram",
+      "address": "@MR4",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 41,
+      "source_raw_index": 42,
+      "program_name": "NewChillerStatusAlarms",
+      "address": "@MR0",
+      "source_zh": "冷水机上下限报警温度设定",
+      "target_en": "Chiller Alarm Temperature Limits"
+    },
+    {
+      "module_index": 41,
+      "source_raw_index": 42,
+      "program_name": "NewChillerStatusAlarms",
+      "address": "@MR1",
+      "source_zh": "冷水机数据发送请求",
+      "target_en": "Chiller data send request"
+    },
+    {
+      "module_index": 43,
+      "source_raw_index": 44,
+      "program_name": "SecondaryTare",
+      "address": "@DM0",
+      "source_zh": "二次去皮STEP",
+      "target_en": "2nd Tare STEP"
+    },
+    {
+      "module_index": 43,
+      "source_raw_index": 44,
+      "program_name": "SecondaryTare",
+      "address": "@MR0",
+      "source_zh": "二次去皮启动条件_自动",
+      "target_en": "2nd Tare start cond_Auto"
+    },
+    {
+      "module_index": 43,
+      "source_raw_index": 44,
+      "program_name": "SecondaryTare",
+      "address": "@MR10",
+      "source_zh": "二次去皮启动条件_单机",
+      "target_en": "2nd Tare start cond_Single"
+    },
+    {
+      "module_index": 43,
+      "source_raw_index": 44,
+      "program_name": "SecondaryTare",
+      "address": "@MR4",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 44,
+      "source_raw_index": 45,
+      "program_name": "Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2",
+      "address": "@DM2",
+      "source_zh": "残留重量检测值.F",
+      "target_en": "Residual wt detect val.F"
+    },
+    {
+      "module_index": 44,
+      "source_raw_index": 45,
+      "program_name": "Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2",
+      "address": "@MR0",
+      "source_zh": "精称读取重量",
+      "target_en": "Fine scale read weight"
+    },
+    {
+      "module_index": 44,
+      "source_raw_index": 45,
+      "program_name": "Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2",
+      "address": "@MR1",
+      "source_zh": "精称去皮_HMI",
+      "target_en": "Fine Scale Tare HMI"
+    },
+    {
+      "module_index": 44,
+      "source_raw_index": 45,
+      "program_name": "Port0FineScaleComms:Read Wt/Tare; Check Wt 1/2",
+      "address": "@MR2",
+      "source_zh": "重量读取完成标志",
+      "target_en": "Weight read done flag"
+    },
+    {
+      "module_index": 45,
+      "source_raw_index": 46,
+      "program_name": "MeltingTimers:Melt,Furn Cool,Blow,CuPlateCool",
+      "address": "@MR0",
+      "source_zh": "炉内冷却开始",
+      "target_en": "Furnace cool start"
+    },
+    {
+      "module_index": 45,
+      "source_raw_index": 46,
+      "program_name": "MeltingTimers:Melt,Furn Cool,Blow,CuPlateCool",
+      "address": "@MR2",
+      "source_zh": "熔炼启动标志",
+      "target_en": "Melting start flag"
+    },
+    {
+      "module_index": 46,
+      "source_raw_index": 47,
+      "program_name": "GripperCylinderEndurance",
+      "address": "@DM0",
+      "source_zh": "Z轴夹子老化Step",
+      "target_en": "Z-gripper aging Step"
+    },
+    {
+      "module_index": 46,
+      "source_raw_index": 47,
+      "program_name": "GripperCylinderEndurance",
+      "address": "@DM2",
+      "source_zh": "Z轴夹子当前老化次数",
+      "target_en": "Z-gripper current aging count"
+    },
+    {
+      "module_index": 46,
+      "source_raw_index": 47,
+      "program_name": "GripperCylinderEndurance",
+      "address": "@DM4",
+      "source_zh": "载石倾夹子老化Step",
+      "target_en": "CarrierGraphPour Grip Aging"
+    },
+    {
+      "module_index": 46,
+      "source_raw_index": 47,
+      "program_name": "GripperCylinderEndurance",
+      "address": "@DM6",
+      "source_zh": "载石倾夹子当前老化次数",
+      "target_en": "CarrierGraphPour Grip Count"
+    },
+    {
+      "module_index": 46,
+      "source_raw_index": 47,
+      "program_name": "GripperCylinderEndurance",
+      "address": "@MR0",
+      "source_zh": "Z轴夹子老化条件满足",
+      "target_en": "Z-gripper aging cond met"
+    },
+    {
+      "module_index": 46,
+      "source_raw_index": 47,
+      "program_name": "GripperCylinderEndurance",
+      "address": "@MR1",
+      "source_zh": "Z轴夹子老化启动中",
+      "target_en": "Z Gripper Endurance Running"
+    },
+    {
+      "module_index": 46,
+      "source_raw_index": 47,
+      "program_name": "GripperCylinderEndurance",
+      "address": "@MR14",
+      "source_zh": "停止标志TｏZ轴夹子",
+      "target_en": "Stop flag Z-gripper"
+    },
+    {
+      "module_index": 46,
+      "source_raw_index": 47,
+      "program_name": "GripperCylinderEndurance",
+      "address": "@MR16",
+      "source_zh": "载石倾夹子老化条件满足",
+      "target_en": "CarrierGraphPour Grip Ready"
+    },
+    {
+      "module_index": 46,
+      "source_raw_index": 47,
+      "program_name": "GripperCylinderEndurance",
+      "address": "@MR17",
+      "source_zh": "载石倾夹子老化启动中",
+      "target_en": "CarrierGraphPour Aging Run"
+    },
+    {
+      "module_index": 46,
+      "source_raw_index": 47,
+      "program_name": "GripperCylinderEndurance",
+      "address": "@MR20",
+      "source_zh": "停止_载石倾夹子老化",
+      "target_en": "Stop CarrierGraphPour Aging"
+    },
+    {
+      "module_index": 46,
+      "source_raw_index": 47,
+      "program_name": "GripperCylinderEndurance",
+      "address": "@MR21",
+      "source_zh": "载石倾夹子老化启动",
+      "target_en": "Start CarrierGraphPour Aging"
+    },
+    {
+      "module_index": 46,
+      "source_raw_index": 47,
+      "program_name": "GripperCylinderEndurance",
+      "address": "@MR30",
+      "source_zh": "停止标志Tｏ载石倾",
+      "target_en": "Stop Flag CarrierGraphPour"
+    },
+    {
+      "module_index": 46,
+      "source_raw_index": 47,
+      "program_name": "GripperCylinderEndurance",
+      "address": "@MR4",
+      "source_zh": "停止_Z轴夹子老化",
+      "target_en": "Stop_Z-gripper aging"
+    },
+    {
+      "module_index": 46,
+      "source_raw_index": 47,
+      "program_name": "GripperCylinderEndurance",
+      "address": "@MR5",
+      "source_zh": "Z轴夹子老化启动",
+      "target_en": "Z-gripper aging start"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@DM0",
+      "source_zh": "初始化Step",
+      "target_en": "Init Step"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@DM1",
+      "source_zh": "闸门电机初始化Step",
+      "target_en": "Gate Motor Init Step"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@DM2",
+      "source_zh": "取盘电机初始化Step",
+      "target_en": "Tray Pick Motor Init Step"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@DM3",
+      "source_zh": "翻转电机初始化Step",
+      "target_en": "Flip Motor Init Step"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@DM4",
+      "source_zh": "倾倒电机初始化Step",
+      "target_en": "Pour Motor Init Step"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@DM5",
+      "source_zh": "粗称位载盘复位Step",
+      "target_en": "Coarse Weigh Tray Reset Step"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@DM6",
+      "source_zh": "精称位载盘复位Step",
+      "target_en": "Fine Weigh Tray Reset Step"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@DM7",
+      "source_zh": "Z轴夹子上盘子处理Step",
+      "target_en": "Z Axis Clamp Tray Proc Step"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@DM8",
+      "source_zh": "初始化点动次数_HMI",
+      "target_en": "Init Jog Count_HMI"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@DM9",
+      "source_zh": "5秒计数器",
+      "target_en": "5s Counter"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR0",
+      "source_zh": "停止",
+      "target_en": "Stop"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR10",
+      "source_zh": "开机自动初始化",
+      "target_en": "Power-On Auto Init"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR17",
+      "source_zh": "闸门电机初始化开始",
+      "target_en": "Gate Motor Init Start"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR18",
+      "source_zh": "取盘电机初始化开始",
+      "target_en": "Tray Pick Motor Init Start"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR19",
+      "source_zh": "翻转电机初始化开始",
+      "target_en": "Flip Motor Init Start"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR20",
+      "source_zh": "倾倒电机初始化开始",
+      "target_en": "Pour Motor Init Start"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR27",
+      "source_zh": "闸门电机初始化完成",
+      "target_en": "Gate Motor Init Done"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR28",
+      "source_zh": "取盘电机初始化完成",
+      "target_en": "Tray Pick Motor Init Done"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR29",
+      "source_zh": "翻转电机初始化完成",
+      "target_en": "Flip Motor Init Done"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR30",
+      "source_zh": "倾倒电机初始化完成",
+      "target_en": "Pour Motor Init Done"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR42",
+      "source_zh": "光栅断开滤波延时",
+      "target_en": "Light Curtain Break Filter Delay"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR48",
+      "source_zh": "载盘位已放盘标志To石墨盘",
+      "target_en": "Tray Placed To Graphite"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR5",
+      "source_zh": "初始化_HMI",
+      "target_en": "Init_HMI"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR50",
+      "source_zh": "到载盘位放盘To载盘",
+      "target_en": "To Tray Pos Place To Tray"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR51",
+      "source_zh": "延时检测已泄压信号",
+      "target_en": "DelayDeprSigDet"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR52",
+      "source_zh": "轴1～3最后延时回原",
+      "target_en": "Axis 1-3 Last Delay Homing"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR57",
+      "source_zh": "石墨盘放回原位准备中",
+      "target_en": "Graphite Tray Return Prep"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR59",
+      "source_zh": "轴1~3点1位置已清零",
+      "target_en": "Axis 1-3 Pos 1 Cleared"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR63",
+      "source_zh": "泄压延时",
+      "target_en": "Depressurization Delay"
+    },
+    {
+      "module_index": 47,
+      "source_raw_index": 1,
+      "program_name": "Init_Fix_Z_Axis_Drop",
+      "address": "@MR8",
+      "source_zh": "开机标志",
+      "target_en": "Power-On Flag"
+    }
+  ]
+}
