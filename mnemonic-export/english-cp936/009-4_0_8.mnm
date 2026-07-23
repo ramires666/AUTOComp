@@ -955,7 +955,8 @@ ANB MR601
 MOV #2 DM100
 MCR
 ;<h1/>/*52#Command*/£¨11#¡¢18#¡¢12#¡¢13#¡¢14#¡¢15#¡¢21#£©
-;/*New Configuration£ºSelect¡°Normal Induction Melting¡±Or¡°No Induction Melting¡±*/£¨20241123£©
+;/*New Configuration£ºSelect¡°Normal Induction Melting¡±Or¡°No Induction
+;Melting¡±*/£¨20241123£©
 LDB MR601
 AND= DM110 #1
 MEP

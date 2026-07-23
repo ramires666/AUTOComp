@@ -10,7 +10,8 @@ DEVICE:132
 ;4¡¢JOG£¨J_Axis1£»J_Axis2£»J_Axis3£©
 ;5¡¢Teach
 ;6¡¢Positioning£¨Safety Conditions¡¢Positioning£©
-;¡°Teach¡¢JOG¡±Must be in Single+Standby Mode to Proceed£»OtherHMIButtons Also Require Single Mode
+;¡°Teach¡¢JOG¡±Must be in Single+Standby Mode to Proceed£»OtherHMIButtons Also
+;Require Single Mode
 ;<h1/>/*£¨XYZ£©Subdivision£º6400*/
 LDP MR615
 LD MR608
@@ -113,7 +114,8 @@ ANB MR1004
 INV
 OUT @MR005
 ;<h1/>4¡¢JOG
-;//4 Channel(s)£¬MR4500-4815£¬Each Axis1 Channel(s)£¨Forward¡¢Reverse¡¢High/Low Speed Switch£©
+;//4 Channel(s)£¬MR4500-4815£¬Each Axis1 Channel(s)£¨Forward¡¢Reverse¡¢High/Low
+;Speed Switch£©
 LDB MR700
 AND MR601
 MC
@@ -160,7 +162,8 @@ MCR
 ;//Each Axis£ºAxisnHomed
 ;//Z-Axis Homing£ºNo vacuum-lid memory¡¢No carrier-tray memory
 ;
-;---------------------------------------------------------¡¾Home-return Alarm¡¿---------------------------------------------------------
+;---------------------------------------------------------¡¾Home-return
+;Alarm¡¿---------------------------------------------------------
 ;/*X-Axis Homing Failure*/
 LD MR5311
 ANB CR8400
@@ -194,7 +197,8 @@ ONDL #6000 @MR008
 CON
 AND @MR008
 SET MR1002
-;---------------------------------------------------------Home-return Program---------------------------------------------------------
+;---------------------------------------------------------Home-return
+;Program---------------------------------------------------------
 LDP MR5005
 OR MR5006
 AND= DM600 #0
@@ -640,7 +644,8 @@ LD<= DM71 #0
 MOV.L +80 DM71
 LD<=.L DM72 +0
 MOV.L +8000 DM72
-;---------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------
+;----------------------------------------
 LD CR2002
 MOV DM60 CM8022
 MOV DM61 CM8023

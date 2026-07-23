@@ -143,7 +143,8 @@ CON
 AND @MR005
 SET MR23500
 MOV #28 @DM1
-;///V3.6.0.5£¬Avoid blocking due to Tare failure£¬Online mode cancels the process of retrying Tare after failure
+;///V3.6.0.5£¬Avoid blocking due to Tare failure£¬Online mode cancels the
+;process of retrying Tare after failure
 LD CR2002
 AND= @DM1 #28
 ANB MR23500

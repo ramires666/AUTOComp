@@ -81,7 +81,8 @@ RES MR3406
 ;Two¡¢Target Temperature Not Yet Reached at Process End
 LD MR6409
 RES MR3502
-;Three¡¢With Chiller and Water Pump Running£¬Received¡°Initialization¡±Or¡°Return¡±Command
+;Three¡¢With Chiller and Water Pump
+;Running£¬Received¡°Initialization¡±Or¡°Return¡±Command
 LD<> DM101 #53
 AND<> DM101 #55
 AND<> DM101 #56

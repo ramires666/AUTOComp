@@ -5,7 +5,8 @@ DEVICE:132
 ;/*MR3000-MR3915*/
 ;PLC,60 Point
 ;
-;Output£ºR500-606¡¢1500-1515£»HMIManual£ºMR3000-3115¡¢3200-3215£»Command Auto£º3300-3415¡¢3500-3515
+;Output£ºR500-606¡¢1500-1515£»HMIManual£ºMR3000-3115¡¢3200-3215£»Command
+;Auto£º3300-3415¡¢3500-3515
 ;Position Reached£º3600-3615
 ;<h1/>Reset
 LDP MR615
@@ -543,7 +544,8 @@ OUT R1502
 LD @MR003
 OUT R1503
 ;<h1/>Flip Motor£¬StartR1504¡¢DirectionR1505
-;Flip Motor Carrier-Tray Position_HMI:MR30112£»Flip Motor Carrier-Tray Position_Automatic:MR30412
+;Flip Motor Carrier-Tray Position_HMI:MR30112£»Flip Motor Carrier-Tray
+;Position_Automatic:MR30412
 LD R008
 AND R101
 LDB R008
@@ -580,7 +582,8 @@ AND R010
 ANB R114
 AND R115
 OUT @MR004
-;Flip Motor Graphite-Crucible Position_HMI:MR30113£»Flip Motor Graphite-Crucible Position_Automatic:MR30413
+;Flip Motor Graphite-Crucible Position_HMI:MR30113£»Flip Motor
+;Graphite-Crucible Position_Automatic:MR30413
 LD R006
 AND R102
 LDB R006
@@ -617,7 +620,8 @@ OUT @MR005
 ;
 ;//Start+Direction£ºToward Graphite-Crucible Station
 ;//Start£ºToward Carrier-Tray Station
-;//All Three Flip Sensors Are Normally Open£¬At the Current Position, It Is at the Notch£¬Sensor Isoff£¬When Not Present, It Ison
+;//All Three Flip Sensors Are Normally Open£¬At the Current Position, It Is at
+;the Notch£¬Sensor Isoff£¬When Not Present, It Ison
 LDB MR700
 AND MR601
 ANP MR3215
@@ -647,7 +651,9 @@ LD R104
 ANB R009
 ANL
 SET @MR114
-;Homing When Not at Graphite-Crucible Station or Carrier-Tray Station£¬First Move Toward Graphite-Crucible Station£¬1¡¢Rotate Until Graphite-Crucible SensoroffThen Move Toward Carrier-Tray Station£»2¡¢If Home Is Reached, Complete
+;Homing When Not at Graphite-Crucible Station or Carrier-Tray Station£¬First
+;Move Toward Graphite-Crucible Station£¬1¡¢Rotate Until Graphite-Crucible
+;SensoroffThen Move Toward Carrier-Tray Station£»2¡¢If Home Is Reached, Complete
 LDB CR8602
 ANB CR8502
 ANB CR8402
@@ -758,7 +764,9 @@ LDB @MR115
 AND MR4315
 RES MR4315
 RES MR2905
-;---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------
+;-----------------------------------------------------------------------------
+;-----------
 LD @MR114
 OR @MR004
 OR @MR005

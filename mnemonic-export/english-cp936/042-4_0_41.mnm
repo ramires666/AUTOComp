@@ -166,7 +166,8 @@ SET MR21013
 LD CR7304
 RES CR7204
 MCR
-;<h1/>/*Chiller Status and Alarms-Data Parsing*/FRM Port2£ºDM2316~DM2318£¨FRMChiller£©£»MR22615~MR23115£¨bitStatus£©
+;<h1/>/*Chiller Status and Alarms-Data Parsing*/FRM
+;Port2£ºDM2316~DM2318£¨FRMChiller£©£»MR22615~MR23115£¨bitStatus£©
 LDB R1510
 AND<> DM2316 #0
 FMOV #0 DM2316 #5

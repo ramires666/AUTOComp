@@ -341,7 +341,8 @@ SET MR1804
 RES @MR002
 RES MR23504
 ;<h1/>/*First Check¡¢Second Check Weight Save*/£¨To HMIDisplay£©
-;Fine Weighing First Check Weight£®F£ºDM542  //First Check Weight Read RequestFRM 8#Command
+;Fine Weighing First Check Weight£®F£ºDM542  //First Check Weight Read
+;RequestFRM 8#Command
 ;Fine Weighing Second Check Weight£®F£ºDM544
 LD @MR002
 AND MR23502

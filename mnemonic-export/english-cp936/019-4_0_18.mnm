@@ -245,7 +245,8 @@ OUT MR6704
 CON
 OUT @MR100
 ;<h1/>/*11#Carrier-Tray Station Flip to Graphite-Crucible Station */
-;===Graphite-Crucible Gripper and Carrier-Tray Gripper Delayed Action===£¨V3.5Version£¬20240515£©
+;===Graphite-Crucible Gripper and Carrier-Tray Gripper Delayed
+;Action===£¨V3.5Version£¬20240515£©
 LD<=.S DM438 +0
 MOV #10 DM438
 LD<=.S DM440 +0
@@ -271,7 +272,8 @@ LDB @MR100
 AND= @DM1 #70
 AND MR3612
 ONDL DM438 @MR111
-;==============================================================================================================================
+;=============================================================================
+;=================================================
 LDB @MR100
 AND MR6104
 MC
@@ -337,7 +339,9 @@ ANL
 RES MR3309
 SET MR3308
 MOV #60 @DM1
-;/*Second Flip from Graphite-Crucible Station to Carrier-Tray Station*/_20231024£¨To Ensure Gold Is Completely Poured Out£¬0.5sChanged To1.5s£¬Luqiao Start£©
+;/*Second Flip from Graphite-Crucible Station to Carrier-Tray
+;Station*/_20231024£¨To Ensure Gold Is Completely Poured Out£¬0.5sChanged
+;To1.5s£¬Luqiao Start£©
 LDB @MR100
 AND= @DM1 #60
 ANB R006
@@ -827,7 +831,8 @@ OUT MR6714
 CON
 OUT @MR700
 ;<h1/>/*21#Graphite-Crucible Station¡úCarrier-Tray Station*/
-;===Graphite-Crucible Gripper and Carrier-Tray Gripper Delayed Action===£¨V3.5Version£¬20240515£©
+;===Graphite-Crucible Gripper and Carrier-Tray Gripper Delayed
+;Action===£¨V3.5Version£¬20240515£©
 LDB @MR700
 AND= @DM7 #10
 AND MR3612
@@ -844,7 +849,8 @@ LDB @MR700
 AND= @DM7 #70
 AND MR3613
 ONDL DM442 @MR711
-;==============================================================================================================================
+;=============================================================================
+;=================================================
 LDP MR615
 OR MR610
 OR CR2008

@@ -20,7 +20,8 @@ OR CR2008
 RES MR700
 MOV #0 @DM1
 MOV #0 @DM0
-;During single-machine debugging£¬To Host computer Running£¬Cannot send commands toPLC
+;During single-machine debugging£¬To Host computer Running£¬Cannot send commands
+;toPLC
 LD MR601
 ANB MR615
 ANB MR614
@@ -170,7 +171,8 @@ LABEL #2001
 ;DM572=1        '=0£¬Old Chiller£¨Large Screen£©£»=1£¬New Chiller
 ;DM573=0        '=0£¬Do Not Use Pure Gold¡¢K-Gold Station£»=1£¬Use
 ;DM574=1        '=0£¬Do Not Use Secondary Tare£»=1£¬Use
-;DM575=0        '=0£¬Do Not Use Temperature and Humidity£»=1£¬Use Temperature and Humidity
+;DM575=0        '=0£¬Do Not Use Temperature and Humidity£»=1£¬Use Temperature and
+;Humidity
 ;DM576=0        '=0£¬Do Not Use Carrier-Tray Residue Detection£»=1£¬Use
 ;DM577=0        '=0£¬Chiller Has Water£»=1£¬Chiller No Water
 ;'DM578=0       '
@@ -202,7 +204,8 @@ MOV #0 DM573
 ;
 LD CR2002
 MOV #1 DM574
-;DM575=0        '=0£¬Do Not Use Temperature and Humidity£»=1£¬Use Temperature and Humidity
+;DM575=0        '=0£¬Do Not Use Temperature and Humidity£»=1£¬Use Temperature and
+;Humidity
 ;
 LD CR2002
 MOV #0 DM575

@@ -193,7 +193,8 @@ AND R003
 AND MR601
 ANP MR21508
 SET MR8808
-;<h1/>/*Combined Command1£ºOpen Lid+Induction Melting-Graphite Crucible+Close Lid*/@DM0¡¢@MR100
+;<h1/>/*Combined Command1£ºOpen Lid+Induction Melting-Graphite Crucible+Close
+;Lid*/@DM0¡¢@MR100
 LDP MR21410
 AND R003
 AND R009
@@ -432,7 +433,8 @@ RES @MR100
 RES MR21411
 MOV #0 @DM0
 MCR
-;<h1/>/*Combined Command2£ºFlip from Graphite-Crucible Station to Carrier-Tray Station*/@DM0¡¢@MR200
+;<h1/>/*Combined Command2£ºFlip from Graphite-Crucible Station to Carrier-Tray
+;Station*/@DM0¡¢@MR200
 LDB @MR104
 AND= @DM1 #10
 AND MR3612
@@ -449,7 +451,8 @@ LDB @MR104
 AND= @DM1 #70
 AND MR3613
 ONDL DM442 @MR211
-;==============================================================================================================================
+;=============================================================================
+;=================================================
 LDP MR21412
 AND R010
 AND R009

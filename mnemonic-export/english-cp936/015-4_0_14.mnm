@@ -211,7 +211,8 @@ ANL
 RES MR5900
 MOV #40 @DM2
 ;/*Retare*/
-;/*To determine if returned goods are taken£¬Cancel¡°Retare¡±_20231020£¨0926-5Version£©*/
+;/*To determine if returned goods are*/
+;taken£¬Cancel¡°Retare¡±_20231020£¨0926-5Version£©
 LD CR2003
 AND= @DM2 #35
 MPS

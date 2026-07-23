@@ -49,7 +49,8 @@ AND CR2003
 SET MR1601
 ;/*Furnace Alarm*/
 ;/*V3.6.0.1*/£¨20241025£©
-;<Melting Power Supply Alarm>£ºNo Automatic Reset Alarm£¬Requires Manual Handling
+;<Melting Power Supply Alarm>£ºNo Automatic Reset Alarm£¬Requires Manual
+;Handling
 LD R1509
 AND R015
 ONDL #500 @MR011
@@ -213,7 +214,8 @@ LD @MR007
 AND CR2004
 RES @MR007
 SET MR10009
-;===During furnace internal cooling repair£¬Issue of air compressor still running====£¨2240827£©
+;===During furnace internal cooling repair£¬Issue of air compressor still
+;running====£¨2240827£©
 LD MR11610
 RES MR21300
 RES MR3504
@@ -466,7 +468,8 @@ ANB MR611
 ANB MR610
 INV
 OUT @MR400
-;<h1/>/*Induction Melting Station¡úGraphite-Crucible Station¡¢Close Lid*/@MR400¡¢@DM4
+;<h1/>/*Induction Melting Station¡úGraphite-Crucible Station¡¢Close
+;Lid*/@MR400¡¢@DM4
 LD MR11613
 MEP
 RES MR11613
@@ -527,7 +530,9 @@ RES MR5807
 SET MR6907
 MOV #30 @DM4
 ;/*Place tray*/
-;///Changed to£ºTurn On Water-Cooling-Head Circulation Pump at Graphite-Crucible Station£¬PreventZ-Axis Gripper Alarm£¬Water pump running continuously_20231113
+;///Changed to£ºTurn On Water-Cooling-Head Circulation Pump at
+;Graphite-Crucible Station£¬PreventZ-Axis Gripper Alarm£¬Water pump running
+;continuously_20231113
 LDB @MR400
 AND= @DM4 #30
 AND MR5807
@@ -636,7 +641,8 @@ MOV #42 DM526
 ;   DM524=40  
 ;END IF
 ;
-;DM526=DM524      'V3.6.0.5Version and above£¬Prevent temperature rise after secondary tare£¬Use the same temperature for flip and secondary tare
+;DM526=DM524      'V3.6.0.5Version and above£¬Prevent temperature rise after
+;secondary tare£¬Use the same temperature for flip and secondary tare
 ;'HMIInput error correction
 ;
 ;IF DM526<=30 OR DM526> 70 THEN
@@ -653,7 +659,8 @@ MOV #40 DM524
 ;END IF
 ;
 LABEL #2000
-;DM526=DM524      'V3.6.0.5Version and above£¬Prevent temperature rise after secondary tare£¬Use the same temperature for flip and secondary tare
+;DM526=DM524      'V3.6.0.5Version and above£¬Prevent temperature rise after
+;secondary tare£¬Use the same temperature for flip and secondary tare
 LD CR2002
 MOV DM524 DM526
 ;
